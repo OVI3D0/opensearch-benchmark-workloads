@@ -18,7 +18,7 @@
       "name": "term",
       "operation-type": "search",
       "index": "{{index_name | default('big5')}}",
-      "request-timeout": 7200,
+      "request-timeout": 1,
       "body": {
         "query": {
           "term": {
@@ -837,6 +837,7 @@
     },
     {
       "name": "keyword-terms",
+      "request-timeout": 1,
       "operation-type": "search",
       "index": "{{index_name | default('big5')}}",
       "body": {
