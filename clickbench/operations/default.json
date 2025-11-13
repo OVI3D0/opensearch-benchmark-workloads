@@ -12,12 +12,20 @@
     },
     {
       "name": "q01-count-all",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
+      "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | stats count()"
-      }
+        "query": "source = {{index_name | default('clickbench')}} | stats count() as total_docs"
+      },
+      "assertions": [
+        {
+          "property": "rows.0.total_docs",
+          "condition": "==",
+          "value": 99997497
+        }
+      ]
     },
     {
       "name": "q02-count-adv-engine",
