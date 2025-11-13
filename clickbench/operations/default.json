@@ -29,7 +29,7 @@
     },
     {
       "name": "q02-count-adv-engine",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -38,7 +38,7 @@
     },
     {
       "name": "q03-sum-count-avg",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -47,7 +47,7 @@
     },
     {
       "name": "q04-avg-userid",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -56,7 +56,7 @@
     },
     {
       "name": "q05-distinct-userid",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -65,7 +65,7 @@
     },
     {
       "name": "q06-distinct-searchphrase",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -74,7 +74,7 @@
     },
     {
       "name": "q07-min-max-eventdate",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -83,7 +83,7 @@
     },
     {
       "name": "q08-group-by-adv-engine",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -92,7 +92,7 @@
     },
     {
       "name": "q09-region-users",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -101,7 +101,7 @@
     },
     {
       "name": "q10-region-stats",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -110,7 +110,7 @@
     },
     {
       "name": "q11-mobile-phone-model",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -119,7 +119,7 @@
     },
     {
       "name": "q12-mobile-phone-stats",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -128,7 +128,7 @@
     },
     {
       "name": "q13-search-phrase-count",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -137,7 +137,7 @@
     },
     {
       "name": "q14-search-phrase-users",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -146,7 +146,7 @@
     },
     {
       "name": "q15-search-engine-phrase",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -155,7 +155,7 @@
     },
     {
       "name": "q16-user-activity",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -164,7 +164,7 @@
     },
     {
       "name": "q17-user-search-activity",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -173,7 +173,7 @@
     },
     {
       "name": "q18-user-search-limit",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -182,7 +182,7 @@
     },
     {
       "name": "q19-user-minute-search",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -191,7 +191,7 @@
     },
     {
       "name": "q20-specific-user",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -200,7 +200,7 @@
     },
     {
       "name": "q21-google-urls",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -209,7 +209,7 @@
     },
     {
       "name": "q22-google-search-phrases",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -218,7 +218,7 @@
     },
     {
       "name": "q23-google-title-search",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -227,7 +227,7 @@
     },
     {
       "name": "q24-google-urls-sorted",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -236,7 +236,7 @@
     },
     {
       "name": "q25-search-phrases-by-time",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -245,7 +245,7 @@
     },
     {
       "name": "q26-search-phrases-sorted",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -254,7 +254,7 @@
     },
     {
       "name": "q27-search-phrases-multi-sort",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -263,7 +263,7 @@
     },
     {
       "name": "q28-counter-url-length",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -272,7 +272,7 @@
     },
     {
       "name": "q29-referer-analysis",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -281,7 +281,7 @@
     },
     {
       "name": "q30-resolution-width-sums",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -290,7 +290,7 @@
     },
     {
       "name": "q31-search-engine-client-stats",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -299,7 +299,7 @@
     },
     {
       "name": "q32-watch-client-stats",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -308,7 +308,7 @@
     },
     {
       "name": "q33-watch-client-all",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -317,7 +317,7 @@
     },
     {
       "name": "q34-url-popularity",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -326,7 +326,7 @@
     },
     {
       "name": "q35-url-with-constant",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -335,7 +335,7 @@
     },
     {
       "name": "q36-client-ip-variations",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -344,7 +344,7 @@
     },
     {
       "name": "q37-counter-62-urls",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -353,7 +353,7 @@
     },
     {
       "name": "q38-counter-62-titles",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -362,7 +362,7 @@
     },
     {
       "name": "q39-counter-62-links",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -371,7 +371,7 @@
     },
     {
       "name": "q40-traffic-source-analysis",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -380,7 +380,7 @@
     },
     {
       "name": "q41-url-hash-date",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -389,7 +389,7 @@
     },
     {
       "name": "q42-window-client-dimensions",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
@@ -398,7 +398,7 @@
     },
     {
       "name": "q43-hourly-pageviews",
-      "operation-type": "raw-request",
+      "operation-type": "ppl-query",
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
