@@ -619,26 +619,10 @@
         "query": "source = {{index_name | default('clickbench')}} | where like(Title, '%Google%') and not like(URL, '%.google.%') and SearchPhrase != '' | stats count() as c, dc(UserID) by SearchPhrase | sort - c | head 10"
       },
       "assertions": [
-        {
-          "property": "meta.total",
-          "condition": "==",
-          "value": 10
-        },
-        {
-          "property": "rows.0.EventDate",
-          "condition": "==",
-          "value": "2013-07-02 00:00:00"
-        },
-        {
-          "property": "rows.0.URLRegionID",
-          "condition": "==",
-          "value": 216
-        },
-        {
-          "property": "rows.0.HasGCLID",
-          "condition": "==",
-          "value": 0
-        }
+        { "property": "meta.total", "condition": "==", "value": 10 },
+        { "property": "rows.0.c", "condition": "==", "value": 273 },
+        { "property": "rows.0.\"dc(UserID)\"", "condition": "==", "value": 236 },
+        { "property": "rows.0.SearchPhrase", "condition": "==", "value": "..." }
       ]
     },
     {
