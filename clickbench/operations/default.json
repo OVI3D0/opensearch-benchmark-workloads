@@ -186,7 +186,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where AdvEngineID!=0 | stats count() by AdvEngineID | sort - `count()`"
+        "query": "source = {{index_name | default('clickbench')}} | where AdvEngineID!=0 | stats count() by AdvEngineID bucket_nullable=false | sort - `count()`"
       },
       "assertions": [
         {
@@ -213,7 +213,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | stats dc(UserID) as u by RegionID | sort -u | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | stats dc(UserID) as u by RegionID bucket_nullable=false | sort -u | head 10"
       },
       "assertions": [
         {
@@ -240,7 +240,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | stats sum(AdvEngineID), count() as c, avg(ResolutionWidth), dc(UserID) by RegionID | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | stats sum(AdvEngineID), count() as c, avg(ResolutionWidth), dc(UserID) by RegionID bucket_nullable=false | sort - c | head 10"
       },
       "assertions": [
         {
@@ -272,7 +272,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where MobilePhoneModel != '' | stats dc(UserID) as u by MobilePhoneModel | sort - u | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where MobilePhoneModel != '' | stats dc(UserID) as u by MobilePhoneModel bucket_nullable=false | sort - u | head 10"
       },
       "assertions": [
         {
@@ -299,7 +299,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where MobilePhoneModel != '' | stats dc(UserID) as u by MobilePhone, MobilePhoneModel | sort - u | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where MobilePhoneModel != '' | stats dc(UserID) as u by MobilePhone, MobilePhoneModel bucket_nullable=false | sort - u | head 10"
       },
       "assertions": [
         {
@@ -331,7 +331,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats count() as c by SearchPhrase | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats count() as c by SearchPhrase bucket_nullable=false | sort - c | head 10"
       },
       "assertions": [
         {
@@ -358,7 +358,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats dc(UserID) as u by SearchPhrase | sort - u | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats dc(UserID) as u by SearchPhrase bucket_nullable=false | sort - u | head 10"
       },
       "assertions": [
         {
@@ -385,7 +385,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats count() as c by SearchEngineID, SearchPhrase | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats count() as c by SearchEngineID, SearchPhrase bucket_nullable=false | sort - c | head 10"
       },
       "assertions": [
         {
@@ -417,7 +417,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | stats count() by UserID | sort - `count()` | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | stats count() by UserID bucket_nullable=false | sort - `count()` | head 10"
       },
       "assertions": [
         {
@@ -444,7 +444,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | stats count() by UserID, SearchPhrase | sort - `count()` | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | stats count() by UserID, SearchPhrase bucket_nullable=false | sort - `count()` | head 10"
       },
       "assertions": [
         {
@@ -476,7 +476,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | stats count() by UserID, SearchPhrase | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | stats count() by UserID, SearchPhrase bucket_nullable=false | head 10"
       },
       "assertions": [
         {
@@ -508,7 +508,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | eval m = extract(minute from EventTime) | stats count() by UserID, m, SearchPhrase | sort - `count()` | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | eval m = extract(minute from EventTime) | stats count() by UserID, m, SearchPhrase bucket_nullable=false | sort - `count()` | head 10"
       },
       "assertions": [
         {
@@ -584,7 +584,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where like(URL, '%google%') and SearchPhrase != '' | stats count() as c by SearchPhrase | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where like(URL, '%google%') and SearchPhrase != '' | stats count() as c by SearchPhrase bucket_nullable=false | sort - c | head 10"
       },
       "assertions": [
         {
@@ -616,8 +616,25 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where like(Title, '%Google%') and not like(URL, '%.google.%') and SearchPhrase != '' | stats count() as c, dc(UserID) by SearchPhrase | sort - c | head 10"
-      }
+        "query": "source = {{index_name | default('clickbench')}} | where like(Title, '%Google%') and not like(URL, '%.google.%') and SearchPhrase != '' | stats count() as c, dc(UserID) by SearchPhrase bucket_nullable=false | sort - c | head 10"
+      },
+      "assertions": [
+        {
+          "property": "meta.total",
+          "condition": "==",
+          "value": 10
+        },
+        {
+          "property": "rows.0.c",
+          "condition": "==",
+          "value": 273
+        },
+        {
+          "property": "rows.0.\"dc(UserID)\"",
+          "condition": "==",
+          "value": 236
+        }
+      ]
     },
     {
       "name": "q24-google-urls-sorted",
@@ -719,7 +736,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where URL != '' | stats avg(length(URL)) as l, count() as c by CounterID | where c > 100000 | sort - l | head 25"
+        "query": "source = {{index_name | default('clickbench')}} | where URL != '' | stats avg(length(URL)) as l, count() as c by CounterID bucket_nullable=false | where c > 100000 | sort - l | head 25"
       },
       "assertions": [
         {
@@ -750,7 +767,7 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | Referer != '' | eval k = regexp_replace(Referer, '^https?://(?:www\\.)?([^/]+)/.*$', '\\1') | stats avg(length(Referer)) as l, count() as c, min(Referer) by k | where c > 100000 | sort - l | head 25"
+        "query": "source = {{index_name | default('clickbench')}} | Referer != '' | eval k = regexp_replace(Referer, '^https?://(?:www\\.)?([^/]+)/.*$', '\\1') | stats avg(length(Referer)) as l, count() as c, min(Referer) by k bucket_nullable=false | where c > 100000 | sort - l | head 25"
       }
     },
     {
@@ -792,7 +809,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats count() as c, sum(IsRefresh), avg(ResolutionWidth) by SearchEngineID, ClientIP | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats count() as c, sum(IsRefresh), avg(ResolutionWidth) by SearchEngineID, ClientIP bucket_nullable=false | sort - c | head 10"
       },
       "assertions": [
         {
@@ -824,7 +841,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats count() as c, sum(IsRefresh), avg(ResolutionWidth) by WatchID, ClientIP | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats count() as c, sum(IsRefresh), avg(ResolutionWidth) by WatchID, ClientIP bucket_nullable=false | sort - c | head 10"
       },
       "assertions": [
         {
@@ -856,7 +873,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | stats count() as c, sum(IsRefresh), avg(ResolutionWidth) by WatchID, ClientIP | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | stats count() as c, sum(IsRefresh), avg(ResolutionWidth) by WatchID, ClientIP bucket_nullable=false | sort - c | head 10"
       },
       "assertions": [
         {
@@ -888,7 +905,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | stats count() as c by URL | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | stats count() as c by URL bucket_nullable=false | sort - c | head 10"
       },
       "assertions": [
         {
@@ -915,7 +932,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | eval const = 1 | stats count() as c by const, URL | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | eval const = 1 | stats count() as c by const, URL bucket_nullable=false | sort - c | head 10"
       },
       "assertions": [
         {
@@ -947,7 +964,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | eval `ClientIP - 1` = ClientIP - 1, `ClientIP - 2` = ClientIP - 2, `ClientIP - 3` = ClientIP - 3 | stats count() as c by ClientIP, `ClientIP - 1`, `ClientIP - 2`, `ClientIP - 3` | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | eval `ClientIP - 1` = ClientIP - 1, `ClientIP - 2` = ClientIP - 2, `ClientIP - 3` = ClientIP - 3 | stats count() as c by ClientIP, `ClientIP - 1`, `ClientIP - 2`, `ClientIP - 3` bucket_nullable=false | sort - c | head 10"
       },
       "assertions": [
         {
@@ -979,7 +996,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and DontCountHits = 0 and IsRefresh = 0 and URL != '' | stats count() as PageViews by URL | sort - PageViews | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and DontCountHits = 0 and IsRefresh = 0 and URL != '' | stats count() as PageViews by URL bucket_nullable=false | sort - PageViews | head 10"
       },
       "assertions": [
         {
@@ -1006,7 +1023,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and DontCountHits = 0 and IsRefresh = 0 and Title != '' | stats count() as PageViews by Title | sort - PageViews | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and DontCountHits = 0 and IsRefresh = 0 and Title != '' | stats count() as PageViews by Title bucket_nullable=false | sort - PageViews | head 10"
       },
       "assertions": [
         {
@@ -1033,7 +1050,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 and IsLink != 0 and IsDownload = 0 | stats count() as PageViews by URL | sort - PageViews | head 10 from 1000"
+        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 and IsLink != 0 and IsDownload = 0 | stats count() as PageViews by URL bucket_nullable=false | sort - PageViews | head 10 from 1000"
       },
       "assertions": [
         {
@@ -1050,7 +1067,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 | eval Src=case(SearchEngineID = 0 and AdvEngineID = 0, Referer else ''), Dst=URL | stats count() as PageViews by TraficSourceID, SearchEngineID, AdvEngineID, Src, Dst | sort - PageViews | head 10 from 1000"
+        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 | eval Src=case(SearchEngineID = 0 and AdvEngineID = 0, Referer else ''), Dst=URL | stats count() as PageViews by TraficSourceID, SearchEngineID, AdvEngineID, Src, Dst bucket_nullable=false | sort - PageViews | head 10 from 1000"
       },
       "assertions": [
         {
@@ -1067,7 +1084,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 and TraficSourceID in (-1, 6) and RefererHash = 3594120000172545465 | stats count() as PageViews by URLHash, EventDate | sort - PageViews | head 10 from 100"
+        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 and TraficSourceID in (-1, 6) and RefererHash = 3594120000172545465 | stats count() as PageViews by URLHash, EventDate bucket_nullable=false | sort - PageViews | head 10 from 100"
       },
       "assertions": [
         {
@@ -1099,7 +1116,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 and DontCountHits = 0 and URLHash = 2868770270353813622 | stats count() as PageViews by WindowClientWidth, WindowClientHeight | sort - PageViews | head 10 from 10000"
+        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 and DontCountHits = 0 and URLHash = 2868770270353813622 | stats count() as PageViews by WindowClientWidth, WindowClientHeight bucket_nullable=false | sort - PageViews | head 10 from 10000"
       },
       "assertions": [
         {
@@ -1116,7 +1133,7 @@
       "method": "POST",
       "detailed-results": true,
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-15 00:00:00' and IsRefresh = 0 and DontCountHits = 0 | eval M = date_format(EventTime, '%Y-%m-%d %H:00:00') | stats count() as PageViews by M | sort M | head 10 from 1000"
+        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-15 00:00:00' and IsRefresh = 0 and DontCountHits = 0 | eval M = date_format(EventTime, '%Y-%m-%d %H:00:00') | stats count() as PageViews by M bucket_nullable=false | sort M | head 10 from 1000"
       },
       "assertions": [
         {
