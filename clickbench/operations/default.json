@@ -564,7 +564,7 @@
           "value": 801
         },
         {
-          "property": "rows.0.\"dc(UserID)\"",
+          "property": "rows.0.dc(UserID)",
           "condition": "==",
           "value": 600
         },
