@@ -1296,12 +1296,12 @@
                     },
                     "script": "params.count > 100000"
                 }
+                },
+                "limit_buckets": {
+                "bucket_sort": {
+                    "size": 25
                 }
-            }
-            },
-            "limit_buckets": {
-            "bucket_sort": {
-                "size": 25
+                }
             }
             }
         }
