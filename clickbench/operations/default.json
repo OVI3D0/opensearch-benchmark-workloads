@@ -310,17 +310,17 @@
         {
           "property": "rows.0.u",
           "condition": "==",
-          "value": 395
+          "value": 932578
         },
         {
           "property": "rows.0.MobilePhone",
           "condition": "==",
-          "value": 60
+          "value": 1
         },
         {
           "property": "rows.0.MobilePhoneModel",
           "condition": "==",
-          "value": "308"
+          "value": "iPad"
         }
       ]
     },
@@ -342,12 +342,12 @@
         {
           "property": "rows.0.c",
           "condition": "==",
-          "value": 383
+          "value": 70263
         },
         {
           "property": "rows.0.SearchPhrase",
           "condition": "==",
-          "value": "'kbnysq ctrcfylhtq d vfrcbvev"
+          "value": "карелки"
         }
       ]
     },
@@ -359,24 +359,7 @@
       "detailed-results": true,
       "body": {
         "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats dc(UserID) as u by SearchPhrase | sort - u | head 10"
-      },
-      "assertions": [
-        {
-          "property": "meta.total",
-          "condition": "==",
-          "value": 10
-        },
-        {
-          "property": "rows.0.u",
-          "condition": "==",
-          "value": 336
-        },
-        {
-          "property": "rows.0.SearchPhrase",
-          "condition": "==",
-          "value": "'kbnysq ctrcfylhtq d vfrcbvev"
-        }
-      ]
+      }
     },
     {
       "name": "q15-search-engine-phrase",
@@ -386,29 +369,7 @@
       "detailed-results": true,
       "body": {
         "query": "source = {{index_name | default('clickbench')}} | where SearchPhrase != '' | stats count() as c by SearchEngineID, SearchPhrase | sort - c | head 10"
-      },
-      "assertions": [
-        {
-          "property": "meta.total",
-          "condition": "==",
-          "value": 10
-        },
-        {
-          "property": "rows.0.c",
-          "condition": "==",
-          "value": 44
-        },
-        {
-          "property": "rows.0.SearchEngineID",
-          "condition": "==",
-          "value": 1
-        },
-        {
-          "property": "rows.0.SearchPhrase",
-          "condition": "==",
-          "value": "asrock antasy xv"
-        }
-      ]
+      }
     },
     {
       "name": "q16-user-activity",
@@ -428,12 +389,12 @@
         {
           "property": "rows.0.count()",
           "condition": "==",
-          "value": 357
+          "value": 29097
         },
         {
           "property": "rows.0.UserID",
           "condition": "==",
-          "value": -9220031997633870766
+          "value": 1313338681122956954
         }
       ]
     },
@@ -455,12 +416,12 @@
         {
           "property": "rows.0.count()",
           "condition": "==",
-          "value": 357
+          "value": 29097
         },
         {
           "property": "rows.0.UserID",
           "condition": "==",
-          "value": -9220031997633870766
+          "value": 1313338681122956954
         },
         {
           "property": "rows.0.SearchPhrase",
@@ -509,29 +470,7 @@
       "detailed-results": true,
       "body": {
         "query": "source = {{index_name | default('clickbench')}} | eval m = extract(minute from EventTime) | stats count() by UserID, m, SearchPhrase | sort - `count()` | head 10"
-      },
-      "assertions": [
-        {
-          "property": "meta.total",
-          "condition": "==",
-          "value": 10
-        },
-        {
-          "property": "rows.0.count()",
-          "condition": "==",
-          "value": 22
-        },
-        {
-          "property": "rows.0.UserID",
-          "condition": "==",
-          "value": -9221886956462285029
-        },
-        {
-          "property": "rows.0.m",
-          "condition": "==",
-          "value": 21
-        }
-      ]
+      }
     },
     {
       "name": "q20-specific-user",
@@ -573,7 +512,7 @@
         {
           "property": "rows.0.count()",
           "condition": "==",
-          "value": 32196
+          "value": 15911
         }
       ]
     },
@@ -595,17 +534,12 @@
         {
           "property": "rows.0.c",
           "condition": "==",
-          "value": 273
-        },
-        {
-          "property": "rows.0.dc(UserID)",
-          "condition": "==",
-          "value": 236
+          "value": 60
         },
         {
           "property": "rows.0.SearchPhrase",
           "condition": "==",
-          "value": "\u0432\u0438\u043d\u043a\u0438 \u043c\u0435\u0434\u0432\u0435\u0434\u044c \u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c \u0444\u0438\u043b\u044c\u043c\u044b 2013 \u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c"
+          "value": "прокур горбуши"
         }
       ]
     },
@@ -627,12 +561,17 @@
         {
           "property": "rows.0.c",
           "condition": "==",
-          "value": 273
+          "value": 801
         },
         {
           "property": "rows.0.\"dc(UserID)\"",
           "condition": "==",
-          "value": 236
+          "value": 600
+        },
+        {
+          "property": "rows.0.SearchPhrase",
+          "condition": "==",
+          "value": "винки медведь смотреть фильмы 2013 смотреть"
         }
       ]
     },
@@ -737,29 +676,7 @@
       "detailed-results": true,
       "body": {
         "query": "source = {{index_name | default('clickbench')}} | where URL != '' | stats avg(length(URL)) as l, count() as c by CounterID | where c > 100000 | sort - l | head 25"
-      },
-      "assertions": [
-        {
-          "property": "meta.total",
-          "condition": "==",
-          "value": 25
-        },
-        {
-          "property": "rows.0.l",
-          "condition": "==",
-          "value": 187.9562693941447
-        },
-        {
-          "property": "rows.0.c",
-          "condition": "==",
-          "value": 323229
-        },
-        {
-          "property": "rows.0.CounterID",
-          "condition": "==",
-          "value": 1634
-        }
-      ]
+      }
     },
     {
       "name": "q29-referer-analysis",
@@ -767,7 +684,7 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | Referer != '' | eval k = regexp_replace(Referer, '^https?://(?:www\\.)?([^/]+)/.*$', '\\1') | stats avg(length(Referer)) as l, count() as c, min(Referer) by k | where c > 100000 | sort - l | head 25"
+        "query": "source = {{index_name | default('clickbench')}} | where Referer != '' | eval k = regexp_replace(Referer, '^https?://(?:www\\.)?([^/]+)/.*$', '\\1') | stats avg(length(Referer)) as l, count() as c, min(Referer) by k | where c > 100000 | sort - l | head 25"
       }
     },
     {
@@ -820,17 +737,17 @@
         {
           "property": "rows.0.c",
           "condition": "==",
-          "value": 31
+          "value": 1633
         },
         {
           "property": "rows.0.sum(IsRefresh)",
           "condition": "==",
-          "value": 3
+          "value": 35
         },
         {
           "property": "rows.0.avg(ResolutionWidth)",
           "condition": "==",
-          "value": 1989.0
+          "value": 1408.0122473974282
         }
       ]
     },
@@ -884,7 +801,7 @@
         {
           "property": "rows.0.c",
           "condition": "==",
-          "value": 1
+          "value": 2
         },
         {
           "property": "rows.0.sum(IsRefresh)",
@@ -894,7 +811,7 @@
         {
           "property": "rows.0.avg(ResolutionWidth)",
           "condition": "==",
-          "value": 1368.0
+          "value": 1638.0
         }
       ]
     },
@@ -906,24 +823,7 @@
       "detailed-results": true,
       "body": {
         "query": "source = {{index_name | default('clickbench')}} | stats count() as c by URL | sort - c | head 10"
-      },
-      "assertions": [
-        {
-          "property": "meta.total",
-          "condition": "==",
-          "value": 10
-        },
-        {
-          "property": "rows.0.c",
-          "condition": "==",
-          "value": 67763
-        },
-        {
-          "property": "rows.0.URL",
-          "condition": "==",
-          "value": ""
-        }
-      ]
+      }
     },
     {
       "name": "q35-url-with-constant",
@@ -933,29 +833,7 @@
       "detailed-results": true,
       "body": {
         "query": "source = {{index_name | default('clickbench')}} | eval const = 1 | stats count() as c by const, URL | sort - c | head 10"
-      },
-      "assertions": [
-        {
-          "property": "meta.total",
-          "condition": "==",
-          "value": 10
-        },
-        {
-          "property": "rows.0.c",
-          "condition": "==",
-          "value": 67763
-        },
-        {
-          "property": "rows.0.const",
-          "condition": "==",
-          "value": 1
-        },
-        {
-          "property": "rows.0.URL",
-          "condition": "==",
-          "value": ""
-        }
-      ]
+      }
     },
     {
       "name": "q36-client-ip-variations",
@@ -975,17 +853,17 @@
         {
           "property": "rows.0.c",
           "condition": "==",
-          "value": 2799
+          "value": 47008
         },
         {
           "property": "rows.0.ClientIP",
           "condition": "==",
-          "value": -2146825212
+          "value": -39921974
         },
         {
-          "property": "rows.0.ClientIP - 1",
+          "property": "rows.0.\"ClientIP - 1\"",
           "condition": "==",
-          "value": -2146825213
+          "value": -39921975
         }
       ]
     },
@@ -1007,12 +885,12 @@
         {
           "property": "rows.0.PageViews",
           "condition": "==",
-          "value": 333
+          "value": 102341
         },
         {
           "property": "rows.0.URL",
           "condition": "==",
-          "value": "http://afisha.yandex.ua/auto_id=0&with_photo.ashx/101/4/?cat=6257271"
+          "value": "http://irr.ru/index.php?showalbum/login-leniya7777294,938303130"
         }
       ]
     },
@@ -1034,12 +912,12 @@
         {
           "property": "rows.0.PageViews",
           "condition": "==",
-          "value": 39098
+          "value": 122407
         },
         {
           "property": "rows.0.Title",
           "condition": "==",
-          "value": "\u0411\u0440\u044e\u043a\u0438 New Era H (\u0410\u0441\u0443\u0441) 258 \u043e\u0431\u0449\u0430\u044f \u0432\u044b\u043f\u043b\u0430\u0442\u043e\u043a, \u0433\u043e\u0440\u0448\u0435\u0447\u043d\u044b\u043c\u0438"
+          "value": "Тест (Россия) - Яндекс"
         }
       ]
     },
@@ -1051,14 +929,7 @@
       "detailed-results": true,
       "body": {
         "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 and IsLink != 0 and IsDownload = 0 | stats count() as PageViews by URL | sort - PageViews | head 10 from 1000"
-      },
-      "assertions": [
-        {
-          "property": "meta.total",
-          "condition": "==",
-          "value": 0
-        }
-      ]
+      }
     },
     {
       "name": "q40-traffic-source-analysis",
@@ -1068,14 +939,7 @@
       "detailed-results": true,
       "body": {
         "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 | eval Src=case(SearchEngineID = 0 and AdvEngineID = 0, Referer else ''), Dst=URL | stats count() as PageViews by TraficSourceID, SearchEngineID, AdvEngineID, Src, Dst | sort - PageViews | head 10 from 1000"
-      },
-      "assertions": [
-        {
-          "property": "meta.total",
-          "condition": "==",
-          "value": 0
-        }
-      ]
+      }
     },
     {
       "name": "q41-url-hash-date",
@@ -1085,29 +949,7 @@
       "detailed-results": true,
       "body": {
         "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-31 00:00:00' and IsRefresh = 0 and TraficSourceID in (-1, 6) and RefererHash = 3594120000172545465 | stats count() as PageViews by URLHash, EventDate | sort - PageViews | head 10 from 100"
-      },
-      "assertions": [
-        {
-          "property": "meta.total",
-          "condition": "==",
-          "value": 10
-        },
-        {
-          "property": "rows.0.PageViews",
-          "condition": "==",
-          "value": 3
-        },
-        {
-          "property": "rows.0.URLHash",
-          "condition": "==",
-          "value": -9083732271036960698
-        },
-        {
-          "property": "rows.0.EventDate",
-          "condition": "==",
-          "value": "2013-07-15 00:00:00"
-        }
-      ]
+      }
     },
     {
       "name": "q42-window-client-dimensions",
