@@ -1,0 +1,91 @@
+schema nyc_taxis {
+    document nyc_taxis {
+        # Financial fields (scaled_float -> float)
+        field surcharge type float {
+            indexing: summary | attribute
+        }
+        field mta_tax type float {
+            indexing: summary | attribute
+        }
+        field tolls_amount type float {
+            indexing: summary | attribute
+        }
+        field extra type float {
+            indexing: summary | attribute
+        }
+        field improvement_surcharge type float {
+            indexing: summary | attribute
+        }
+        field fare_amount type float {
+            indexing: summary | attribute
+        }
+        field ehail_fee type float {
+            indexing: summary | attribute
+        }
+        field total_amount type float {
+            indexing: summary | attribute
+        }
+        field trip_distance type float {
+            indexing: summary | attribute
+        }
+
+        # half_float -> float
+        field tip_amount type float {
+            indexing: summary | attribute
+        }
+
+        # integer
+        field passenger_count type int {
+            indexing: summary | attribute
+        }
+
+        # keyword -> string with attribute
+        field trip_type type string {
+            indexing: summary | attribute
+        }
+        field rate_code_id type string {
+            indexing: summary | attribute
+        }
+        field payment_type type string {
+            indexing: summary | attribute
+        }
+        field vendor_id type string {
+            indexing: summary | attribute
+        }
+        field store_and_fwd_flag type string {
+            indexing: summary | attribute
+        }
+        field cab_color type string {
+            indexing: summary | attribute
+        }
+
+        # text -> string with index
+        field vendor_name type string {
+            indexing: summary | index
+        }
+
+        # date -> long (epoch millis) for sorting/filtering
+        # We store as string for compatibility, attribute for sorting
+        field pickup_datetime type string {
+            indexing: summary | attribute
+        }
+        field dropoff_datetime type string {
+            indexing: summary | attribute
+        }
+
+        # geo_point -> position
+        field pickup_location type position {
+            indexing: summary | attribute
+        }
+        field dropoff_location type position {
+            indexing: summary | attribute
+        }
+    }
+
+    # Default ranking profile
+    rank-profile default {
+        first-phase {
+            expression: attribute(total_amount)
+        }
+    }
+}
