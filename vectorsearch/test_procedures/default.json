@@ -44,6 +44,14 @@
     ]
 },
 {
+    "name": "vespa-search-only",
+    "default": false,
+    "description": "Vespa-native vector search using pre-translated YQL queries. Skips DSL\u2192YQL translation in the Vespa runner so measured throughput reflects engine performance, not client overhead. Pair with --database-type=vespa.",
+    "schedule": [
+       {{ benchmark.collect(parts="common/vespa-search-only-schedule.json") }}
+    ]
+},
+{
     "name": "force-merge-index",
     "default": false,
     "description": "Force merge vector search index to improve search performance",
