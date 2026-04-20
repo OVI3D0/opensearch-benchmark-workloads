@@ -116,11 +116,17 @@ class VespaVectorSearchPartitionParamSource(VectorSearchPartitionParamSource):
     without rebuilding the body.
     """
 
+    def __init__(self, workload, params, query_params, **kwargs):
+        super().__init__(workload, params, query_params, **kwargs)
+        # "field" is set in the schedule operation but SearchPartitionParamSource
+        # doesn't forward it to query_params. Capture it from the raw params.
+        self._vector_field = params.get("field", "target_field")
+
     def _update_body_params(self, vector):
         body_params = self.query_params.get(self.PARAMS_NAME_BODY) or dict()
 
         index_name = self.query_params.get("index", "target_index")
-        field_name = self.query_params.get("field", "target_field")
+        field_name = self._vector_field
 
         if hasattr(vector, "tolist"):
             vector = vector.tolist()
