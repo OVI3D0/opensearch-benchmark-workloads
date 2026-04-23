@@ -2,6 +2,9 @@
     "settings": {
       "index": {
         "knn": true
+        {%- if refresh_interval is defined %}
+        ,"refresh_interval": "{{ refresh_interval }}"
+        {%- endif %}
         {%- if memory_optimized_search_enabled is defined and memory_optimized_search_enabled %}
         ,"knn.memory_optimized_search": true
         {%- endif %}
