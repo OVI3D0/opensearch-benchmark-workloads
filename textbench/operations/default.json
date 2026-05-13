@@ -1,0 +1,96 @@
+    {
+      "name": "index-append",
+      "operation-type": "bulk",
+      "bulk-size": {{bulk_size | default(5000)}},
+      "ingest-percentage": {{ingest_percentage | default(100)}}
+    },
+    {
+      "name": "q01-fetch-and-service-time-bounded",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'failed order') and ServiceName = 'checkout' and Timestamp >= '2025-09-23T00:00:00' and Timestamp < '2025-09-23T00:30:00' | sort - Timestamp | fields Timestamp, ServiceName, SeverityText, Body | head 100"
+      }
+    },
+    {
+      "name": "q02-fetch-complex-boolean-time-bounded",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('textbench')}} | where (match(Body, 'connection reset') or match(Body, 'timeout')) and ServiceName = 'frontend' and SeverityNumber >= 13 and Timestamp >= '2025-09-23T00:00:00' and Timestamp < '2025-09-23T00:30:00' | sort - Timestamp | fields Timestamp, ServiceName, SeverityText, Body | head 100"
+      }
+    },
+    {
+      "name": "q03-fetch-or-5-tokens-full-corpus",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'error exception failed timeout refused') | sort - Timestamp | fields Timestamp, ServiceName, SeverityText, Body | head 100"
+      }
+    },
+    {
+      "name": "q04-count-single-token",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'timeout') | stats count()"
+      }
+    },
+    {
+      "name": "q05-count-or-5-tokens",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'error exception failed timeout refused') | stats count()"
+      }
+    },
+    {
+      "name": "q06-group-by-service-count-or",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'exception timeout failed') | stats count() as cnt by ServiceName | sort - cnt"
+      }
+    },
+    {
+      "name": "q07-group-by-service-count-and",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'connection') and match(Body, 'reset') | stats count() as cnt by ServiceName | sort - cnt"
+      }
+    },
+    {
+      "name": "q08-date-histogram-single-token-service",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'payment') and ServiceName = 'checkout' | stats count() as cnt by span(Timestamp, 1h) as hour | sort hour"
+      }
+    },
+    {
+      "name": "q09-date-histogram-and-full-corpus",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'connection') and match(Body, 'reset') | stats count() as cnt by span(Timestamp, 1h) as hour | sort hour"
+      }
+    },
+    {
+      "name": "q10-group-by-service-distinct-traces",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'exception timeout failed') | stats count() as cnt, dc(TraceId) as unique_traces by ServiceName | sort - cnt"
+      }
+    }

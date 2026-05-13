@@ -1,0 +1,19 @@
+{
+  "name": "textbench",
+  "description": "Indexes the TextBench OTel logs dataset and runs OpenSearch PPL queries to benchmark full-text search and analytical performance on log data",
+  "default": true,
+  "schedule": [
+    {% with default_index_settings={}, index_name="textbench" %}
+    {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
+    {% endwith %}
+    {{ benchmark.collect(parts="ppl/textbench-schedule.json") }}
+  ]
+},
+{
+  "name": "textbench-search-only",
+  "description": "Runs only the PPL search queries against an already-indexed TextBench dataset (skip ingest)",
+  "default": false,
+  "schedule": [
+    {{ benchmark.collect(parts="ppl/textbench-schedule.json") }}
+  ]
+}
