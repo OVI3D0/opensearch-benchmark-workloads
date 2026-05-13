@@ -13,7 +13,7 @@
       "documents": [
         {
           "source-file": "{{ source_file | default('corpus/part_000.ndjson') }}",
-          "document-count": 1000000000
+          "document-count": {{ document_count | default(1000000000) }}
         }
       ]
     }
