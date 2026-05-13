@@ -10,7 +10,7 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'failed order') and ServiceName = 'checkout' and Timestamp >= '2025-09-23T00:00:00' and Timestamp < '2025-09-23T00:30:00' | sort - Timestamp | fields Timestamp, ServiceName, SeverityText, Body | head 100"
+        "query": "source = {{index_name | default('textbench')}} | where match(Body, 'failed order') and ServiceName = 'checkout' and Timestamp >= '2025-09-23 00:00:00' and Timestamp < '2025-09-23 00:30:00' | sort - Timestamp | fields Timestamp, ServiceName, SeverityText, Body | head 100"
       }
     },
     {
@@ -19,7 +19,7 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('textbench')}} | where (match(Body, 'connection reset') or match(Body, 'timeout')) and ServiceName = 'frontend' and SeverityNumber >= 13 and Timestamp >= '2025-09-23T00:00:00' and Timestamp < '2025-09-23T00:30:00' | sort - Timestamp | fields Timestamp, ServiceName, SeverityText, Body | head 100"
+        "query": "source = {{index_name | default('textbench')}} | where (match(Body, 'connection reset') or match(Body, 'timeout')) and ServiceName = 'frontend' and SeverityNumber >= 13 and Timestamp >= '2025-09-23 00:00:00' and Timestamp < '2025-09-23 00:30:00' | sort - Timestamp | fields Timestamp, ServiceName, SeverityText, Body | head 100"
       }
     },
     {
