@@ -1,0 +1,40 @@
+{
+  "operation": {
+    "operation-type": "put-settings",
+    "body": {
+      "transient": {
+        "plugins.ppl.syntax.legacy.preferred": "{{legacy_syntax | default("false")}}"
+      }
+    }
+  }
+},
+{
+  "operation": "ext-q0-multi-distinct-count",
+  "warmup-iterations": {{ warmup_iterations | default(10) | tojson }},
+  "iterations": {{ test_iterations | default(10) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "ext-q1-multi-distinct-count-2",
+  "warmup-iterations": {{ warmup_iterations | default(10) | tojson }},
+  "iterations": {{ test_iterations | default(10) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "ext-q2-groupby-multi-distinct",
+  "warmup-iterations": {{ warmup_iterations | default(10) | tojson }},
+  "iterations": {{ test_iterations | default(10) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "ext-q7-groupby-watchid-stats",
+  "warmup-iterations": {{ warmup_iterations | default(10) | tojson }},
+  "iterations": {{ test_iterations | default(10) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "ext-q13-sum-with-filter",
+  "warmup-iterations": {{ warmup_iterations | default(10) | tojson }},
+  "iterations": {{ test_iterations | default(10) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+}

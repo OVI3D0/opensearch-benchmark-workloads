@@ -396,4 +396,49 @@
       "body": {
         "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-15 00:00:00' and IsRefresh = 0 and DontCountHits = 0 | eval M = date_format(EventTime, '%Y-%m-%d %H:00:00') | stats count() as PageViews by M | sort M | head 10 from 1000"
       }
+    },
+    {
+      "name": "ext-q0-multi-distinct-count",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | stats distinct_count(SearchPhrase), distinct_count(MobilePhone), distinct_count(MobilePhoneModel)"
+      }
+    },
+    {
+      "name": "ext-q1-multi-distinct-count-2",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | stats distinct_count(HitColor), distinct_count(BrowserCountry), distinct_count(BrowserLanguage)"
+      }
+    },
+    {
+      "name": "ext-q2-groupby-multi-distinct",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | stats distinct_count(SocialNetwork), distinct_count(HitColor), distinct_count(BrowserLanguage), distinct_count(SocialAction) by BrowserCountry | sort - distinct_count(SocialNetwork) | head 10"
+      }
+    },
+    {
+      "name": "ext-q7-groupby-watchid-stats",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | stats min(ResolutionWidth) as wmin, max(ResolutionWidth) as wmax, sum(IsRefresh) as srefresh by WatchID | sort - WatchID | head 10"
+      }
+    },
+    {
+      "name": "ext-q13-sum-with-filter",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | where URL < 'zzzz' | stats sum(CounterID) as counter_id_sum"
+      }
     }

@@ -62,4 +62,12 @@
     },
     {{ benchmark.collect(parts="ppl/mustang-clickbench-schedule.json") }}
   ]
+},
+{
+  "name": "extended-ppl",
+  "description": "Extended ClickBench queries (subset convertible to PPL from https://github.com/apache/datafusion/tree/main/benchmarks/queries/clickbench/extended). Query-only — assumes data already ingested.",
+  "default": false,
+  "schedule": [
+    {{ benchmark.collect(parts="ppl/extended-clickbench-schedule.json") }}
+  ]
 }
