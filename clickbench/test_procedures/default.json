@@ -62,4 +62,26 @@
     },
     {{ benchmark.collect(parts="ppl/mustang-clickbench-schedule.json") }}
   ]
+},
+{
+  "name": "datafusion-ingest",
+  "description": "Ingest only: delete/create index, bulk index, flush. No queries.",
+  "default": false,
+  "schedule": [
+    {% with default_index_settings={}, index_name="clickbench" %}
+    {{ benchmark.collect(parts="../../common_operations/delete_index.json") }},
+    {{ benchmark.collect(parts="../../common_operations/create_index.json") }},
+    {{ benchmark.collect(parts="../../common_operations/check_cluster_health.json") }},
+    {{ benchmark.collect(parts="../../common_operations/index_append.json") }},
+    {% endwith %}
+    {{ benchmark.collect(parts="ppl/mustang-ingest-only.json") }}
+  ]
+},
+{
+  "name": "datafusion-queries",
+  "description": "Queries only: assumes data is already indexed. Runs all PPL queries.",
+  "default": false,
+  "schedule": [
+    {{ benchmark.collect(parts="ppl/mustang-clickbench-schedule.json") }}
+  ]
 }
