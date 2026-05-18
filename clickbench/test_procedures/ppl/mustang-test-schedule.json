@@ -1,0 +1,7 @@
+{
+  "operation": "q01-count-all",
+  "warmup-iterations": {{ q01_count_all_warmup_iterations or warmup_iterations | default(1) | tojson }},
+  "iterations": {{ q01_count_all_iterations or test_iterations | default(5) | tojson }},
+  "target-throughput": {{ q01_count_all_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q01_count_all_clients or search_clients | default(1) }}
+}
