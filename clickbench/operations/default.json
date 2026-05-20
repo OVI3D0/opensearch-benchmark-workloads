@@ -205,7 +205,7 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where like(URL, '%google%') and SearchPhrase != '' | stats count() as c by SearchPhrase | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where like(URL, '%google%') and SearchPhrase != '' | stats min(URL), count() as c by SearchPhrase | sort - c | head 10"
       }
     },
     {
@@ -214,7 +214,7 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where like(Title, '%Google%') and not like(URL, '%.google.%') and SearchPhrase != '' | stats count() as c, dc(UserID) by SearchPhrase | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where like(Title, '%Google%') and not like(URL, '%.google.%') and SearchPhrase != '' | stats min(URL), min(Title), count() as c, dc(UserID) by SearchPhrase | sort - c | head 10"
       }
     },
     {
@@ -394,7 +394,7 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-15 00:00:00' and IsRefresh = 0 and DontCountHits = 0 | eval M = date_format(EventTime, '%Y-%m-%d %H:00:00') | stats count() as PageViews by M | sort M | head 10 from 1000"
+        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-14 00:00:00' and EventDate <= '2013-07-15 00:00:00' and IsRefresh = 0 and DontCountHits = 0 | eval M = date_format(EventTime, '%Y-%m-%d %H:%i:00') | stats count() as PageViews by M | sort M | head 10 from 1000"
       }
     },
     {
