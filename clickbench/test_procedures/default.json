@@ -96,7 +96,7 @@
   "description": "Test query only: runs one query (q01). Assumes data already ingested.",
   "default": false,
   "schedule": [
-    {{ benchmark.collect(parts="ppl/mustang-test-schedule.json") }}
+    {{ benchmark.collect(parts="mustang/mustang-test-schedule.json") }}
   ]
 },
 {
