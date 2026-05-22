@@ -68,28 +68,19 @@
   "description": "Ingest only: delete/create index, bulk index, flush. No queries.",
   "default": false,
   "schedule": [
-    {
-      "operation": "delete-index"
-    },
-    {
-      "operation": {
-        "operation-type": "create-index"
-      }
-    },
-    {
-      "operation": {
-        "operation-type": "cluster-health",
-        "request-params": {
-          "wait_for_status": "green",
-          "wait_for_no_relocating_shards": "true"
-        },
-        "retry-until-success": true
-      }
-    },
-    {% with index_name="clickbench" %}
+    {% with default_index_settings={}, index_name="clickbench" %}
+    {{ benchmark.collect(parts="../../common_operations/delete_index.json") }},
+    {{ benchmark.collect(parts="../../common_operations/create_index.json") }},
+    {{ benchmark.collect(parts="../../common_operations/check_cluster_health.json") }},
     {{ benchmark.collect(parts="../../common_operations/index_append.json") }},
     {% endwith %}
-    {{ benchmark.collect(parts="ppl/mustang-ingest-only.json") }}
+    {
+      "operation": "flush-index",
+      "warmup-iterations": {{ flush_index_warmup_iterations or warmup_iterations | default(1) | tojson }},
+      "iterations": {{ flush_index_iterations or test_iterations | default(1) | tojson }},
+      "target-throughput": {{ flush_index_target_throughput or target_throughput | default(1) | tojson }},
+      "clients": {{ flush_index_clients or search_clients | default(1) }}
+    }
   ]
 },
 {
@@ -97,22 +88,7 @@
   "description": "Queries only: assumes data is already indexed. Runs all PPL queries.",
   "default": false,
   "schedule": [
-    {{ benchmark.collect(parts="ppl/mustang-clickbench-schedule.json") }}
-  ]
-},
-{
-  "name": "datafusion-test",
-  "description": "Fast pipeline validation: ingest 0.1% + one query. Idempotent.",
-  "default": false,
-  "schedule": [
-    {% with default_index_settings={}, index_name="clickbench" %}
-    {{ benchmark.collect(parts="../../common_operations/delete_index.json") }},
-    {{ benchmark.collect(parts="../../common_operations/create_index.json") }},
-    {{ benchmark.collect(parts="../../common_operations/check_cluster_health.json") }},
-    {{ benchmark.collect(parts="../../common_operations/index_append.json") }},
-    {% endwith %}
-    {{ benchmark.collect(parts="ppl/mustang-ingest-only.json") }},
-    {{ benchmark.collect(parts="ppl/mustang-test-schedule.json") }}
+    {{ benchmark.collect(parts="mustang/mustang-query-only.json") }}
   ]
 },
 {
