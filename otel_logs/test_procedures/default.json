@@ -13,4 +13,29 @@
   "schedule": [
     {{ benchmark.collect(parts="ppl/otel-logs-schedule.json") }}
   ]
+},
+{
+  "name": "otel-logs-random-mix",
+  "description": "Sustained random PPL query mix at a TPS target. Each request picks one of the 39 PPL queries uniformly at random. Use for chaos testing or steady-state load.",
+  "default": false,
+  "schedule": [
+    {
+      "operation": "put-settings",
+      "iterations": 1,
+      "warmup-iterations": 0,
+      "clients": 1
+    },
+    {
+      "operation": {
+        "name": "random-ppl-query",
+        "operation-type": "raw-request",
+        "param-source": "random-ppl-mix",
+        "index_name": "{{ index_name | default('otel_logs') }}"
+      },
+      "warmup-time-period": {{ warmup_time_period | default(60) | tojson }},
+      "time-period": {{ time_period | default(1800) | tojson }},
+      "target-throughput": {{ target_throughput | default(10) | tojson }},
+      "clients": {{ search_clients | default(4) | tojson }}
+    }
+  ]
 }

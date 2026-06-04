@@ -60,8 +60,26 @@ opensearch-benchmark run \
 
 | Name | Default | What it does |
 |---|---|---|
-| `otel-logs-ppl` | yes | Full run: 20 warmup + 20 measured iterations of each of 39 queries. |
+| `otel-logs-ppl` | yes | Full run: 20 warmup + 20 measured iterations of each of 39 queries. Per-query stats. |
 | `otel-logs-ppl-test` | no | Lightweight: same schedule, intended for use with `test_iterations:1`. |
+| `otel-logs-random-mix` | no | Sustained random query mix at a TPS target. Each request picks one of the 39 PPL queries uniformly at random. Aggregate stats only (no per-query breakdown). For chaos testing or steady-state load. |
+
+### Random-mix parameters
+
+| Param | Default | What it controls |
+|---|---|---|
+| `warmup_time_period` | `60` | Warmup seconds before measurement starts. |
+| `time_period` | `1800` | Measured run duration in seconds. |
+| `target_throughput` | `10` | Aggregate ops/sec target across all clients. |
+| `search_clients` | `4` | Concurrent clients firing the random mix. |
+
+Random-mix usage:
+```bash
+opensearch-benchmark run --workload=otel_logs \
+  --test-procedure=otel-logs-random-mix \
+  --workload-params='{"index_name":"otel-logs-ec2-*","time_period":3600,"target_throughput":20,"search_clients":8}' \
+  --pipeline=benchmark-only --target-hosts=...
+```
 
 ## Source of queries
 
