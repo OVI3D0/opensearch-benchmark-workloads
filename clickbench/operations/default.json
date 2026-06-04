@@ -205,7 +205,7 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where like(URL, '%google%') and SearchPhrase != '' | stats count() as c by SearchPhrase | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where like(URL, '%google%') and SearchPhrase != '' | stats min(URL), count() as c by SearchPhrase | sort - c | head 10"
       }
     },
     {
@@ -214,7 +214,7 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where like(Title, '%Google%') and not like(URL, '%.google.%') and SearchPhrase != '' | stats count() as c, dc(UserID) by SearchPhrase | sort - c | head 10"
+        "query": "source = {{index_name | default('clickbench')}} | where like(Title, '%Google%') and not like(URL, '%.google.%') and SearchPhrase != '' | stats min(URL), min(Title), count() as c, dc(UserID) by SearchPhrase | sort - c | head 10"
       }
     },
     {
@@ -268,7 +268,7 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | Referer != '' | eval k = regexp_replace(Referer, '^https?://(?:www\\.)?([^/]+)/.*$', '\\1') | stats avg(length(Referer)) as l, count() as c, min(Referer) by k | where c > 100000 | sort - l | head 25"
+        "query": "source = {{index_name | default('clickbench')}} | where Referer != '' | eval k = regexp_replace(Referer, '^https?://(?:www\\.)?([^/]+)/.*$', '\\1') | stats avg(length(Referer)) as l, count() as c, min(Referer) by k | where c > 100000 | sort - l | head 25"
       }
     },
     {
@@ -394,6 +394,87 @@
       "path": "/_plugins/_ppl",
       "method": "POST",
       "body": {
-        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-01 00:00:00' and EventDate <= '2013-07-15 00:00:00' and IsRefresh = 0 and DontCountHits = 0 | eval M = date_format(EventTime, '%Y-%m-%d %H:00:00') | stats count() as PageViews by M | sort M | head 10 from 1000"
+        "query": "source = {{index_name | default('clickbench')}} | where CounterID = 62 and EventDate >= '2013-07-14 00:00:00' and EventDate <= '2013-07-15 00:00:00' and IsRefresh = 0 and DontCountHits = 0 | eval M = date_format(EventTime, '%Y-%m-%d %H:%i:00') | stats count() as PageViews by M | sort M | head 10 from 1000"
+      }
+    },
+    {
+      "name": "ext-q0-multi-distinct-count",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | stats distinct_count(SearchPhrase), distinct_count(MobilePhone), distinct_count(MobilePhoneModel)"
+      }
+    },
+    {
+      "name": "ext-q1-multi-distinct-count-2",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | stats distinct_count(HitColor), distinct_count(BrowserCountry), distinct_count(BrowserLanguage)"
+      }
+    },
+    {
+      "name": "ext-q2-groupby-multi-distinct",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | stats distinct_count(SocialNetwork), distinct_count(HitColor), distinct_count(BrowserLanguage), distinct_count(SocialAction) by BrowserCountry | sort - distinct_count(SocialNetwork) | head 10"
+      }
+    },
+    {
+      "name": "ext-q7-groupby-watchid-stats",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | stats min(ResolutionWidth) as wmin, max(ResolutionWidth) as wmax, sum(IsRefresh) as srefresh by WatchID | sort - WatchID | head 10"
+      }
+    },
+    {
+      "name": "ext-q13-sum-with-filter",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | where URL < 'zzzz' | stats sum(CounterID) as counter_id_sum"
+      }
+    },
+    {
+      "name": "ext-q3-stddev-var-groupby",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | stats count() as c, avg(Age) as avg_age, avg(ParamPrice) as avg_price, stddev_samp(ParamPrice) as s, var_samp(ParamPrice) as v by SocialSourceNetworkID, RegionID | where s is not null | sort - s | head 10"
+      }
+    },
+    {
+      "name": "ext-q4-median-groupby-having",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | where JavaEnable = 0 | stats count() as c, min(ResponseStartTiming) as tmin, median(ResponseStartTiming) as tmed, max(ResponseStartTiming) as tmax by ClientIP, WatchID | where c > 1 | sort - tmed | head 10"
+      }
+    },
+    {
+      "name": "ext-q5-percentile-groupby-having",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | where JavaEnable = 0 | stats count() as c, min(ResponseStartTiming) as tmin, percentile(ResponseStartTiming, 95) as tp95, max(ResponseStartTiming) as tmax by ClientIP, WatchID | where c > 1 | sort - tp95 | head 10"
+      }
+    },
+    {
+      "name": "ext-q8-timestamp-diff-groupby",
+      "operation-type": "raw-request",
+      "path": "/_plugins/_ppl",
+      "method": "POST",
+      "body": {
+        "query": "source = {{index_name | default('clickbench')}} | stats avg(ResponseEndTiming - ResponseStartTiming) as avg_response_time, avg(ResponseEndTiming - ConnectTiming) as avg_latency by RegionID, UserAgent, OS | sort - avg_latency | head 10"
       }
     }
