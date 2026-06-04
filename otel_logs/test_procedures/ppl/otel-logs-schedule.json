@@ -1,0 +1,279 @@
+{
+  "operation": "put-settings",
+  "iterations": 1,
+  "warmup-iterations": 0,
+  "clients": 1
+},
+{
+  "operation": "q01-count-all",
+  "warmup-iterations": {{ q01_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q01_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q01_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q01_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q02-count-by-severity",
+  "warmup-iterations": {{ q02_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q02_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q02_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q02_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q03-count-by-service",
+  "warmup-iterations": {{ q03_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q03_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q03_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q03_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q04-count-by-region",
+  "warmup-iterations": {{ q04_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q04_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q04_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q04_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q05-where-severity-like-error",
+  "warmup-iterations": {{ q05_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q05_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q05_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q05_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q06-count-by-method-status",
+  "warmup-iterations": {{ q06_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q06_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q06_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q06_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q07-where-status-5xx",
+  "warmup-iterations": {{ q07_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q07_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q07_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q07_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q08-count-by-namespace",
+  "warmup-iterations": {{ q08_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q08_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q08_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q08_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q09-count-by-sdk-language",
+  "warmup-iterations": {{ q09_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q09_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q09_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q09_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q10-count-by-severity-service",
+  "warmup-iterations": {{ q10_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q10_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q10_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q10_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q11-agg-avg-max-min",
+  "warmup-iterations": {{ q11_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q11_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q11_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q11_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q12-distinct-services-hosts-pods",
+  "warmup-iterations": {{ q12_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q12_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q12_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q12_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q13-stats-by-span-10s",
+  "warmup-iterations": {{ q13_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q13_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q13_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q13_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q14-stats-by-span-60s",
+  "warmup-iterations": {{ q14_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q14_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q14_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q14_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q15-multi-agg-by-service",
+  "warmup-iterations": {{ q15_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q15_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q15_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q15_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q16-sum-by-service",
+  "warmup-iterations": {{ q16_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q16_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q16_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q16_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q17-agg-by-sdk-language",
+  "warmup-iterations": {{ q17_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q17_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q17_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q17_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q18-dc-traces-by-service",
+  "warmup-iterations": {{ q18_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q18_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q18_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q18_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q19-dedup-service",
+  "warmup-iterations": {{ q19_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q19_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q19_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q19_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q20-dedup-severity",
+  "warmup-iterations": {{ q20_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q20_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q20_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q20_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q21-top-services",
+  "warmup-iterations": {{ q21_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q21_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q21_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q21_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q22-rare-services",
+  "warmup-iterations": {{ q22_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q22_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q22_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q22_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q23-eval-error-by-service",
+  "warmup-iterations": {{ q23_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q23_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q23_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q23_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q24-eval-5xx-by-service",
+  "warmup-iterations": {{ q24_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q24_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q24_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q24_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q25-eval-error-rate",
+  "warmup-iterations": {{ q25_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q25_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q25_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q25_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q26-eval-severity-band",
+  "warmup-iterations": {{ q26_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q26_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q26_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q26_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q27-where-prod-namespace",
+  "warmup-iterations": {{ q27_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q27_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q27_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q27_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q28-where-severity-warn",
+  "warmup-iterations": {{ q28_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q28_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q28_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q28_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q29-where-5xx-or-error",
+  "warmup-iterations": {{ q29_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q29_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q29_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q29_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q30-head-3-services",
+  "warmup-iterations": {{ q30_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q30_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q30_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q30_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q31-head-5-fields",
+  "warmup-iterations": {{ q31_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q31_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q31_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q31_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q32-where-severity-eq-error",
+  "warmup-iterations": {{ q32_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q32_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q32_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q32_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q33-head-0",
+  "warmup-iterations": {{ q33_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q33_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q33_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q33_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q34-double-where",
+  "warmup-iterations": {{ q34_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q34_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q34_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q34_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q35-sort-time-head-5",
+  "warmup-iterations": {{ q35_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q35_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q35_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q35_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q36-sort-time-head-1",
+  "warmup-iterations": {{ q36_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q36_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q36_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q36_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q37-distinct-count-services",
+  "warmup-iterations": {{ q37_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q37_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q37_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q37_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q38-dedup-fields-sort",
+  "warmup-iterations": {{ q38_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q38_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q38_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q38_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q39-dedup-multi",
+  "warmup-iterations": {{ q39_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ q39_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ q39_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q39_clients or search_clients | default(1) }}
+}

@@ -1,0 +1,363 @@
+
+  {
+    "name": "put-settings",
+    "operation-type": "raw-request",
+    "method": "PUT",
+    "path": "/_cluster/settings",
+    "body": {
+      "transient": {
+        "plugins.ppl.syntax.legacy.preferred": "{{legacy_syntax | default("false")}}"
+      }
+    }
+  },
+  {
+    "name": "q01-count-all",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count()"
+    }
+  },
+  {
+    "name": "q02-count-by-severity",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by severityText | sort - c"
+    }
+  },
+  {
+    "name": "q03-count-by-service",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by serviceName | sort - c"
+    }
+  },
+  {
+    "name": "q04-count-by-region",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by `resource.cloud.region` | sort - c"
+    }
+  },
+  {
+    "name": "q05-where-severity-like-error",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | where severityText like 'ERROR' | stats count()"
+    }
+  },
+  {
+    "name": "q06-count-by-method-status",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by `log.http.method`, `log.http.status_code` | sort - c"
+    }
+  },
+  {
+    "name": "q07-where-status-5xx",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | where `log.http.status_code` >= 500 | stats count() as c by `log.http.status_code` | sort - c"
+    }
+  },
+  {
+    "name": "q08-count-by-namespace",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by `resource.k8s.namespace.name` | sort - c"
+    }
+  },
+  {
+    "name": "q09-count-by-sdk-language",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by `resource.telemetry.sdk.language` | sort - c"
+    }
+  },
+  {
+    "name": "q10-count-by-severity-service",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by severityText, serviceName | sort - c"
+    }
+  },
+  {
+    "name": "q11-agg-avg-max-min",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats avg(severityNumber) as avg_sev, max(`log.http.status_code`) as max_status, min(time) as min_time"
+    }
+  },
+  {
+    "name": "q12-distinct-services-hosts-pods",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats dc(serviceName) as services, dc(`resource.host.name`) as hosts, dc(`resource.k8s.pod.name`) as pods"
+    }
+  },
+  {
+    "name": "q13-stats-by-span-10s",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() by span(time, 10000) | sort + `span(time,10000)`"
+    }
+  },
+  {
+    "name": "q14-stats-by-span-60s",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by span(time, 60000)"
+    }
+  },
+  {
+    "name": "q15-multi-agg-by-service",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c, avg(severityNumber) as avg_sev, max(severityNumber) as max_sev, min(severityNumber) as min_sev by serviceName | sort - c"
+    }
+  },
+  {
+    "name": "q16-sum-by-service",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats sum(severityNumber) as sum_sev by serviceName | sort - sum_sev"
+    }
+  },
+  {
+    "name": "q17-agg-by-sdk-language",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c, avg(severityNumber) as avg_sev by `resource.telemetry.sdk.language` | sort - c"
+    }
+  },
+  {
+    "name": "q18-dc-traces-by-service",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c, dc(traceId) as unique_traces by serviceName | sort - c"
+    }
+  },
+  {
+    "name": "q19-dedup-service",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | dedup serviceName | stats count()"
+    }
+  },
+  {
+    "name": "q20-dedup-severity",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | dedup severityText | stats count()"
+    }
+  },
+  {
+    "name": "q21-top-services",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | top 3 serviceName"
+    }
+  },
+  {
+    "name": "q22-rare-services",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | rare 3 serviceName"
+    }
+  },
+  {
+    "name": "q23-eval-error-by-service",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | eval is_error = case(severityNumber >= 17, 1 else 0) | stats sum(is_error) as errors by serviceName | sort - errors"
+    }
+  },
+  {
+    "name": "q24-eval-5xx-by-service",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | eval is_5xx = case(`log.http.status_code` >= 500, 1 else 0) | stats sum(is_5xx) as server_errors by serviceName | sort - server_errors"
+    }
+  },
+  {
+    "name": "q25-eval-error-rate",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | eval is_5xx = case(`log.http.status_code` >= 500, 1 else 0) | stats sum(is_5xx) as bad, count() as total | eval error_rate = round(bad * 100.0 / total, 2)"
+    }
+  },
+  {
+    "name": "q26-eval-severity-band",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | eval sev_band = case(severityNumber <= 5, 'low', severityNumber <= 13, 'mid' else 'high') | stats count() as c by sev_band | sort - c"
+    }
+  },
+  {
+    "name": "q27-where-prod-namespace",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | where `resource.k8s.namespace.name` = 'prod' | stats count() as c by serviceName | sort - c"
+    }
+  },
+  {
+    "name": "q28-where-severity-warn",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | where severityNumber >= 13 | stats count() as c by serviceName | sort - c"
+    }
+  },
+  {
+    "name": "q29-where-5xx-or-error",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | where `log.http.status_code` >= 500 or severityNumber >= 17 | stats count()"
+    }
+  },
+  {
+    "name": "q30-head-3-services",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by serviceName | sort + serviceName | head 3"
+    }
+  },
+  {
+    "name": "q31-head-5-fields",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by serviceName, severityText | sort - c | head 5 | fields c, serviceName"
+    }
+  },
+  {
+    "name": "q32-where-severity-eq-error",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | where severityText = 'ERROR' | stats count()"
+    }
+  },
+  {
+    "name": "q33-head-0",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats count() as c by serviceName | head 0"
+    }
+  },
+  {
+    "name": "q34-double-where",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | where severityNumber >= 13 | where `log.http.status_code` >= 500 | stats count()"
+    }
+  },
+  {
+    "name": "q35-sort-time-head-5",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | sort - time | head 5 | fields time, serviceName"
+    }
+  },
+  {
+    "name": "q36-sort-time-head-1",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | sort - time | head 1 | fields time, serviceName, severityText"
+    }
+  },
+  {
+    "name": "q37-distinct-count-services",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | stats distinct_count(serviceName) as services"
+    }
+  },
+  {
+    "name": "q38-dedup-fields-sort",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | dedup serviceName | fields serviceName | sort + serviceName"
+    }
+  },
+  {
+    "name": "q39-dedup-multi",
+    "operation-type": "raw-request",
+    "method": "POST",
+    "path": "/_plugins/_ppl",
+    "body": {
+      "query": "source={{index_name | default('otel_logs')}} | dedup serviceName, `resource.cloud.region` | stats count()"
+    }
+  }

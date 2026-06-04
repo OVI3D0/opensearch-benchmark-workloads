@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "description": "Search-only OTel logs PPL benchmark. Runs 39 PPL queries against a pre-existing OTel-shaped logs index (default name 'otel_logs', overridable via index_name workload parameter). No ingestion happens — load the data yourself before running this workload.",
+  "indices": [
+    {
+      "name": "{{ index_name | default('otel_logs') }}"
+    }
+  ],
+  "operations": [
+    {{ benchmark.collect(parts="operations/*.json") }}
+  ],
+  "test_procedures": [
+    {{ benchmark.collect(parts="test_procedures/*.json") }}
+  ]
+}

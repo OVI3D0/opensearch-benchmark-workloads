@@ -1,0 +1,16 @@
+{
+  "name": "otel-logs-ppl",
+  "description": "Runs 39 PPL queries against an OTel logs index. Search-only.",
+  "default": true,
+  "schedule": [
+    {{ benchmark.collect(parts="ppl/otel-logs-schedule.json") }}
+  ]
+},
+{
+  "name": "otel-logs-ppl-test",
+  "description": "Lightweight smoke test — single iteration of each query for validation.",
+  "default": false,
+  "schedule": [
+    {{ benchmark.collect(parts="ppl/otel-logs-schedule.json") }}
+  ]
+}
