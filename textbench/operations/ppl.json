@@ -1,0 +1,108 @@
+{
+  "name": "q01-count-all",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | stats count()"
+  }
+},
+{
+  "name": "q02-count-by-severity",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | stats count() as c by SeverityText | sort - c"
+  }
+},
+{
+  "name": "q03-count-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | stats count() as c by ServiceName | sort - c"
+  }
+},
+{
+  "name": "q04-where-severity-gte-17",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | where SeverityNumber >= 17 | stats count()"
+  }
+},
+{
+  "name": "q05-where-severity-eq-error",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | where SeverityText = 'ERROR' | stats count()"
+  }
+},
+{
+  "name": "q06-distinct-count-services",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | stats distinct_count(ServiceName)"
+  }
+},
+{
+  "name": "q07-min-max-avg-severity",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | stats min(SeverityNumber), max(SeverityNumber), avg(SeverityNumber)"
+  }
+},
+{
+  "name": "q08-count-by-severity-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | stats count() by SeverityText, ServiceName | head 50"
+  }
+},
+{
+  "name": "q09-sort-time-head-10",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | sort - Timestamp | head 10"
+  }
+},
+{
+  "name": "q10-count-by-scope",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | stats count() by ScopeName"
+  }
+},
+{
+  "name": "q11-where-positive-severity-by-text",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | where SeverityNumber > 0 | stats count() as c by SeverityText | sort - c"
+  }
+},
+{
+  "name": "q12-body-like-error",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{index_name | default('textbench-*')}} | where like(Body, '%error%') | stats count()"
+  }
+}

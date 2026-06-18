@@ -1,7 +1,6 @@
 import os
 import sys
 
-# Make the sibling 'common/' importable when OSB loads this plugin.
 _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
@@ -12,5 +11,5 @@ from common.random_query_param_source import build_param_source
 def register(registry):
     registry.register_param_source(
         "random-ppl-mix",
-        build_param_source(workload_dir=__file__, default_index="big5"),
+        build_param_source(workload_dir=__file__, default_index="textbench-*"),
     )

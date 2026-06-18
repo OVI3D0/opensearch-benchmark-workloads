@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "description": "Search-only PPL benchmark against a textbench-* style OTel logs index. Targets the schema used by mustang-10-tb-pg-1: ServiceName, SeverityText, SeverityNumber, Body, Timestamp. No ingestion happens — load the data yourself.",
+  "indices": [
+    {
+      "name": "{{ index_name | default('textbench-*') }}"
+    }
+  ],
+  "operations": [
+    {{ benchmark.collect(parts="operations/*.json") }}
+  ],
+  "test_procedures": [
+    {{ benchmark.collect(parts="test_procedures/*.json") }}
+  ]
+}

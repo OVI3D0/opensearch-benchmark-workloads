@@ -1,0 +1,43 @@
+{
+  "name": "redline-ppl-random-mix",
+  "description": "Sustained random-mix PPL load for redline / ramp-up testing. Each client picks one of textbench's PPL queries uniformly at random per request. Use search_clients to ramp; tune target_throughput to find redline.",
+  "default": true,
+  "schedule": [
+    {
+      "operation": {
+        "name": "random-ppl-query",
+        "operation-type": "raw-request",
+        "param-source": "random-ppl-mix",
+        "operations_path": "operations/ppl.json",
+        "filter_paths": ["/_plugins/_ppl"],
+        "index_name": "{{ index_name | default('textbench-*') }}"
+      },
+      "warmup-time-period": {{ warmup_time_period | default(60) | tojson }},
+      "time-period": {{ time_period | default(600) | tojson }},
+      "target-throughput": {{ target_throughput | default(1000) | tojson }},
+      "clients": {{ search_clients | default(100) | tojson }}
+    }
+  ]
+},
+{
+  "name": "smoke",
+  "description": "Run each PPL op once for plumbing validation.",
+  "default": false,
+  "schedule": [
+    {
+      "operation": "q01-count-all",
+      "iterations": 1,
+      "warmup-iterations": 0
+    },
+    {
+      "operation": "q02-count-by-severity",
+      "iterations": 1,
+      "warmup-iterations": 0
+    },
+    {
+      "operation": "q03-count-by-service",
+      "iterations": 1,
+      "warmup-iterations": 0
+    }
+  ]
+}
