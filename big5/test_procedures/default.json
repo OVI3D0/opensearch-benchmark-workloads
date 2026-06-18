@@ -72,4 +72,23 @@
     {% endwith %}
     {{ benchmark.collect(parts="intra_segment/intra-segment-schedule.json") }}
   ]
+},
+{
+  "name": "redline-ppl-random-mix",
+  "description": "Sustained random-mix PPL load for redline / ramp-up testing. Each client picks one of the workload's PPL queries uniformly at random per request. Aggregate stats only (no per-query breakdown). Set search_clients high to ramp; tune target_throughput to find the engine's redline.",
+  "default": false,
+  "schedule": [
+    {
+      "operation": {
+        "name": "random-ppl-query",
+        "operation-type": "raw-request",
+        "param-source": "random-ppl-mix",
+        "index_name": "{{ index_name | default('big5') }}"
+      },
+      "warmup-time-period": {{ warmup_time_period | default(60) | tojson }},
+      "time-period": {{ time_period | default(600) | tojson }},
+      "target-throughput": {{ target_throughput | default(1000) | tojson }},
+      "clients": {{ search_clients | default(100) | tojson }}
+    }
+  ]
 }
