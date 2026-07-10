@@ -1,0 +1,30 @@
+{
+  "name": "textbench-clickhouse",
+  "description": "Indexes the TextBench OTel logs dataset via CREATE TABLE + INSERT and runs the ClickHouse-native SQL queries. Pair with --database-type=clickhouse and --workload-params '{\"index_body\": \"clickhouse/index.json\"}'. Note: substring / multiSearchAny replace BM25 match(), so hit counts diverge from the OS procedure -- see textbench/operations/clickhouse.json header.",
+  "default": false,
+  "schedule": [
+    {% with default_index_settings={}, index_name="textbench", index_body="clickhouse/index.json" %}
+    {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
+    {% endwith %}
+    {{ benchmark.collect(parts="clickhouse/textbench-schedule.json") }}
+  ]
+},
+{
+  "name": "textbench",
+  "description": "Indexes the TextBench OTel logs dataset and runs OpenSearch PPL queries to benchmark full-text search and analytical performance on log data",
+  "default": true,
+  "schedule": [
+    {% with default_index_settings={}, index_name="textbench" %}
+    {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
+    {% endwith %}
+    {{ benchmark.collect(parts="ppl/textbench-schedule.json") }}
+  ]
+},
+{
+  "name": "textbench-search-only",
+  "description": "Runs only the PPL search queries against an already-indexed TextBench dataset (skip ingest)",
+  "default": false,
+  "schedule": [
+    {{ benchmark.collect(parts="ppl/textbench-schedule.json") }}
+  ]
+}

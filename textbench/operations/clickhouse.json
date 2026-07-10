@@ -1,0 +1,70 @@
+    {
+      "name": "q01-clickhouse-fetch-and-service-time-bounded",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT Timestamp, ServiceName, SeverityText, Body FROM textbench WHERE positionCaseInsensitive(Body, 'failed order') > 0 AND ServiceName = 'checkout' AND Timestamp >= toDateTime64('2025-09-23 00:00:00.000', 3) AND Timestamp < toDateTime64('2025-09-23 00:30:00.000', 3) ORDER BY Timestamp DESC LIMIT 100;"
+      }
+    },
+    {
+      "name": "q02-clickhouse-fetch-complex-boolean-time-bounded",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT Timestamp, ServiceName, SeverityText, Body FROM textbench WHERE (positionCaseInsensitive(Body, 'connection reset') > 0 OR positionCaseInsensitive(Body, 'timeout') > 0) AND ServiceName = 'frontend' AND SeverityNumber >= 13 AND Timestamp >= toDateTime64('2025-09-23 00:00:00.000', 3) AND Timestamp < toDateTime64('2025-09-23 00:30:00.000', 3) ORDER BY Timestamp DESC LIMIT 100;"
+      }
+    },
+    {
+      "name": "q03-clickhouse-fetch-or-5-tokens-full-corpus",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT Timestamp, ServiceName, SeverityText, Body FROM textbench WHERE multiSearchAnyCaseInsensitive(Body, ['error', 'exception', 'failed', 'timeout', 'refused']) = 1 ORDER BY Timestamp DESC LIMIT 100;"
+      }
+    },
+    {
+      "name": "q04-clickhouse-count-single-token",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT COUNT(*) FROM textbench WHERE positionCaseInsensitive(Body, 'timeout') > 0;"
+      }
+    },
+    {
+      "name": "q05-clickhouse-count-or-5-tokens",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT COUNT(*) FROM textbench WHERE multiSearchAnyCaseInsensitive(Body, ['error', 'exception', 'failed', 'timeout', 'refused']) = 1;"
+      }
+    },
+    {
+      "name": "q06-clickhouse-group-by-service-count-or",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT ServiceName, COUNT(*) AS cnt FROM textbench WHERE multiSearchAnyCaseInsensitive(Body, ['exception', 'timeout', 'failed']) = 1 GROUP BY ServiceName ORDER BY cnt DESC;"
+      }
+    },
+    {
+      "name": "q07-clickhouse-group-by-service-count-and",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT ServiceName, COUNT(*) AS cnt FROM textbench WHERE positionCaseInsensitive(Body, 'connection') > 0 AND positionCaseInsensitive(Body, 'reset') > 0 GROUP BY ServiceName ORDER BY cnt DESC;"
+      }
+    },
+    {
+      "name": "q08-clickhouse-date-histogram-single-token-service",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT toStartOfHour(Timestamp) AS hour, COUNT(*) AS cnt FROM textbench WHERE positionCaseInsensitive(Body, 'payment') > 0 AND ServiceName = 'checkout' GROUP BY hour ORDER BY hour;"
+      }
+    },
+    {
+      "name": "q09-clickhouse-date-histogram-and-full-corpus",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT toStartOfHour(Timestamp) AS hour, COUNT(*) AS cnt FROM textbench WHERE positionCaseInsensitive(Body, 'connection') > 0 AND positionCaseInsensitive(Body, 'reset') > 0 GROUP BY hour ORDER BY hour;"
+      }
+    },
+    {
+      "name": "q10-clickhouse-group-by-service-distinct-traces",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT ServiceName, COUNT(*) AS cnt, uniqExact(TraceId) AS unique_traces FROM textbench WHERE multiSearchAnyCaseInsensitive(Body, ['exception', 'timeout', 'failed']) = 1 GROUP BY ServiceName ORDER BY cnt DESC;"
+      }
+    }

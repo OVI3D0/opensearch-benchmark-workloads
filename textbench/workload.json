@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "description": "TextBench workload based on ClickHouse/TextBench OTel logs dataset for full-text search benchmarking (1B documents)",
+  "indices": [
+    {
+      "name": "{{ index_name | default('textbench') }}",
+      "body": "{{ index_body | default('index.json') }}"
+    }
+  ],
+  "corpora": [
+    {
+      "name": "textbench",
+      "documents": [
+        {
+          "source-file": "{{ source_file | default('corpus/part_000.ndjson') }}",
+          "document-count": {{ document_count | default(1000000000) }}
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {{ benchmark.collect(parts="operations/*.json") }}
+  ],
+  "test_procedures": [
+    {{ benchmark.collect(parts="test_procedures/*.json") }}
+  ]
+}

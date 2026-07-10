@@ -1,0 +1,70 @@
+{
+  "operation": "q01-fetch-and-service-time-bounded",
+  "warmup-iterations": {{ q01_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ q01_iterations or test_iterations | default(50) | tojson }},
+  "target-throughput": {{ q01_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q01_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q02-fetch-complex-boolean-time-bounded",
+  "warmup-iterations": {{ q02_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ q02_iterations or test_iterations | default(50) | tojson }},
+  "target-throughput": {{ q02_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q02_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q03-fetch-or-5-tokens-full-corpus",
+  "warmup-iterations": {{ q03_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ q03_iterations or test_iterations | default(50) | tojson }},
+  "target-throughput": {{ q03_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q03_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q04-count-single-token",
+  "warmup-iterations": {{ q04_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ q04_iterations or test_iterations | default(50) | tojson }},
+  "target-throughput": {{ q04_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q04_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q05-count-or-5-tokens",
+  "warmup-iterations": {{ q05_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ q05_iterations or test_iterations | default(50) | tojson }},
+  "target-throughput": {{ q05_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q05_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q06-group-by-service-count-or",
+  "warmup-iterations": {{ q06_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ q06_iterations or test_iterations | default(50) | tojson }},
+  "target-throughput": {{ q06_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q06_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q07-group-by-service-count-and",
+  "warmup-iterations": {{ q07_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ q07_iterations or test_iterations | default(50) | tojson }},
+  "target-throughput": {{ q07_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q07_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q08-date-histogram-single-token-service",
+  "warmup-iterations": {{ q08_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ q08_iterations or test_iterations | default(50) | tojson }},
+  "target-throughput": {{ q08_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q08_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q09-date-histogram-and-full-corpus",
+  "warmup-iterations": {{ q09_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ q09_iterations or test_iterations | default(50) | tojson }},
+  "target-throughput": {{ q09_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q09_clients or search_clients | default(1) }}
+},
+{
+  "operation": "q10-group-by-service-distinct-traces",
+  "warmup-iterations": {{ q10_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ q10_iterations or test_iterations | default(50) | tojson }},
+  "target-throughput": {{ q10_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ q10_clients or search_clients | default(1) }}
+}
