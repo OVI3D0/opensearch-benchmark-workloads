@@ -1,0 +1,105 @@
+    {
+      "name": "match-all-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT COUNT(*) FROM http_logs;"
+      }
+    },
+    {
+      "name": "term-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT COUNT(*) FROM http_logs WHERE request = 'GET / HTTP/1.0';"
+      }
+    },
+    {
+      "name": "multi-term-filter-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT COUNT(*) FROM http_logs WHERE request = 'GET / HTTP/1.0' AND status = 200;"
+      }
+    },
+    {
+      "name": "range-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT COUNT(*) FROM http_logs WHERE `@timestamp` >= toDateTime64('1998-05-01 00:00:00.000', 3) AND `@timestamp` < toDateTime64('1998-06-01 00:00:00.000', 3);"
+      }
+    },
+    {
+      "name": "200s-in-range-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT COUNT(*) FROM http_logs WHERE status = 200 AND `@timestamp` >= toDateTime64('1998-05-01 00:00:00.000', 3) AND `@timestamp` < toDateTime64('1998-05-02 00:00:00.000', 3);"
+      }
+    },
+    {
+      "name": "400s-in-range-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT COUNT(*) FROM http_logs WHERE status = 400 AND `@timestamp` >= toDateTime64('1998-05-01 00:00:00.000', 3) AND `@timestamp` < toDateTime64('1998-05-02 00:00:00.000', 3);"
+      }
+    },
+    {
+      "name": "hourly-agg-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT toStartOfHour(`@timestamp`) AS hour, COUNT(*) AS c FROM http_logs GROUP BY hour ORDER BY hour;"
+      }
+    },
+    {
+      "name": "hourly-agg-with-filter-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT toStartOfHour(`@timestamp`) AS hour, COUNT(*) AS c FROM http_logs WHERE status = 200 GROUP BY hour ORDER BY hour;"
+      }
+    },
+    {
+      "name": "hourly-agg-with-filter-and-metrics-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT toStartOfHour(`@timestamp`) AS hour, COUNT(*) AS c, AVG(size) AS avg_size, MIN(size) AS min_size, MAX(size) AS max_size, SUM(size) AS sum_size FROM http_logs WHERE status = 200 GROUP BY hour ORDER BY hour;"
+      }
+    },
+    {
+      "name": "multi-term-agg-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT clientip, status, size, COUNT(*) AS c FROM http_logs WHERE `@timestamp` >= toDateTime64('1998-05-03 00:00:00.000', 3) AND `@timestamp` < toDateTime64('1998-05-07 00:00:00.000', 3) GROUP BY clientip, status, size ORDER BY c DESC LIMIT 100;"
+      }
+    },
+    {
+      "name": "range-size-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT COUNT(*) FROM http_logs WHERE size >= 20 AND size <= 200;"
+      }
+    },
+    {
+      "name": "desc-sort-timestamp-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT `@timestamp`, clientip, request, status, size FROM http_logs ORDER BY `@timestamp` DESC LIMIT 10;"
+      }
+    },
+    {
+      "name": "asc-sort-timestamp-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT `@timestamp`, clientip, request, status, size FROM http_logs ORDER BY `@timestamp` ASC LIMIT 10;"
+      }
+    },
+    {
+      "name": "desc-sort-size-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT `@timestamp`, clientip, request, status, size FROM http_logs ORDER BY size DESC LIMIT 10;"
+      }
+    },
+    {
+      "name": "asc-sort-size-clickhouse",
+      "operation-type": "search",
+      "body": {
+        "sql": "SELECT `@timestamp`, clientip, request, status, size FROM http_logs ORDER BY size ASC LIMIT 10;"
+      }
+    }

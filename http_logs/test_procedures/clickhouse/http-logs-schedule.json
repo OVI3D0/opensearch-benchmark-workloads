@@ -1,0 +1,105 @@
+{
+  "operation": "match-all-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "term-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "multi-term-filter-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "range-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "200s-in-range-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "400s-in-range-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "hourly-agg-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "hourly-agg-with-filter-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "hourly-agg-with-filter-and-metrics-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "multi-term-agg-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "range-size-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "desc-sort-timestamp-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "asc-sort-timestamp-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "desc-sort-size-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "asc-sort-size-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+}

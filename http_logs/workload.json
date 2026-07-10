@@ -1,6 +1,7 @@
 {% import "benchmark.helpers" as benchmark with context %}
 
-{% set index_body = 'index.json' %}
+{% set index_body = index_body | default('index.json') %}
+{% set clickhouse_mode = clickhouse_mode | default(false) %}
 
 
 {
@@ -10,6 +11,11 @@
   "indices": [
     {%- if generated_corpus is defined %}
       {{ benchmark.collect(parts="gen-idx-*.json") }}
+    {%- elif clickhouse_mode is defined and clickhouse_mode %}
+      {
+	"name": "http_logs",
+	"body": "{{ index_body }}"
+      }
     {%- else %}
       {
 	"name": "logs-181998",
@@ -115,7 +121,7 @@
         "base-url": "https://dbyiw3u3rf9yr.cloudfront.net/corpora/http_logs",
         "documents": [
           {
-            "target-index": "logs-181998",
+            "target-index": "{{ 'http_logs' if clickhouse_mode else 'logs-181998' }}",
             {% if use_zstd %}
             "source-file": "documents-181998.json.zst",
             "compressed-bytes": 16098947,
@@ -127,7 +133,7 @@
             "uncompressed-bytes": 363512754
           },
           {
-            "target-index": "logs-191998",
+            "target-index": "{{ 'http_logs' if clickhouse_mode else 'logs-191998' }}",
             {% if use_zstd %}
             "source-file": "documents-191998.json.zst",
             "compressed-bytes": 58306789,
@@ -139,7 +145,7 @@
             "uncompressed-bytes": 1301732149
           },
           {
-            "target-index": "logs-201998",
+            "target-index": "{{ 'http_logs' if clickhouse_mode else 'logs-201998' }}",
             {% if use_zstd %}
             "source-file": "documents-201998.json.zst",
             "compressed-bytes": 77690696,
@@ -151,7 +157,7 @@
             "uncompressed-bytes": 1744012279
           },
           {
-            "target-index": "logs-211998",
+            "target-index": "{{ 'http_logs' if clickhouse_mode else 'logs-211998' }}",
             {% if use_zstd %}
             "source-file": "documents-211998.json.zst",
             "compressed-bytes": 105769843,
@@ -163,7 +169,7 @@
             "uncompressed-bytes": 2364230815
           },
           {
-            "target-index": "logs-221998",
+            "target-index": "{{ 'http_logs' if clickhouse_mode else 'logs-221998' }}",
             {% if use_zstd %}
             "source-file": "documents-221998.json.zst",
             "compressed-bytes": 65227695,
@@ -175,7 +181,7 @@
             "uncompressed-bytes": 1438320123
           },
           {
-            "target-index": "logs-231998",
+            "target-index": "{{ 'http_logs' if clickhouse_mode else 'logs-231998' }}",
             {% if use_zstd %}
             "source-file": "documents-231998.json.zst",
             "compressed-bytes": 74590323,
@@ -187,7 +193,7 @@
             "uncompressed-bytes": 1597530673
           },
           {
-            "target-index": "logs-241998",
+            "target-index": "{{ 'http_logs' if clickhouse_mode else 'logs-241998' }}",
             {% if use_zstd %}
             "source-file": "documents-241998.json.zst",
             "compressed-bytes": 1111746761,

@@ -1,4 +1,15 @@
     {
+      "name": "http-logs-clickhouse",
+      "description": "Indexes the http_logs dataset via CREATE TABLE + INSERT and runs the ClickHouse-native SQL queries. Pair with --database-type=clickhouse and --workload-params '{\"clickhouse_mode\": true, \"index_body\": \"clickhouse/index.json\"}'.",
+      "default": false,
+      "schedule": [
+        {% with default_index_settings={}, index_name="http_logs", index_body="clickhouse/index.json" %}
+        {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
+        {% endwith %}
+        {{ benchmark.collect(parts="clickhouse/http-logs-schedule.json") }}
+      ]
+    },
+    {
       "name": "append-no-conflicts",
       "description": "Indexes the whole document corpus using OpenSearch default settings. We only adjust the number of replicas as we benchmark a single node cluster and Benchmark will only start the benchmark if the cluster turns green. Document ids are unique so all index operations are append only. After that a couple of queries are run.",
       "default": true,
