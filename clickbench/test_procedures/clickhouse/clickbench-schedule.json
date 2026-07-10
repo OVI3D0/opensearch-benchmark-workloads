@@ -1,0 +1,301 @@
+{
+  "operation": "q01-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q02-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q03-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q04-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q05-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q06-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q07-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q08-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q09-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q10-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q11-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q12-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q13-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q14-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q15-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q16-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q17-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q18-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q19-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q20-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q21-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q22-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q23-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q24-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q25-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q26-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q27-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q28-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q29-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q30-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q31-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q32-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q33-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q34-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q35-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q36-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q37-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q38-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q39-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q40-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q41-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q42-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+},
+{
+  "operation": "q43-clickhouse",
+  "warmup-iterations": {{ warmup_iterations | default(1) | tojson }},
+  "iterations": {{ test_iterations | default(3) | tojson }},
+  "target-throughput": {{ target_throughput | default(0) | tojson }},
+  "clients": {{ search_clients | default(1) }}
+}
