@@ -1,4 +1,15 @@
 {
+  "name": "clickbench-clickhouse",
+  "description": "Indexes the ClickBench dataset via CREATE TABLE + INSERT and runs the 43 canonical ClickHouse SQL queries. Pair with --database-type=clickhouse.",
+  "default": false,
+  "schedule": [
+    {% with default_index_settings={}, index_name="clickbench", index_body="clickhouse/index.json" %}
+    {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
+    {% endwith %}
+    {{ benchmark.collect(parts="clickhouse/clickbench-schedule.json") }}
+  ]
+},
+{
   "name": "clickbench",
   "description": "Indexes the ClickBench dataset and runs OpenSearch PPL queries to benchmark analytical use case performance",
   "default": true,
