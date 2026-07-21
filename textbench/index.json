@@ -1,0 +1,31 @@
+{
+  "settings": {
+    "index.number_of_shards": {{number_of_shards | default(1)}},
+    "index.number_of_replicas": {{number_of_replicas | default(0)}},
+    "index.refresh_interval": "{{refresh_interval | default('30s')}}",
+    "index.queries.cache.enabled": {{query_cache_enabled | default(false) | tojson}},
+    "index.requests.cache.enable": {{requests_cache_enabled | default(false) | tojson}},
+    "index.codec": "{{codec | default('best_compression')}}",
+    "index.sort.field": ["ServiceName", "Timestamp"],
+    "index.sort.order": ["asc", "asc"]
+  },
+  "mappings": {
+    "properties": {
+      "Timestamp": { "type": "date_nanos" },
+      "TraceId": { "type": "keyword" },
+      "SpanId": { "type": "keyword" },
+      "TraceFlags": { "type": "byte" },
+      "SeverityText": { "type": "keyword" },
+      "SeverityNumber": { "type": "byte" },
+      "ServiceName": { "type": "keyword" },
+      "Body": { "type": "text" },
+      "ResourceSchemaUrl": { "type": "keyword" },
+      "ResourceAttributes": { "type": "flat_object" },
+      "ScopeSchemaUrl": { "type": "keyword" },
+      "ScopeName": { "type": "keyword" },
+      "ScopeVersion": { "type": "keyword" },
+      "ScopeAttributes": { "type": "flat_object" },
+      "LogAttributes": { "type": "flat_object" }
+    }
+  }
+}

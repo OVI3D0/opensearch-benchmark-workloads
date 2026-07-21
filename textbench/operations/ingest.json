@@ -1,0 +1,12 @@
+{
+  "name": "index-append",
+  "operation-type": "bulk",
+  "bulk-size": {{bulk_size | default(5000)}},
+  "ingest-percentage": {{ingest_percentage | default(100)}}
+},
+{
+  "name": "flush-index",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('textbench-1b') }}/_flush",
+  "method": "POST"
+}

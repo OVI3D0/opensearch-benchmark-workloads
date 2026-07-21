@@ -1,9 +1,22 @@
 {
   "version": 2,
-  "description": "Search-only PPL benchmark against a textbench-* style OTel logs index. Targets the schema used by mustang-10-tb-pg-1: ServiceName, SeverityText, SeverityNumber, Body, Timestamp. No ingestion happens — load the data yourself.",
+  "description": "TextBench OTel-logs workload (1B docs) for full-text search + analytical benchmarking. Supports ingest from the CloudFront-hosted corpus (datafusion-ingest / lucene-ingest procedures) AND search-only redline load (redline-ppl-random-mix). Ingest target index is 'textbench-1b' so it matches the 'textbench-*' index pattern the correctness harness queries.",
   "indices": [
     {
-      "name": "{{ index_name | default('textbench-*') }}"
+      "name": "{{ index_name | default('textbench-1b') }}",
+      "body": "{{ index_body | default('index-datafusion.json') }}"
+    }
+  ],
+  "corpora": [
+    {
+      "name": "textbench",
+      "base-url": "https://dbyiw3u3rf9yr.cloudfront.net/corpora/textbench",
+      "documents": [
+        {
+          "source-file": "documents.json.bz2",
+          "document-count": {{ document_count | default(1000000000) }}
+        }
+      ]
     }
   ],
   "operations": [
