@@ -8,7 +8,7 @@
     "index.translog.sync_interval": "30s",
     "index.translog.durability": {{index_translog_durability | default("async") | tojson}},
     "index.sort.field": [ "CounterID", "EventDate", "UserID", "EventTime", "WatchID" ],
-    "index.sort.order": [ "desc", "desc", "desc", "desc", "desc" ]
+    "index.sort.order": [ "asc", "asc", "asc", "asc", "asc" ]
     {%- if parquet_enabled_index is defined and parquet_enabled_index %}
     ,"index.pluggable.dataformat.enabled": true
     ,"index.pluggable.dataformat": "composite"
@@ -265,6 +265,12 @@
       },
       "SilverlightVersion4": {
         "type": "short"
+      },
+      "SocialAction": {
+        "type": "keyword"
+      },
+      "SocialNetwork": {
+        "type": "keyword"
       },
       "SocialSourceNetworkID": {
         "type": "short"

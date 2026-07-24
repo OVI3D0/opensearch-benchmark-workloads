@@ -9,7 +9,9 @@
     "index.translog.durability": {{index_translog_durability | default("async") | tojson}},
     "index.pluggable.dataformat.enabled": true,
     "index.pluggable.dataformat": "composite",
-    "index.composite.primary_data_format": "parquet"
+    "index.composite.primary_data_format": "parquet",
+    "index.sort.field": ["CounterID", "EventDate", "UserID", "EventTime", "WatchID"],
+    "index.sort.order": ["asc", "asc", "asc", "asc", "asc"]
   },
   "mappings": {
     "dynamic": "false",
@@ -260,6 +262,12 @@
       },
       "SilverlightVersion4": {
         "type": "short"
+      },
+      "SocialAction": {
+        "type": "keyword"
+      },
+      "SocialNetwork": {
+        "type": "keyword"
       },
       "SocialSourceNetworkID": {
         "type": "short"
