@@ -81,7 +81,7 @@
   },
   "sha256": "4def5393de169f072728e3d8e3f37a44bc9733b25d5cdcfb6977313cd25d6064",
   "source_file": "documents-1k.json.gz",
-  "status": "locally generated; not uploaded",
+  "status": "published to s3://opensearch-benchmark-workloads/corpora/openobserve_1b/documents-1k.json.gz",
   "timestamp_max_us": 1780287180000000,
   "timestamp_min_us": 1780272000000000,
   "uncompressed_bytes": 2237422,

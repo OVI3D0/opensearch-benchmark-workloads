@@ -34,10 +34,11 @@ OSB test mode expects:
 
 `https://dbyiw3u3rf9yr.cloudfront.net/corpora/openobserve_1b/documents-1k.json.gz`
 
-The corpus artifacts have not yet been uploaded. `corpus/capture.py` captures the
-upstream generator's gzip request bodies without rewriting their full-corpus NDJSON
-records. The committed 1,000-document manifest records all query anchors, q01-q19
-goldens, timestamp bounds, and the local artifact's SHA-256.
+The full corpus has not been uploaded. The 1,000-document test-mode corpus is
+published at the URL above; its committed manifest records all query anchors,
+q01-q19 goldens, timestamp bounds, and SHA-256. `corpus/capture.py` captures the
+upstream generator's gzip request bodies without rewriting full-corpus NDJSON
+records.
 
 ## Procedures
 
