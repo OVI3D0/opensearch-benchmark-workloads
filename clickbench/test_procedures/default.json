@@ -1,11 +1,29 @@
 {
   "name": "clickbench-clickhouse",
-  "description": "Indexes the ClickBench dataset via CREATE TABLE + INSERT and runs the 43 canonical ClickHouse SQL queries. Pair with --database-type=clickhouse.",
+  "description": "Indexes the ClickBench dataset via CREATE TABLE + INSERT and runs the 43 canonical ClickHouse SQL queries. Pair with --database-type=clickhouse and --workload-params=index_name:clickbench,index_body:clickhouse/index.json.",
   "default": false,
   "schedule": [
     {% with default_index_settings={}, index_name="clickbench", index_body="clickhouse/index.json" %}
     {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
     {% endwith %}
+    {{ benchmark.collect(parts="clickhouse/clickbench-schedule.json") }}
+  ]
+},
+{
+  "name": "clickbench-clickhouse-ingest",
+  "description": "Creates the ClickHouse table and ingests the ClickBench dataset without running queries. Pair with --database-type=clickhouse and --workload-params=index_name:clickbench,index_body:clickhouse/index.json.",
+  "default": false,
+  "schedule": [
+    {% with default_index_settings={}, index_name="clickbench", index_body="clickhouse/index.json" %}
+    {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }}
+    {% endwith %}
+  ]
+},
+{
+  "name": "clickbench-clickhouse-queries",
+  "description": "Runs the 43 canonical ClickHouse SQL queries against an existing clickbench table. Pair with --database-type=clickhouse.",
+  "default": false,
+  "schedule": [
     {{ benchmark.collect(parts="clickhouse/clickbench-schedule.json") }}
   ]
 },
