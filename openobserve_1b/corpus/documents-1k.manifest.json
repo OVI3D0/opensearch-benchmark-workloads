@@ -1,0 +1,90 @@
+{
+  "anchors": {
+    "common_token": "failed",
+    "container": "api-gateway-container",
+    "pod_name": "api-gateway-9a2c1e6f4-8923f",
+    "rare_token": "474dbfe4c65a971176ae239869a6ba47",
+    "span_id": "7a4e90080fd2a013",
+    "trace_id": "339354527adf581e8ece2eaea8cde703"
+  },
+  "capture": {
+    "batch_size": 1000,
+    "capture_batches": 1,
+    "concurrency": 1,
+    "generator_total": 1000000000,
+    "seed": 12648430,
+    "spread_duration_seconds": 15180,
+    "start_timestamp_us": 1780272000000000
+  },
+  "compressed_bytes": 462021,
+  "document_count": 1000,
+  "goldens": {
+    "q01": {"count": 1},
+    "q02": {
+      "rows": 1,
+      "sha256": "deb1b2bdb2d8c128c0ec7db0f8d2c60cb321817a156ce63ab7b20d9d8615b214"
+    },
+    "q03": {"count": 1},
+    "q04": {
+      "rows": 1,
+      "sha256": "deb1b2bdb2d8c128c0ec7db0f8d2c60cb321817a156ce63ab7b20d9d8615b214"
+    },
+    "q05": {"count": 1},
+    "q06": {
+      "rows": 1,
+      "sha256": "deb1b2bdb2d8c128c0ec7db0f8d2c60cb321817a156ce63ab7b20d9d8615b214"
+    },
+    "q07": {"count": 801},
+    "q08": {
+      "rows": 100,
+      "sha256": "92ee3b63ed8af7c3f5d64fc062170df366e91695d9115a8717742e40b6347ea7"
+    },
+    "q09": {"count": 1},
+    "q10": {
+      "rows": 1,
+      "sha256": "deb1b2bdb2d8c128c0ec7db0f8d2c60cb321817a156ce63ab7b20d9d8615b214"
+    },
+    "q11": {"count": 1},
+    "q12": {
+      "rows": 1,
+      "sha256": "deb1b2bdb2d8c128c0ec7db0f8d2c60cb321817a156ce63ab7b20d9d8615b214"
+    },
+    "q13": {"count": 1},
+    "q14": {
+      "rows": 1,
+      "sha256": "deb1b2bdb2d8c128c0ec7db0f8d2c60cb321817a156ce63ab7b20d9d8615b214"
+    },
+    "q15": {"count": 1},
+    "q16": {
+      "rows": 1,
+      "sha256": "deb1b2bdb2d8c128c0ec7db0f8d2c60cb321817a156ce63ab7b20d9d8615b214"
+    },
+    "q17": {
+      "buckets": [[494520, 237], [494521, 237], [494522, 237], [494523, 237], [494524, 52]]
+    },
+    "q18": {
+      "buckets": [
+        ["kube-system", 246],
+        ["default", 142],
+        ["monitoring", 130],
+        ["ingress-nginx", 101],
+        ["search", 80],
+        ["logging", 78],
+        ["payments", 78],
+        ["checkout", 75],
+        ["auth", 70]
+      ]
+    },
+    "q19": {
+      "buckets": [[494520, 181], [494521, 190], [494522, 196], [494523, 189], [494524, 45]]
+    }
+  },
+  "sha256": "4def5393de169f072728e3d8e3f37a44bc9733b25d5cdcfb6977313cd25d6064",
+  "source_file": "documents-1k.json.gz",
+  "status": "locally generated; not uploaded",
+  "timestamp_max_us": 1780287180000000,
+  "timestamp_min_us": 1780272000000000,
+  "uncompressed_bytes": 2237422,
+  "upstream_sha": "289608a6f96e4c35783d2aafb680f0ba4dd406b8",
+  "upstream_url": "https://github.com/openobserve/openobserve-clickhouse-benchmark.git"
+}

@@ -1,0 +1,35 @@
+{% set trace_id = trace_id | default("339354527adf581e8ece2eaea8cde703") %}
+{% set span_id = span_id | default("7a4e90080fd2a013") %}
+{% set rare_token = rare_token | default("474dbfe4c65a971176ae239869a6ba47") %}
+{% set common_token = common_token | default("failed") %}
+{% set container_name = container_name | default("api-gateway-container") %}
+{% set pod_name = pod_name | default("api-gateway-9a2c1e6f4-8923f") %}
+
+{
+  "version": 2,
+  "description": "One-billion-record Kubernetes observability-log workload adapted from the OpenObserve vs ClickHouse benchmark",
+  "indices": [
+    {
+      "name": "{{ index_name | default('openobserve-1b') }}",
+      "body": "{{ index_body | default('index-datafusion.json') }}"
+    }
+  ],
+  "corpora": [
+    {
+      "name": "openobserve-1b",
+      "base-url": "https://dbyiw3u3rf9yr.cloudfront.net/corpora/openobserve_1b",
+      "documents": [
+        {
+          "source-file": "documents.json.gz",
+          "document-count": 1000000000
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {{ benchmark.collect(parts="operations/*.json") }}
+  ],
+  "test_procedures": [
+    {{ benchmark.collect(parts="test_procedures/*.json") }}
+  ]
+}

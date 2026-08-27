@@ -1,0 +1,56 @@
+{
+  "settings": {
+    "index.number_of_shards": {{ number_of_shards | default(1) }},
+    "index.number_of_replicas": {{ number_of_replicas | default(0) }},
+    "index.queries.cache.enabled": {{ query_cache_enabled | default(false) | tojson }},
+    "index.requests.cache.enable": {{ requests_cache_enabled | default(false) | tojson }},
+    "index.codec": "best_compression",
+    "index.translog.durability": {{ index_translog_durability | default("async") | tojson }},
+    "index.pluggable.dataformat.enabled": true,
+    "index.pluggable.dataformat": "composite",
+    "index.composite.primary_data_format": "parquet",
+    "index.sort.field": ["_timestamp"],
+    "index.sort.order": ["asc"],
+    "analysis": {
+      "analyzer": {
+        "split_by_non_alpha": {
+          "type": "pattern",
+          "pattern": "[^A-Za-z]+",
+          "lowercase": true
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "_timestamp": {"type": "long"},
+      "level": {"type": "keyword"},
+      "message": {"type": "text", "analyzer": "split_by_non_alpha"},
+      "host": {"type": "keyword"},
+      "stream": {"type": "keyword"},
+      "kubernetes_namespace_name": {"type": "keyword"},
+      "kubernetes_pod_name": {"type": "keyword"},
+      "kubernetes_container_name": {"type": "keyword"},
+      "kubernetes_node_name": {"type": "keyword"},
+      "kubernetes_labels_app": {"type": "keyword"},
+      "kubernetes_labels_version": {"type": "keyword"},
+      "kubernetes_pod_ip": {"type": "keyword"},
+      "trace_id": {"type": "keyword"},
+      "span_id": {"type": "keyword"},
+      "request_id": {"type": "keyword"},
+      "http_method": {"type": "keyword"},
+      "http_path": {"type": "keyword"},
+      "http_status": {"type": "short"},
+      "http_latency_ms": {"type": "integer"},
+      "http_bytes_out": {"type": "integer"},
+      "client_ip": {"type": "ip"},
+      "ja3": {"type": "keyword"},
+      "user_id": {"type": "keyword"},
+      "session_id": {"type": "keyword"},
+      "region": {"type": "keyword"},
+      "zone": {"type": "keyword"},
+      "cluster": {"type": "keyword"}
+    }
+  }
+}
