@@ -4,7 +4,7 @@
   "indices": [
     {
       "name": "{{ index_name | default('clickbench') }}",
-      "body": "index-datafusion.json"
+      "body": "{{ index_body | default('index-datafusion.json') }}"
     }
   ],
   "corpora": [
