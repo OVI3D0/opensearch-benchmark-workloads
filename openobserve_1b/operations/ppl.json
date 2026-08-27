@@ -1,0 +1,133 @@
+{
+  "name": "q01-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where trace_id = '{{ trace_id }}' | stats count()"}
+},
+{
+  "name": "q02-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where trace_id = '{{ trace_id }}' | sort - `_timestamp` | head 100"}
+},
+{
+  "name": "q03-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where span_id = '{{ span_id }}' | stats count()"}
+},
+{
+  "name": "q04-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where span_id = '{{ span_id }}' | sort - `_timestamp` | head 100"}
+},
+{
+  "name": "q05-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ rare_token }}') | stats count()"}
+},
+{
+  "name": "q06-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ rare_token }}') | sort - `_timestamp` | head 100"}
+},
+{
+  "name": "q07-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ common_token }}') | stats count()"}
+},
+{
+  "name": "q08-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ common_token }}') | sort - `_timestamp` | head 100"}
+},
+{
+  "name": "q09-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where kubernetes_container_name = '{{ container_name }}' and trace_id = '{{ trace_id }}' | stats count()"}
+},
+{
+  "name": "q10-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where kubernetes_container_name = '{{ container_name }}' and trace_id = '{{ trace_id }}' | sort - `_timestamp` | head 100"}
+},
+{
+  "name": "q11-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where kubernetes_container_name = '{{ container_name }}' and query_string(['message'], '{{ rare_token }}') | stats count()"}
+},
+{
+  "name": "q12-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where kubernetes_container_name = '{{ container_name }}' and query_string(['message'], '{{ rare_token }}') | sort - `_timestamp` | head 100"}
+},
+{
+  "name": "q13-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ common_token }}') and query_string(['message'], '{{ rare_token }}') | stats count()"}
+},
+{
+  "name": "q14-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ common_token }}') and query_string(['message'], '{{ rare_token }}') | sort - `_timestamp` | head 100"}
+},
+{
+  "name": "q15-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where kubernetes_pod_name = '{{ pod_name }}' | stats count()"}
+},
+{
+  "name": "q16-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where kubernetes_pod_name = '{{ pod_name }}' | sort - `_timestamp` | head 100"}
+},
+{
+  "name": "q17-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | eval hour = floor(`_timestamp` / 3600000000) | stats count() by hour | sort + hour"}
+},
+{
+  "name": "q18-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | stats count() as c by kubernetes_namespace_name | sort - c, + kubernetes_namespace_name | head 10"}
+},
+{
+  "name": "q19-ppl",
+  "operation-type": "raw-request",
+  "path": "/_plugins/_ppl",
+  "method": "POST",
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ common_token }}') | eval hour = floor(`_timestamp` / 3600000000) | stats count() by hour | sort + hour"}
+}

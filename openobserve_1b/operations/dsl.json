@@ -1,0 +1,271 @@
+{
+  "name": "q01-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {"term": {"trace_id": "{{ trace_id }}"}}
+  }
+},
+{
+  "name": "q02-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "query": {"term": {"trace_id": "{{ trace_id }}"}},
+    "sort": [{"_timestamp": "desc"}]
+  }
+},
+{
+  "name": "q03-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {"term": {"span_id": "{{ span_id }}"}}
+  }
+},
+{
+  "name": "q04-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "query": {"term": {"span_id": "{{ span_id }}"}},
+    "sort": [{"_timestamp": "desc"}]
+  }
+},
+{
+  "name": "q05-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {"match": {"message": {"query": "{{ rare_token }}", "operator": "and"}}}
+  }
+},
+{
+  "name": "q06-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "query": {"match": {"message": {"query": "{{ rare_token }}", "operator": "and"}}},
+    "sort": [{"_timestamp": "desc"}]
+  }
+},
+{
+  "name": "q07-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {"match": {"message": {"query": "{{ common_token }}", "operator": "and"}}}
+  }
+},
+{
+  "name": "q08-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "query": {"match": {"message": {"query": "{{ common_token }}", "operator": "and"}}},
+    "sort": [{"_timestamp": "desc"}]
+  }
+},
+{
+  "name": "q09-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "bool": {
+        "filter": [
+          {"term": {"kubernetes_container_name": "{{ container_name }}"}},
+          {"term": {"trace_id": "{{ trace_id }}"}}
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "q10-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "query": {
+      "bool": {
+        "filter": [
+          {"term": {"kubernetes_container_name": "{{ container_name }}"}},
+          {"term": {"trace_id": "{{ trace_id }}"}}
+        ]
+      }
+    },
+    "sort": [{"_timestamp": "desc"}]
+  }
+},
+{
+  "name": "q11-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "bool": {
+        "filter": [{"term": {"kubernetes_container_name": "{{ container_name }}"}}],
+        "must": [{"match": {"message": {"query": "{{ rare_token }}", "operator": "and"}}}]
+      }
+    }
+  }
+},
+{
+  "name": "q12-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "query": {
+      "bool": {
+        "filter": [{"term": {"kubernetes_container_name": "{{ container_name }}"}}],
+        "must": [{"match": {"message": {"query": "{{ rare_token }}", "operator": "and"}}}]
+      }
+    },
+    "sort": [{"_timestamp": "desc"}]
+  }
+},
+{
+  "name": "q13-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "bool": {
+        "must": [
+          {"match": {"message": {"query": "{{ common_token }}", "operator": "and"}}},
+          {"match": {"message": {"query": "{{ rare_token }}", "operator": "and"}}}
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "q14-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "query": {
+      "bool": {
+        "must": [
+          {"match": {"message": {"query": "{{ common_token }}", "operator": "and"}}},
+          {"match": {"message": {"query": "{{ rare_token }}", "operator": "and"}}}
+        ]
+      }
+    },
+    "sort": [{"_timestamp": "desc"}]
+  }
+},
+{
+  "name": "q15-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {"term": {"kubernetes_pod_name": "{{ pod_name }}"}}
+  }
+},
+{
+  "name": "q16-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "query": {"term": {"kubernetes_pod_name": "{{ pod_name }}"}},
+    "sort": [{"_timestamp": "desc"}]
+  }
+},
+{
+  "name": "q17-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "aggs": {
+      "events_per_hour": {
+        "histogram": {
+          "field": "_timestamp",
+          "interval": 3600000000,
+          "min_doc_count": 1,
+          "order": {"_key": "asc"}
+        }
+      }
+    }
+  }
+},
+{
+  "name": "q18-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "aggs": {
+      "top_namespaces": {
+        "terms": {
+          "field": "kubernetes_namespace_name",
+          "size": 10,
+          "order": [{"_count": "desc"}, {"_key": "asc"}]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "q19-dsl",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('openobserve-1b') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "query": {"match": {"message": {"query": "{{ common_token }}", "operator": "and"}}},
+    "aggs": {
+      "events_per_hour": {
+        "histogram": {
+          "field": "_timestamp",
+          "interval": 3600000000,
+          "min_doc_count": 1,
+          "order": {"_key": "asc"}
+        }
+      }
+    }
+  }
+}

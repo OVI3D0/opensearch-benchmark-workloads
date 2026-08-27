@@ -1,0 +1,89 @@
+{
+  "name": "openobserve-1b-mustang",
+  "description": "Ingests the corpus into a composite index and runs the 19 PPL operations. Use index_body:index-datafusion.json.",
+  "default": true,
+  "schedule": [
+    {% with default_index_settings={}, index_name=index_name | default("openobserve-1b") %}
+    {{ benchmark.collect(parts="../../common_operations/delete_index.json") }},
+    {{ benchmark.collect(parts="../../common_operations/create_index.json") }},
+    {{ benchmark.collect(parts="../../common_operations/check_cluster_health.json") }},
+    {{ benchmark.collect(parts="../../common_operations/index_append.json") }},
+    {% endwith %}
+    {
+      "operation": "flush-index",
+      "warmup-iterations": 0,
+      "iterations": 1,
+      "target-throughput": 1,
+      "clients": 1
+    },
+    {% with engine_suffix="ppl" %}
+    {{ benchmark.collect(parts="common/query-schedule.json") }}
+    {% endwith %}
+  ]
+},
+{
+  "name": "openobserve-1b-mustang-ingest",
+  "description": "Composite-index ingest only. Use index_body:index-datafusion.json.",
+  "default": false,
+  "schedule": [
+    {% with default_index_settings={}, index_name=index_name | default("openobserve-1b") %}
+    {{ benchmark.collect(parts="../../common_operations/delete_index.json") }},
+    {{ benchmark.collect(parts="../../common_operations/create_index.json") }},
+    {{ benchmark.collect(parts="../../common_operations/check_cluster_health.json") }},
+    {{ benchmark.collect(parts="../../common_operations/index_append.json") }}
+    {% endwith %}
+  ]
+},
+{
+  "name": "openobserve-1b-mustang-queries",
+  "description": "Runs the 19 PPL operations against an existing composite index.",
+  "default": false,
+  "schedule": [
+    {% with engine_suffix="ppl" %}
+    {{ benchmark.collect(parts="common/query-schedule.json") }}
+    {% endwith %}
+  ]
+},
+{
+  "name": "openobserve-1b-vanilla",
+  "description": "Ingests the corpus into a Lucene index and runs the 19 Query DSL operations. Use index_body:index.json.",
+  "default": false,
+  "schedule": [
+    {% with default_index_settings={}, index_name=index_name | default("openobserve-1b") %}
+    {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
+    {% endwith %}
+    {% with engine_suffix="dsl" %}
+    {{ benchmark.collect(parts="common/query-schedule.json") }}
+    {% endwith %}
+  ]
+},
+{
+  "name": "openobserve-1b-vanilla-ingest",
+  "description": "Lucene ingest only. Use index_body:index.json.",
+  "default": false,
+  "schedule": [
+    {% with default_index_settings={}, index_name=index_name | default("openobserve-1b") %}
+    {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }}
+    {% endwith %}
+  ]
+},
+{
+  "name": "openobserve-1b-vanilla-queries",
+  "description": "Runs the 19 Query DSL operations against an existing Lucene index.",
+  "default": false,
+  "schedule": [
+    {% with engine_suffix="dsl" %}
+    {{ benchmark.collect(parts="common/query-schedule.json") }}
+    {% endwith %}
+  ]
+},
+{
+  "name": "openobserve-1b-clickhouse-queries",
+  "description": "Runs the 19 ClickHouse SQL operations against an existing k8s_logs table.",
+  "default": false,
+  "schedule": [
+    {% with engine_suffix="clickhouse" %}
+    {{ benchmark.collect(parts="common/query-schedule.json") }}
+    {% endwith %}
+  ]
+}

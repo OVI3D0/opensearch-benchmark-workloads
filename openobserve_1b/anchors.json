@@ -1,0 +1,8 @@
+{
+  "trace_id": "339354527adf581e8ece2eaea8cde703",
+  "span_id": "7a4e90080fd2a013",
+  "rare_token": "474dbfe4c65a971176ae239869a6ba47",
+  "common_token": "failed",
+  "container": "api-gateway-container",
+  "pod_name": "api-gateway-9a2c1e6f4-8923f"
+}

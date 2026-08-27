@@ -1,0 +1,95 @@
+{
+  "name": "q01-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT count() FROM k8s_logs WHERE trace_id = '{{ trace_id }}'"}
+},
+{
+  "name": "q02-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT * FROM k8s_logs WHERE trace_id = '{{ trace_id }}' ORDER BY _timestamp DESC LIMIT 100"}
+},
+{
+  "name": "q03-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT count() FROM k8s_logs WHERE span_id = '{{ span_id }}'"}
+},
+{
+  "name": "q04-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT * FROM k8s_logs WHERE span_id = '{{ span_id }}' ORDER BY _timestamp DESC LIMIT 100"}
+},
+{
+  "name": "q05-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT count() FROM k8s_logs WHERE hasAnyTokens(message, ['{{ rare_token }}'])"}
+},
+{
+  "name": "q06-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT * FROM k8s_logs WHERE hasAnyTokens(message, ['{{ rare_token }}']) ORDER BY _timestamp DESC LIMIT 100"}
+},
+{
+  "name": "q07-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT count() FROM k8s_logs WHERE hasAnyTokens(message, ['{{ common_token }}'])"}
+},
+{
+  "name": "q08-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT * FROM k8s_logs WHERE hasAnyTokens(message, ['{{ common_token }}']) ORDER BY _timestamp DESC LIMIT 100"}
+},
+{
+  "name": "q09-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT count() FROM k8s_logs WHERE kubernetes_container_name = '{{ container_name }}' AND trace_id = '{{ trace_id }}'"}
+},
+{
+  "name": "q10-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT * FROM k8s_logs WHERE kubernetes_container_name = '{{ container_name }}' AND trace_id = '{{ trace_id }}' ORDER BY _timestamp DESC LIMIT 100"}
+},
+{
+  "name": "q11-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT count() FROM k8s_logs WHERE kubernetes_container_name = '{{ container_name }}' AND hasAnyTokens(message, ['{{ rare_token }}'])"}
+},
+{
+  "name": "q12-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT * FROM k8s_logs WHERE kubernetes_container_name = '{{ container_name }}' AND hasAnyTokens(message, ['{{ rare_token }}']) ORDER BY _timestamp DESC LIMIT 100"}
+},
+{
+  "name": "q13-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT count() FROM k8s_logs WHERE hasAnyTokens(message, ['{{ common_token }}']) AND hasAnyTokens(message, ['{{ rare_token }}'])"}
+},
+{
+  "name": "q14-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT * FROM k8s_logs WHERE hasAnyTokens(message, ['{{ common_token }}']) AND hasAnyTokens(message, ['{{ rare_token }}']) ORDER BY _timestamp DESC LIMIT 100"}
+},
+{
+  "name": "q15-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT count() FROM k8s_logs WHERE kubernetes_pod_name = '{{ pod_name }}'"}
+},
+{
+  "name": "q16-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT * FROM k8s_logs WHERE kubernetes_pod_name = '{{ pod_name }}' ORDER BY _timestamp DESC LIMIT 100"}
+},
+{
+  "name": "q17-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT toStartOfHour(toDateTime(intDiv(_timestamp, 1000000))) AS hour, count() FROM k8s_logs GROUP BY hour ORDER BY hour"}
+},
+{
+  "name": "q18-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT kubernetes_namespace_name, count() AS c FROM k8s_logs GROUP BY kubernetes_namespace_name ORDER BY c DESC, kubernetes_namespace_name ASC LIMIT 10"}
+},
+{
+  "name": "q19-clickhouse",
+  "operation-type": "search",
+  "body": {"sql": "SELECT toStartOfHour(toDateTime(intDiv(_timestamp, 1000000))) AS hour, count() FROM k8s_logs WHERE hasAnyTokens(message, ['{{ common_token }}']) GROUP BY hour ORDER BY hour"}
+}

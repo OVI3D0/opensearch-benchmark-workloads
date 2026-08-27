@@ -1,0 +1,11 @@
+OpenObserve one-billion-log benchmark
+=====================================
+
+Source repository:
+  https://github.com/openobserve/openobserve-clickhouse-benchmark
+
+Pinned source revision:
+  289608a6f96e4c35783d2aafb680f0ba4dd406b8
+
+This workload adapts the published schema, corpus definition, and query semantics
+for OpenSearch Benchmark and additional engines.
