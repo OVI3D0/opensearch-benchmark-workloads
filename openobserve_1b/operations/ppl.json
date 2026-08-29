@@ -31,14 +31,14 @@
   "operation-type": "raw-request",
   "path": "/_plugins/_ppl",
   "method": "POST",
-  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ rare_token }}') | stats count()"}
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where match_phrase(message, '{{ rare_token }}') | stats count()"}
 },
 {
   "name": "q06-ppl",
   "operation-type": "raw-request",
   "path": "/_plugins/_ppl",
   "method": "POST",
-  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ rare_token }}') | sort - `_timestamp` | head 100"}
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where match_phrase(message, '{{ rare_token }}') | sort - `_timestamp` | head 100"}
 },
 {
   "name": "q07-ppl",
@@ -73,28 +73,28 @@
   "operation-type": "raw-request",
   "path": "/_plugins/_ppl",
   "method": "POST",
-  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where kubernetes_container_name = '{{ container_name }}' and query_string(['message'], '{{ rare_token }}') | stats count()"}
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where kubernetes_container_name = '{{ container_name }}' and match_phrase(message, '{{ rare_token }}') | stats count()"}
 },
 {
   "name": "q12-ppl",
   "operation-type": "raw-request",
   "path": "/_plugins/_ppl",
   "method": "POST",
-  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where kubernetes_container_name = '{{ container_name }}' and query_string(['message'], '{{ rare_token }}') | sort - `_timestamp` | head 100"}
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where kubernetes_container_name = '{{ container_name }}' and match_phrase(message, '{{ rare_token }}') | sort - `_timestamp` | head 100"}
 },
 {
   "name": "q13-ppl",
   "operation-type": "raw-request",
   "path": "/_plugins/_ppl",
   "method": "POST",
-  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ common_token }}') and query_string(['message'], '{{ rare_token }}') | stats count()"}
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ common_token }}') and match_phrase(message, '{{ rare_token }}') | stats count()"}
 },
 {
   "name": "q14-ppl",
   "operation-type": "raw-request",
   "path": "/_plugins/_ppl",
   "method": "POST",
-  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ common_token }}') and query_string(['message'], '{{ rare_token }}') | sort - `_timestamp` | head 100"}
+  "body": {"query": "source = {{ index_name | default('openobserve-1b') }} | where query_string(['message'], '{{ common_token }}') and match_phrase(message, '{{ rare_token }}') | sort - `_timestamp` | head 100"}
 },
 {
   "name": "q15-ppl",
