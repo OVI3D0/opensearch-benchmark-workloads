@@ -31,3 +31,25 @@ python3 corpus/capture.py \
 Each command writes a sibling `.manifest.json` with row/byte counts, SHA-256,
 provenance, and query anchors. The committed smoke manifest additionally records
 expected q01–q19 results.
+
+## Full corpus: bounded direct-to-S3 capture
+
+The full one-billion-row publication uses one continuous upstream generator process
+and rolls its gzip request bodies into independently checksummed chunks. Closed
+chunks upload concurrently and are removed from local disk after S3 size
+verification. `manifest.json` is uploaded last and is the publication-complete
+marker; a failed generator run never publishes that manifest.
+
+```bash
+python3 corpus/capture_to_s3.py \
+  --s3-uri s3://opensearch-benchmark-workloads/corpora/openobserve_1b/v1 \
+  --work-dir /data/openobserve-1b \
+  --records 1000000000 \
+  --batch-size 8000 \
+  --concurrency 12 \
+  --chunk-rows 10000000
+```
+
+The destination prefix must be empty. The script refuses to replace existing
+objects, verifies every uploaded object's byte length, and records each chunk's row
+count, compressed/uncompressed sizes, SHA-256, and timestamp bounds.
