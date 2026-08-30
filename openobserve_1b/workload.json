@@ -4,6 +4,7 @@
 {% set common_token = common_token | default("failed") %}
 {% set container_name = container_name | default("api-gateway-container") %}
 {% set pod_name = pod_name | default("api-gateway-9a2c1e6f4-8923f") %}
+{% set full_corpus = full_corpus | default(false) %}
 
 {
   "version": 2,
@@ -17,12 +18,21 @@
   "corpora": [
     {
       "name": "openobserve-1b",
-      "base-url": "https://dbyiw3u3rf9yr.cloudfront.net/corpora/openobserve_1b",
+      "base-url": "https://dbyiw3u3rf9yr.cloudfront.net/corpora/openobserve_1b{% if full_corpus %}/v1/ndjson{% endif %}",
       "documents": [
+        {% if full_corpus %}
+        {% for part in range(100) %}
+        {
+          "source-file": "part-{{ "%05d" | format(part) }}.json.gz",
+          "document-count": 10000000
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+        {% else %}
         {
           "source-file": "documents.json.gz",
           "document-count": 1000000000
         }
+        {% endif %}
       ]
     }
   ],

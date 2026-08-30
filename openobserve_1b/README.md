@@ -26,19 +26,24 @@ queries.
 
 ## Corpus
 
-The full corpus is expected at:
+The immutable full corpus is published as 100 ten-million-row gzip NDJSON objects
+under:
 
-`https://dbyiw3u3rf9yr.cloudfront.net/corpora/openobserve_1b/documents.json.gz`
+`https://dbyiw3u3rf9yr.cloudfront.net/corpora/openobserve_1b/v1/ndjson/`
 
-OSB test mode expects:
+Pass workload parameter `full_corpus:true` to select those objects. The default
+single-file declaration is retained so OSB `--test-mode` resolves:
 
 `https://dbyiw3u3rf9yr.cloudfront.net/corpora/openobserve_1b/documents-1k.json.gz`
 
-The full corpus has not been uploaded. The 1,000-document test-mode corpus is
-published at the URL above; its committed manifest records all query anchors,
-q01-q19 goldens, timestamp bounds, and SHA-256. `corpus/capture.py` captures the
-upstream generator's gzip request bodies without rewriting full-corpus NDJSON
-records.
+The full manifest is:
+
+`https://dbyiw3u3rf9yr.cloudfront.net/corpora/openobserve_1b/v1/manifest.json`
+
+It records exactly 1,000,000,000 rows, 100 chunk SHA-256 values, timestamp bounds,
+743,267,587,646 compressed bytes, and 2,238,012,424,292 uncompressed bytes. The
+1,000-document test-mode corpus remains published at the URL above; its committed
+manifest records all query anchors and q01-q19 goldens.
 
 ## Procedures
 
