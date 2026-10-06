@@ -1,0 +1,273 @@
+  {
+    "name": "q01-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(*) FROM otel_logs;"
+    }
+  },
+  {
+    "name": "q02-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT severity_text, COUNT(*) AS c FROM otel_logs GROUP BY severity_text ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q03-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, COUNT(*) AS c FROM otel_logs GROUP BY service_name ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q04-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT resource_cloud_region, COUNT(*) AS c FROM otel_logs GROUP BY resource_cloud_region ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q05-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(*) FROM otel_logs WHERE severity_text LIKE 'ERROR';"
+    }
+  },
+  {
+    "name": "q06-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT log_http_method, log_http_status_code, COUNT(*) AS c FROM otel_logs GROUP BY log_http_method, log_http_status_code ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q07-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT log_http_status_code, COUNT(*) AS c FROM otel_logs WHERE log_http_status_code >= 500 GROUP BY log_http_status_code ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q08-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT resource_k8s_namespace_name, COUNT(*) AS c FROM otel_logs GROUP BY resource_k8s_namespace_name ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q09-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT resource_telemetry_sdk_language, COUNT(*) AS c FROM otel_logs GROUP BY resource_telemetry_sdk_language ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q10-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT severity_text, service_name, COUNT(*) AS c FROM otel_logs GROUP BY severity_text, service_name ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q11-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT AVG(severity_number) AS avg_sev, MAX(log_http_status_code) AS max_status, MIN(time) AS min_time FROM otel_logs;"
+    }
+  },
+  {
+    "name": "q12-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(DISTINCT service_name) AS services, COUNT(DISTINCT resource_host_name) AS hosts, COUNT(DISTINCT resource_k8s_pod_name) AS pods FROM otel_logs;"
+    }
+  },
+  {
+    "name": "q13-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT intDiv(time, 10000) * 10000 AS time_bucket, COUNT(*) AS c FROM otel_logs GROUP BY time_bucket ORDER BY time_bucket ASC;"
+    }
+  },
+  {
+    "name": "q14-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT intDiv(time, 60000) * 60000 AS time_bucket, COUNT(*) AS c FROM otel_logs GROUP BY time_bucket;"
+    }
+  },
+  {
+    "name": "q15-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, COUNT(*) AS c, AVG(severity_number) AS avg_sev, MAX(severity_number) AS max_sev, MIN(severity_number) AS min_sev FROM otel_logs GROUP BY service_name ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q16-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, SUM(severity_number) AS sum_sev FROM otel_logs GROUP BY service_name ORDER BY sum_sev DESC;"
+    }
+  },
+  {
+    "name": "q17-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT resource_telemetry_sdk_language, COUNT(*) AS c, AVG(severity_number) AS avg_sev FROM otel_logs GROUP BY resource_telemetry_sdk_language ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q18-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, COUNT(*) AS c, COUNT(DISTINCT trace_id) AS unique_traces FROM otel_logs GROUP BY service_name ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q19-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(DISTINCT service_name) FROM otel_logs;"
+    }
+  },
+  {
+    "name": "q20-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(DISTINCT severity_text) FROM otel_logs;"
+    }
+  },
+  {
+    "name": "q21-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, COUNT(*) AS cnt FROM otel_logs GROUP BY service_name ORDER BY cnt DESC LIMIT 3;"
+    }
+  },
+  {
+    "name": "q22-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, COUNT(*) AS cnt FROM otel_logs GROUP BY service_name ORDER BY cnt ASC LIMIT 3;"
+    }
+  },
+  {
+    "name": "q23-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, SUM(CASE WHEN severity_number >= 17 THEN 1 ELSE 0 END) AS errors FROM otel_logs GROUP BY service_name ORDER BY errors DESC;"
+    }
+  },
+  {
+    "name": "q24-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, SUM(CASE WHEN log_http_status_code >= 500 THEN 1 ELSE 0 END) AS server_errors FROM otel_logs GROUP BY service_name ORDER BY server_errors DESC;"
+    }
+  },
+  {
+    "name": "q25-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT SUM(CASE WHEN log_http_status_code >= 500 THEN 1 ELSE 0 END) AS bad, COUNT(*) AS total, ROUND(SUM(CASE WHEN log_http_status_code >= 500 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS error_rate FROM otel_logs;"
+    }
+  },
+  {
+    "name": "q26-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT CASE WHEN severity_number <= 5 THEN 'low' WHEN severity_number <= 13 THEN 'mid' ELSE 'high' END AS sev_band, COUNT(*) AS c FROM otel_logs GROUP BY sev_band ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q27-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, COUNT(*) AS c FROM otel_logs WHERE resource_k8s_namespace_name = 'prod' GROUP BY service_name ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q28-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, COUNT(*) AS c FROM otel_logs WHERE severity_number >= 13 GROUP BY service_name ORDER BY c DESC;"
+    }
+  },
+  {
+    "name": "q29-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(*) FROM otel_logs WHERE log_http_status_code >= 500 OR severity_number >= 17;"
+    }
+  },
+  {
+    "name": "q30-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, COUNT(*) AS c FROM otel_logs GROUP BY service_name ORDER BY service_name ASC LIMIT 3;"
+    }
+  },
+  {
+    "name": "q31-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(*) AS c, service_name FROM otel_logs GROUP BY service_name, severity_text ORDER BY c DESC LIMIT 5;"
+    }
+  },
+  {
+    "name": "q32-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(*) FROM otel_logs WHERE severity_text = 'ERROR';"
+    }
+  },
+  {
+    "name": "q33-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT service_name, COUNT(*) AS c FROM otel_logs GROUP BY service_name LIMIT 0;"
+    }
+  },
+  {
+    "name": "q34-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(*) FROM otel_logs WHERE severity_number >= 13 AND log_http_status_code >= 500;"
+    }
+  },
+  {
+    "name": "q35-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT time, service_name FROM otel_logs ORDER BY time DESC LIMIT 5;"
+    }
+  },
+  {
+    "name": "q36-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT time, service_name, severity_text FROM otel_logs ORDER BY time DESC LIMIT 1;"
+    }
+  },
+  {
+    "name": "q37-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(DISTINCT service_name) AS services FROM otel_logs;"
+    }
+  },
+  {
+    "name": "q38-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT DISTINCT service_name FROM otel_logs WHERE service_name IS NOT NULL ORDER BY service_name ASC;"
+    }
+  },
+  {
+    "name": "q39-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT COUNT(*) FROM (SELECT DISTINCT service_name, resource_cloud_region FROM otel_logs WHERE service_name IS NOT NULL AND resource_cloud_region IS NOT NULL) AS t;"
+    }
+  }

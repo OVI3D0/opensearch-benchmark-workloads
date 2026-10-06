@@ -1,0 +1,1046 @@
+{
+  "name": "dsl-q01-count-all",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true
+  }
+},
+{
+  "name": "dsl-q02-count-by-severity",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "severityText.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q03-count-by-service",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q04-count-by-region",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "resource.cloud.region.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q05-where-severity-like-error",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "term": {
+        "severityText.keyword": {
+          "value": "ERROR",
+          "case_insensitive": true
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q06-count-by-method-status",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "log.http.method.keyword"
+            },
+            {
+              "field": "log.http.status_code"
+            }
+          ],
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q07-where-status-5xx",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "range": {
+        "log.http.status_code": {
+          "gte": 500
+        }
+      }
+    },
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "log.http.status_code",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q08-count-by-namespace",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "resource.k8s.namespace.name.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q09-count-by-sdk-language",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "resource.telemetry.sdk.language.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q10-count-by-severity-service",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "severityText.keyword"
+            },
+            {
+              "field": "serviceName.keyword"
+            }
+          ],
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q11-agg-avg-max-min",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "avg_sev": {
+        "avg": {
+          "field": "severityNumber"
+        }
+      },
+      "max_status": {
+        "max": {
+          "field": "log.http.status_code"
+        }
+      },
+      "min_time": {
+        "min": {
+          "field": "time"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q12-distinct-services-hosts-pods",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "services": {
+        "cardinality": {
+          "field": "serviceName.keyword"
+        }
+      },
+      "hosts": {
+        "cardinality": {
+          "field": "resource.host.name.keyword"
+        }
+      },
+      "pods": {
+        "cardinality": {
+          "field": "resource.k8s.pod.name.keyword"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q13-stats-by-span-10s",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "histogram": {
+          "field": "time",
+          "interval": 10000,
+          "min_doc_count": 1
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q14-stats-by-span-60s",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "histogram": {
+          "field": "time",
+          "interval": 60000,
+          "min_doc_count": 1
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q15-multi-agg-by-service",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "avg_sev": {
+            "avg": {
+              "field": "severityNumber"
+            }
+          },
+          "max_sev": {
+            "max": {
+              "field": "severityNumber"
+            }
+          },
+          "min_sev": {
+            "min": {
+              "field": "severityNumber"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q16-sum-by-service",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "sum_sev": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "sum_sev": {
+            "sum": {
+              "field": "severityNumber"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q17-agg-by-sdk-language",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "resource.telemetry.sdk.language.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "avg_sev": {
+            "avg": {
+              "field": "severityNumber"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q18-dc-traces-by-service",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "unique_traces": {
+            "cardinality": {
+              "field": "traceId.keyword"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q19-dedup-service",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "d": {
+        "cardinality": {
+          "field": "serviceName.keyword"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q20-dedup-severity",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "d": {
+        "cardinality": {
+          "field": "severityText.keyword"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q21-top-services",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 3,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q22-rare-services",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 3,
+          "order": [
+            {
+              "_count": "asc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q23-eval-error-by-service",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "errors": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "errors": {
+            "filter": {
+              "range": {
+                "severityNumber": {
+                  "gte": 17
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q24-eval-5xx-by-service",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "server_errors": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "server_errors": {
+            "filter": {
+              "range": {
+                "log.http.status_code": {
+                  "gte": 500
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q25-eval-error-rate",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "bad": {
+        "filter": {
+          "range": {
+            "log.http.status_code": {
+              "gte": 500
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q26-eval-severity-band",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "filters": {
+          "filters": {
+            "low": {
+              "range": {
+                "severityNumber": {
+                  "lte": 5
+                }
+              }
+            },
+            "mid": {
+              "range": {
+                "severityNumber": {
+                  "gt": 5,
+                  "lte": 13
+                }
+              }
+            },
+            "high": {
+              "range": {
+                "severityNumber": {
+                  "gt": 13
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q27-where-prod-namespace",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "term": {
+        "resource.k8s.namespace.name.keyword": "prod"
+      }
+    },
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q28-where-severity-warn",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "range": {
+        "severityNumber": {
+          "gte": 13
+        }
+      }
+    },
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q29-where-5xx-or-error",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "bool": {
+        "should": [
+          {
+            "range": {
+              "log.http.status_code": {
+                "gte": 500
+              }
+            }
+          },
+          {
+            "range": {
+              "severityNumber": {
+                "gte": 17
+              }
+            }
+          }
+        ],
+        "minimum_should_match": 1
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q30-head-3-services",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 3,
+          "order": [
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q31-head-5-fields",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "serviceName.keyword"
+            },
+            {
+              "field": "severityText.keyword"
+            }
+          ],
+          "size": 5,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q32-where-severity-eq-error",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "term": {
+        "severityText.keyword": "ERROR"
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q33-head-0",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q34-double-where",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "bool": {
+        "filter": [
+          {
+            "range": {
+              "severityNumber": {
+                "gte": 13
+              }
+            }
+          },
+          {
+            "range": {
+              "log.http.status_code": {
+                "gte": 500
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q35-sort-time-head-5",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 5,
+    "track_total_hits": false,
+    "_source": [
+      "time",
+      "serviceName"
+    ],
+    "sort": [
+      {
+        "time": "desc"
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-q36-sort-time-head-1",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 1,
+    "track_total_hits": false,
+    "_source": [
+      "time",
+      "serviceName",
+      "severityText"
+    ],
+    "sort": [
+      {
+        "time": "desc"
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-q37-distinct-count-services",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "d": {
+        "cardinality": {
+          "field": "serviceName.keyword"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q38-dedup-fields-sort",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName.keyword",
+          "size": 10000,
+          "order": [
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-q39-dedup-multi",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "serviceName.keyword"
+            },
+            {
+              "field": "resource.cloud.region.keyword"
+            }
+          ],
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

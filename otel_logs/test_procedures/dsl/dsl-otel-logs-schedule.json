@@ -1,0 +1,273 @@
+{
+  "operation": "dsl-q01-count-all",
+  "warmup-iterations": {{ dsl_q01_count_all_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q01_count_all_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q01_count_all_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q01_count_all_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q02-count-by-severity",
+  "warmup-iterations": {{ dsl_q02_count_by_severity_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q02_count_by_severity_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q02_count_by_severity_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q02_count_by_severity_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q03-count-by-service",
+  "warmup-iterations": {{ dsl_q03_count_by_service_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q03_count_by_service_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q03_count_by_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q03_count_by_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q04-count-by-region",
+  "warmup-iterations": {{ dsl_q04_count_by_region_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q04_count_by_region_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q04_count_by_region_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q04_count_by_region_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q05-where-severity-like-error",
+  "warmup-iterations": {{ dsl_q05_where_severity_like_error_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q05_where_severity_like_error_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q05_where_severity_like_error_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q05_where_severity_like_error_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q06-count-by-method-status",
+  "warmup-iterations": {{ dsl_q06_count_by_method_status_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q06_count_by_method_status_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q06_count_by_method_status_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q06_count_by_method_status_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q07-where-status-5xx",
+  "warmup-iterations": {{ dsl_q07_where_status_5xx_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q07_where_status_5xx_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q07_where_status_5xx_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q07_where_status_5xx_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q08-count-by-namespace",
+  "warmup-iterations": {{ dsl_q08_count_by_namespace_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q08_count_by_namespace_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q08_count_by_namespace_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q08_count_by_namespace_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q09-count-by-sdk-language",
+  "warmup-iterations": {{ dsl_q09_count_by_sdk_language_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q09_count_by_sdk_language_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q09_count_by_sdk_language_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q09_count_by_sdk_language_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q10-count-by-severity-service",
+  "warmup-iterations": {{ dsl_q10_count_by_severity_service_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q10_count_by_severity_service_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q10_count_by_severity_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q10_count_by_severity_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q11-agg-avg-max-min",
+  "warmup-iterations": {{ dsl_q11_agg_avg_max_min_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q11_agg_avg_max_min_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q11_agg_avg_max_min_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q11_agg_avg_max_min_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q12-distinct-services-hosts-pods",
+  "warmup-iterations": {{ dsl_q12_distinct_services_hosts_pods_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q12_distinct_services_hosts_pods_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q12_distinct_services_hosts_pods_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q12_distinct_services_hosts_pods_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q13-stats-by-span-10s",
+  "warmup-iterations": {{ dsl_q13_stats_by_span_10s_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q13_stats_by_span_10s_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q13_stats_by_span_10s_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q13_stats_by_span_10s_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q14-stats-by-span-60s",
+  "warmup-iterations": {{ dsl_q14_stats_by_span_60s_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q14_stats_by_span_60s_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q14_stats_by_span_60s_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q14_stats_by_span_60s_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q15-multi-agg-by-service",
+  "warmup-iterations": {{ dsl_q15_multi_agg_by_service_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q15_multi_agg_by_service_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q15_multi_agg_by_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q15_multi_agg_by_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q16-sum-by-service",
+  "warmup-iterations": {{ dsl_q16_sum_by_service_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q16_sum_by_service_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q16_sum_by_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q16_sum_by_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q17-agg-by-sdk-language",
+  "warmup-iterations": {{ dsl_q17_agg_by_sdk_language_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q17_agg_by_sdk_language_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q17_agg_by_sdk_language_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q17_agg_by_sdk_language_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q18-dc-traces-by-service",
+  "warmup-iterations": {{ dsl_q18_dc_traces_by_service_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q18_dc_traces_by_service_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q18_dc_traces_by_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q18_dc_traces_by_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q19-dedup-service",
+  "warmup-iterations": {{ dsl_q19_dedup_service_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q19_dedup_service_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q19_dedup_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q19_dedup_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q20-dedup-severity",
+  "warmup-iterations": {{ dsl_q20_dedup_severity_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q20_dedup_severity_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q20_dedup_severity_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q20_dedup_severity_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q21-top-services",
+  "warmup-iterations": {{ dsl_q21_top_services_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q21_top_services_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q21_top_services_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q21_top_services_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q22-rare-services",
+  "warmup-iterations": {{ dsl_q22_rare_services_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q22_rare_services_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q22_rare_services_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q22_rare_services_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q23-eval-error-by-service",
+  "warmup-iterations": {{ dsl_q23_eval_error_by_service_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q23_eval_error_by_service_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q23_eval_error_by_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q23_eval_error_by_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q24-eval-5xx-by-service",
+  "warmup-iterations": {{ dsl_q24_eval_5xx_by_service_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q24_eval_5xx_by_service_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q24_eval_5xx_by_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q24_eval_5xx_by_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q25-eval-error-rate",
+  "warmup-iterations": {{ dsl_q25_eval_error_rate_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q25_eval_error_rate_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q25_eval_error_rate_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q25_eval_error_rate_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q26-eval-severity-band",
+  "warmup-iterations": {{ dsl_q26_eval_severity_band_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q26_eval_severity_band_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q26_eval_severity_band_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q26_eval_severity_band_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q27-where-prod-namespace",
+  "warmup-iterations": {{ dsl_q27_where_prod_namespace_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q27_where_prod_namespace_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q27_where_prod_namespace_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q27_where_prod_namespace_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q28-where-severity-warn",
+  "warmup-iterations": {{ dsl_q28_where_severity_warn_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q28_where_severity_warn_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q28_where_severity_warn_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q28_where_severity_warn_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q29-where-5xx-or-error",
+  "warmup-iterations": {{ dsl_q29_where_5xx_or_error_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q29_where_5xx_or_error_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q29_where_5xx_or_error_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q29_where_5xx_or_error_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q30-head-3-services",
+  "warmup-iterations": {{ dsl_q30_head_3_services_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q30_head_3_services_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q30_head_3_services_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q30_head_3_services_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q31-head-5-fields",
+  "warmup-iterations": {{ dsl_q31_head_5_fields_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q31_head_5_fields_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q31_head_5_fields_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q31_head_5_fields_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q32-where-severity-eq-error",
+  "warmup-iterations": {{ dsl_q32_where_severity_eq_error_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q32_where_severity_eq_error_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q32_where_severity_eq_error_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q32_where_severity_eq_error_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q33-head-0",
+  "warmup-iterations": {{ dsl_q33_head_0_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q33_head_0_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q33_head_0_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q33_head_0_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q34-double-where",
+  "warmup-iterations": {{ dsl_q34_double_where_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q34_double_where_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q34_double_where_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q34_double_where_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q35-sort-time-head-5",
+  "warmup-iterations": {{ dsl_q35_sort_time_head_5_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q35_sort_time_head_5_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q35_sort_time_head_5_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q35_sort_time_head_5_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q36-sort-time-head-1",
+  "warmup-iterations": {{ dsl_q36_sort_time_head_1_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q36_sort_time_head_1_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q36_sort_time_head_1_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q36_sort_time_head_1_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q37-distinct-count-services",
+  "warmup-iterations": {{ dsl_q37_distinct_count_services_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q37_distinct_count_services_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q37_distinct_count_services_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q37_distinct_count_services_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q38-dedup-fields-sort",
+  "warmup-iterations": {{ dsl_q38_dedup_fields_sort_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q38_dedup_fields_sort_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q38_dedup_fields_sort_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q38_dedup_fields_sort_clients or search_clients | default(1) }}
+},
+{
+  "operation": "dsl-q39-dedup-multi",
+  "warmup-iterations": {{ dsl_q39_dedup_multi_warmup_iterations or warmup_iterations | default(20) | tojson }},
+  "iterations": {{ dsl_q39_dedup_multi_iterations or test_iterations | default(20) | tojson }},
+  "target-throughput": {{ dsl_q39_dedup_multi_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ dsl_q39_dedup_multi_clients or search_clients | default(1) }}
+}
