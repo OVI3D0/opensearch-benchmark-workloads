@@ -61,7 +61,8 @@ legacy `templates` list and its runner raises `KeyError: 'client_request_start'`
 python3 scripts/otel_dp_ingest.py corpus --out-dir /opt/otel/corpus --spans 100000000 --seed $(date +%s)
 EP=https://<domain-endpoint> AUTH='<user>:<password>' RUNNER_TAG=runner-a \
   setsid nohup bash scripts/run_otel_dp_osb.sh > /opt/otel/osb-loop.log 2>&1 &
-# additional generators: same, plus SKIP_SETUP=1 and their own RUNNER_TAG
+# additional generators: same, plus SKIP_SETUP=1 WAIT_FOR_SETUP=1 and their own RUNNER_TAG
+# VARIANT=<tag> labels the target in results; EXTRA_PARAMS passes workload params (e.g. refresh_interval:30s)
 # stop at the next chunk boundary: touch /opt/otel/STOP
 ```
 

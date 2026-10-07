@@ -15,7 +15,9 @@
 # Env knobs: EP, AUTH (required), CORPUS_DIR (initial corpus), TARGET_BYTES, DISK_STOP,
 #            CHUNK_SECONDS, CLIENTS, MAX_CHUNKS (0 = until target), SKIP_SETUP=1 (resume without
 #            wiping), ROTATE=0 (never regenerate), GEN_SPANS, GEN_PROCS, RUN_TYPE, DOMAIN_TAG,
-#            RUNNER_TAG (distinguishes parallel runners in the datastore; default hostname).
+#            RUNNER_TAG (distinguishes parallel runners in the datastore; default hostname),
+#            VARIANT (mustang|baseline tag), EXTRA_PARAMS (extra workload params, e.g. refresh_interval:30s),
+#            WAIT_FOR_SETUP=1 (with SKIP_SETUP=1: wait until another generator's setup has finished).
 # Stop cleanly at the next chunk boundary: touch /opt/otel/STOP
 set -u
 : "${EP:?set EP=https://<domain endpoint>}"
@@ -34,6 +36,8 @@ GEN_MIN_FREE_GB=${GEN_MIN_FREE_GB:-320}
 RUN_TYPE=${RUN_TYPE:-otel-dp-ingest}
 DOMAIN_TAG=${DOMAIN_TAG:-$(echo "${EP#https://}" | sed -E 's/^search-//; s/-[a-z0-9]{26}\..*//')}  # AOS domain name
 RUNNER_TAG=${RUNNER_TAG:-$(hostname -s)}
+VARIANT=${VARIANT:-mustang}
+EXTRA_PARAMS=${EXTRA_PARAMS:-}
 RESULTS_DIR=${RESULTS_DIR:-/opt/otel/results}
 GEN=${GEN:-$(cd "$(dirname "$0")" && pwd)/otel_dp_ingest.py}
 DATA=/root/.benchmark/benchmarks/data
@@ -116,9 +120,9 @@ osb() {  # $1 = test procedure, $2 = chunk tag, $3 = extra workload params
     --client-options="use_ssl:true,verify_certs:false,basic_auth_user:'${AUTH%%:*}',basic_auth_password:'${AUTH#*:}',timeout:120,max_retries:0" \
     --workload-repository=ovi --workload=otel_dp --workload-revision=mustang \
     --test-procedure="$1" \
-    --workload-params="${counts},bulk_indexing_clients:${CLIENTS}${3:+,$3}" \
+    --workload-params="${counts},bulk_indexing_clients:${CLIENTS}${EXTRA_PARAMS:+,$EXTRA_PARAMS}${3:+,$3}" \
     --telemetry=node-stats --telemetry-params="node-stats-sample-interval:30" \
-    --user-tag="run-type:${RUN_TYPE},domain:${DOMAIN_TAG},variant:mustang,dataset:otel-dp,procedure:$1,chunk:$2,corpus:$(basename "$CURRENT"),runner:${RUNNER_TAG}" \
+    --user-tag="run-type:${RUN_TYPE},domain:${DOMAIN_TAG},variant:${VARIANT},dataset:otel-dp,procedure:$1,chunk:$2,corpus:$(basename "$CURRENT"),runner:${RUNNER_TAG}" \
     --results-format=csv --results-file="$RESULTS_DIR/$2.csv" \
     --on-error="${ON_ERROR:-continue}" \
     --kill-running-processes   # dedicated runner: clears OSB leftovers from an interrupted chunk
@@ -128,6 +132,15 @@ osb() {  # $1 = test procedure, $2 = chunk tag, $3 = extra workload params
 init=$(ls -d "$CORPORA"/c-* 2>/dev/null | grep -v '\.tmp$' | sort | tail -1)
 use_corpus "${init:-$CORPUS_DIR}"
 start_generation
+
+# Secondary generator: wait for the primary generator's setup (service map is its last step).
+if [ "${SKIP_SETUP:-0}" = 1 ] && [ "${WAIT_FOR_SETUP:-0}" = 1 ]; then
+  until curl -sfk -m 30 -u "$AUTH" "$EP/otel-v2-apm-service-map/_count" | grep -q '"count":[1-9]' &&
+        curl -sfk -m 30 -u "$AUTH" "$EP/_alias/logs-otel-v1,otel-v1-apm-span" > /dev/null; do
+    log "waiting for setup on $DOMAIN_TAG"; sleep 30
+  done
+  sleep 30
+fi
 
 # Resuming over a chunk started by a previous loop: let it finish rather than kill it.
 while pgrep -f "opensearch-benchmark execute-test" > /dev/null; do sleep 30; done
