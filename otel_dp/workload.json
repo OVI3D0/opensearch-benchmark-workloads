@@ -2,11 +2,6 @@
 {
   "version": 2,
   "description": "OTel logs + traces in the Data Prepper 'standard' index shape (logs-otel-v1 / otel-v1-apm-span / otel-v2-apm-service-map) for Mustang M2 indexing-throughput + resilience testing. Templates are Data Prepper's own, plus keyword dynamic templates for events/links attributes (composite rejects text under nested). Writes go to ISM rollover aliases. Corpus is generated locally by MustangBenchmarkConfigResults scripts/otel-loadtest/otel_dp_ingest.py corpus (no base-url).",
-  "composable-templates": [
-    {"name": "logs-otel-v1", "index-pattern": "logs-otel-v1-*", "delete-matching-indices": true, "template": "templates/logs-otel-v1.json"},
-    {"name": "otel-v1-apm-span", "index-pattern": "otel-v1-apm-span-*", "delete-matching-indices": true, "template": "templates/otel-v1-apm-span.json"},
-    {"name": "otel-v2-apm-service-map", "index-pattern": "otel-v2-apm-service-map", "delete-matching-indices": true, "template": "templates/otel-v2-apm-service-map.json"}
-  ],
   "indices": [
     {"name": "logs-otel-v1-000001", "body": "indices/logs-otel-v1-bootstrap.json"},
     {"name": "otel-v1-apm-span-000001", "body": "indices/otel-v1-apm-span-bootstrap.json"},
