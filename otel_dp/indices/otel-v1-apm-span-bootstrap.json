@@ -1,0 +1,7 @@
+{
+  "aliases": {
+    "otel-v1-apm-span": {
+      "is_write_index": true
+    }
+  }
+}

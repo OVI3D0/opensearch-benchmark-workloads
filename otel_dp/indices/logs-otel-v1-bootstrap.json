@@ -1,0 +1,7 @@
+{
+  "aliases": {
+    "logs-otel-v1": {
+      "is_write_index": true
+    }
+  }
+}

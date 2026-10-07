@@ -1,0 +1,53 @@
+{
+  "name": "setup",
+  "description": "Wipe our otel_dp indices (only logs-otel-v1-*, otel-v1-apm-span-*, otel-v2-apm-service-map), install templates + ISM rollover policy, bootstrap the write aliases, load the service map.",
+  "default": false,
+  "schedule": [
+    {"operation": {"operation-type": "delete-composable-template", "only-if-exists": true}},
+    {"operation": {"operation-type": "create-composable-template"}},
+    {"operation": {"name": "delete-ism-policy", "operation-type": "raw-request", "method": "DELETE",
+                   "path": "/_plugins/_ism/policies/{{ ism_policy | default('otel-dp-rollover') }}", "ignore": [404]}},
+    {"operation": {"name": "create-ism-policy", "operation-type": "raw-request", "method": "PUT",
+                   "path": "/_plugins/_ism/policies/{{ ism_policy | default('otel-dp-rollover') }}",
+                   "body": {"policy": {
+                     "description": "Data Prepper style rollover for otel logs + spans",
+                     "default_state": "current_write_index",
+                     "states": [{"name": "current_write_index",
+                                 "actions": [{"rollover": {"min_primary_shard_size": {{ rollover_shard_size | default("50gb") | tojson }}}}],
+                                 "transitions": []}],
+                     "ism_template": [{"index_patterns": ["logs-otel-v1-*", "otel-v1-apm-span-*"], "priority": 100}]}}}},
+    {"operation": {"operation-type": "create-index"}},
+    {"name": "check-cluster-health", "operation": {"operation-type": "cluster-health",
+       "request-params": {"wait_for_status": "green", "wait_for_no_relocating_shards": "true"}, "retry-until-success": true}},
+    {"operation": {"name": "index-service-map", "operation-type": "bulk", "corpora": "otel_dp_service_map", "bulk-size": 100}, "clients": 1}
+  ]
+},
+{
+  "name": "ingest",
+  "description": "Full-speed bulk of logs + spans in parallel against the rollover aliases. Corpus loops, so the run is bounded by time_period (seconds). Run `setup` once first.",
+  "default": true,
+  "schedule": [
+    {
+      "parallel": {
+        "tasks": [
+          {
+            "name": "bulk-logs",
+            "operation": {"operation-type": "bulk", "corpora": "otel_dp_logs", "bulk-size": {{ bulk_size | default(5000) }},
+                          "looped": true, "ingest-percentage": 100},
+            "clients": {{ logs_clients | default(bulk_indexing_clients | default(48)) }},
+            "warmup-time-period": {{ warmup_time_period | default(0) }},
+            "time-period": {{ time_period | default(3600) }}
+          },
+          {
+            "name": "bulk-spans",
+            "operation": {"operation-type": "bulk", "corpora": "otel_dp_spans", "bulk-size": {{ bulk_size | default(5000) }},
+                          "looped": true, "ingest-percentage": 100},
+            "clients": {{ spans_clients | default(bulk_indexing_clients | default(48)) }},
+            "warmup-time-period": {{ warmup_time_period | default(0) }},
+            "time-period": {{ time_period | default(3600) }}
+          }
+        ]
+      }
+    }
+  ]
+}
