@@ -41,3 +41,6 @@ Place files at `<data dir>/otel_dp_logs/logs.json`, `otel_dp_spans/spans.json`,
 | `bulk_size` | 5000 |
 | `bulk_indexing_clients` (or `logs_clients` / `spans_clients`) | 48 each |
 | `time_period` / `warmup_time_period` | 3600 / 0 |
+
+Note: OSB 1.18's `delete-composable-template` param source only reads the legacy `templates`
+list, so `setup` names each composable template (and its index pattern) explicitly.

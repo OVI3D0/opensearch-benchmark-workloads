@@ -3,7 +3,9 @@
   "description": "Wipe our otel_dp indices (only logs-otel-v1-*, otel-v1-apm-span-*, otel-v2-apm-service-map), install templates + ISM rollover policy, bootstrap the write aliases, load the service map.",
   "default": false,
   "schedule": [
-    {"operation": {"operation-type": "delete-composable-template", "only-if-exists": true}},
+    {"operation": {"name": "delete-template-logs-otel-v1", "operation-type": "delete-composable-template", "template": "logs-otel-v1", "only-if-exists": true, "delete-matching-indices": true, "index-pattern": "logs-otel-v1-*"}},
+    {"operation": {"name": "delete-template-otel-v1-apm-span", "operation-type": "delete-composable-template", "template": "otel-v1-apm-span", "only-if-exists": true, "delete-matching-indices": true, "index-pattern": "otel-v1-apm-span-*"}},
+    {"operation": {"name": "delete-template-otel-v2-apm-service-map", "operation-type": "delete-composable-template", "template": "otel-v2-apm-service-map", "only-if-exists": true, "delete-matching-indices": true, "index-pattern": "otel-v2-apm-service-map"}},
     {"operation": {"operation-type": "create-composable-template"}},
     {"operation": {"name": "delete-ism-policy", "operation-type": "raw-request", "method": "DELETE",
                    "path": "/_plugins/_ism/policies/{{ ism_policy | default('otel-dp-rollover') }}", "ignore": [404]}},
