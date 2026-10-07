@@ -1,3 +1,5 @@
+{# Template params are consumed inside {% include %}d files, which OSB's unused-parameter check can't see. #}
+{% set _template_params = [number_of_shards | default(none), number_of_replicas | default(none), refresh_interval | default(none)] %}
 {
   "name": "setup",
   "description": "Wipe our otel_dp indices (only logs-otel-v1-*, otel-v1-apm-span-*, otel-v2-apm-service-map), install templates + ISM rollover policy, bootstrap the write aliases, load the service map.",
