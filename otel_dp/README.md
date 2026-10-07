@@ -36,7 +36,7 @@ Place files at `<data dir>/otel_dp_logs/logs.json`, `otel_dp_spans/spans.json`,
 | Param | Default |
 |---|---|
 | `logs_document_count` / `spans_document_count` / `service_map_document_count` | 100000000 / 100000000 / 46 |
-| `number_of_shards` / `number_of_replicas` / `refresh_interval` | 10 / 1 / `1s` |
+| `number_of_shards` / `number_of_replicas` / `refresh_interval` | 10 / 1 / unset (cluster default; AOS enforces a 5s minimum on explicit values) |
 | `rollover_shard_size` | `50gb` |
 | `bulk_size` | 5000 |
 | `bulk_indexing_clients` (or `logs_clients` / `spans_clients`) | 48 each |

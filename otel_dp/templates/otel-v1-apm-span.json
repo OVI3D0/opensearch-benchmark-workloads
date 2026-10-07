@@ -7,7 +7,7 @@
     "settings": {
       "index.number_of_shards": {{ number_of_shards | default(10) }},
       "index.number_of_replicas": {{ number_of_replicas | default(1) }},
-      "index.refresh_interval": {{ refresh_interval | default("1s") | tojson }},
+      {% if refresh_interval is defined %}"index.refresh_interval": {{ refresh_interval | tojson }},{% endif %}
       "index.mapping.total_fields.limit": 10000,
       "plugins.index_state_management.rollover_alias": "otel-v1-apm-span"
     },
