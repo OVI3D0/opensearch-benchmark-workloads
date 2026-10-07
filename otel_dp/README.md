@@ -1,6 +1,6 @@
 # otel_dp — OTel logs + traces, Data Prepper index shape
 
-Indexing-throughput / resilience workload for Mustang M2. Documents and mappings match what
+Indexing-throughput / resilience workload. Documents and mappings match what
 Data Prepper's `otel_logs` / `otel_traces` sinks produce with the **standard** index templates:
 
 | Alias / index | Template | Notes |
@@ -65,10 +65,9 @@ EP=https://<domain-endpoint> AUTH='<user>:<password>' RUNNER_TAG=runner-a \
 # stop at the next chunk boundary: touch /opt/otel/STOP
 ```
 
-Reference run (Mustang M2, 10× 8-vCPU data nodes): 2× c7i.8xlarge generators, `bulk_size` 5000,
-48 clients/signal/generator (192 total), unthrottled → ~300–400k docs/s, cluster CPU-bound;
-256 clients just deepened the write queue (~500) and caused 120 s timeouts. Client options
-`timeout:120,max_retries:0` keep a hung bulk from stalling the end of a time-period chunk.
+Tuning notes: bulks are unthrottled, so add clients only until the cluster is saturated — past that
+they just deepen the write queue and cause client timeouts. Client options `timeout:120,max_retries:0`
+keep a hung bulk from stalling the end of a time-period chunk.
 
 `scripts/otel_dp_ingest.py setup|run` is the original non-OSB driver (same docs/templates, aggregate docs/s
 only) — kept for quick smoke loads; use OSB for anything you want latency/throughput metrics from.
