@@ -168,7 +168,8 @@ print("setup verified: Data Prepper mappings in place")
 PY
 fi
 
-n=$(ls "$RESULTS_DIR"/chunk-*.csv 2>/dev/null | wc -l)
+# Continue after the highest chunk number (failed chunks leave gaps, so a file count would collide).
+n=$(ls "$RESULTS_DIR" 2>/dev/null | sed -nE 's/^chunk-0*([0-9]+)\.csv$/\1/p' | sort -n | tail -1); n=${n:-0}
 ran=0
 while :; do
   read -r pri disk < <(state)
