@@ -29,6 +29,10 @@ Place files at `<data dir>/otel_dp_logs/logs.json`, `otel_dp_spans/spans.json`,
 - `setup` — deletes **only** `logs-otel-v1-*`, `otel-v1-apm-span-*`, `otel-v2-apm-service-map`;
   installs templates + ISM policy; bootstraps write aliases; loads the service map.
 - `ingest` (default) — parallel looped bulk of logs + spans for `time_period` seconds.
+- `search` — the PPL query set in `operations/ppl.json` (logs, spans, service map), one client,
+  sequential, `search_warmup_iterations` + `search_iterations` each (heavy queries use
+  `heavy_iterations`). Index names via `logs_index` / `spans_index` / `service_map_index`; trace
+  lookups use `trace_id`. Run after ingest stops.
 
 ## Parameters
 

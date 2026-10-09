@@ -1,0 +1,396 @@
+{
+  "name": "l01-count-all",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats count()"
+  }
+},
+{
+  "name": "l02-count-by-severity",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats count() as c by `severity.text` | sort - c"
+  }
+},
+{
+  "name": "l03-count-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats count() as c by `resource.attributes.service.name` | sort - c"
+  }
+},
+{
+  "name": "l04-count-by-zone",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats count() as c by `resource.attributes.cloud.availability_zone` | sort - c"
+  }
+},
+{
+  "name": "l05-where-severity-eq-error",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | where `severity.text` = 'ERROR' | stats count()"
+  }
+},
+{
+  "name": "l06-count-by-namespace",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats count() as c by `resource.attributes.k8s.namespace.name` | sort - c"
+  }
+},
+{
+  "name": "l07-count-by-sdk-language",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats count() as c by `resource.attributes.telemetry.sdk.language` | sort - c"
+  }
+},
+{
+  "name": "l08-count-by-severity-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats count() as c by `severity.text`, `resource.attributes.service.name` | sort - c"
+  }
+},
+{
+  "name": "l09-agg-avg-max-min",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats avg(`severity.number`) as avg_sev, max(`severity.number`) as max_sev, min(`@timestamp`) as min_time"
+  }
+},
+{
+  "name": "l10-distinct-services-hosts-pods",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats dc(`resource.attributes.service.name`) as services, dc(`resource.attributes.host.name`) as hosts, dc(`resource.attributes.k8s.pod.name`) as pods"
+  }
+},
+{
+  "name": "l11-stats-by-span-1h",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats count() as c by span(`@timestamp`, 1h)"
+  }
+},
+{
+  "name": "l12-multi-agg-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats count() as c, avg(`severity.number`) as avg_sev, max(`severity.number`) as max_sev, min(`severity.number`) as min_sev by `resource.attributes.service.name` | sort - c"
+  }
+},
+{
+  "name": "l13-dc-traces-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | stats count() as c, dc(traceId) as unique_traces by `resource.attributes.service.name` | sort - c"
+  }
+},
+{
+  "name": "l14-dedup-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | dedup `resource.attributes.service.name` | stats count()"
+  }
+},
+{
+  "name": "l15-top-services",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | top 3 `resource.attributes.service.name`"
+  }
+},
+{
+  "name": "l16-rare-services",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | rare 3 `resource.attributes.service.name`"
+  }
+},
+{
+  "name": "l17-eval-error-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | eval is_error = case(`severity.number` >= 17, 1 else 0) | stats sum(is_error) as errors by `resource.attributes.service.name` | sort - errors"
+  }
+},
+{
+  "name": "l18-eval-severity-band",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | eval sev_band = case(`severity.number` <= 5, 'low', `severity.number` <= 13, 'mid' else 'high') | stats count() as c by sev_band | sort - c"
+  }
+},
+{
+  "name": "l19-where-severity-warn",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | where `severity.number` >= 13 | stats count() as c by `resource.attributes.service.name` | sort - c"
+  }
+},
+{
+  "name": "l20-sort-time-head-5",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | sort - `@timestamp` | head 5 | fields `@timestamp`, `resource.attributes.service.name`, `severity.text`"
+  }
+},
+{
+  "name": "l21-fts-match-declined",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | where match(body, 'declined') | stats count()"
+  }
+},
+{
+  "name": "l22-fts-match-unavailable-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | where match(body, 'Unavailable') | stats count() as c by `resource.attributes.service.name` | sort - c"
+  }
+},
+{
+  "name": "l23-fts-phrase-connection-reset",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | where match_phrase(body, 'connection reset by peer') | stats count()"
+  }
+},
+{
+  "name": "l24-trace-lookup-logs",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }} | where traceId = '{{ trace_id | default('d84d222f9f626d9f769c6a486ad38d9d') }}' | fields `@timestamp`, `resource.attributes.service.name`, `severity.text`, body"
+  }
+},
+{
+  "name": "s01-count-all",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats count()"
+  }
+},
+{
+  "name": "s02-count-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats count() as c by serviceName | sort - c"
+  }
+},
+{
+  "name": "s03-count-by-kind",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats count() as c by kind | sort - c"
+  }
+},
+{
+  "name": "s04-count-by-status",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats count() as c by `status.code` | sort - c"
+  }
+},
+{
+  "name": "s05-latency-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats avg(durationInNanos) as avg_ns, max(durationInNanos) as max_ns by serviceName | sort - avg_ns"
+  }
+},
+{
+  "name": "s06-p95-latency-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats percentile(durationInNanos, 95) as p95_ns by serviceName | sort - p95_ns"
+  }
+},
+{
+  "name": "s07-error-spans-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | where `status.code` = 2 | stats count() as c by serviceName | sort - c"
+  }
+},
+{
+  "name": "s08-slow-spans-by-op",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | where durationInNanos > 500000000 | stats count() as c by name | sort - c"
+  }
+},
+{
+  "name": "s09-count-by-tracegroup",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats count() as c by traceGroup | sort - c"
+  }
+},
+{
+  "name": "s10-distinct-traces",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats dc(traceId) as traces"
+  }
+},
+{
+  "name": "s11-tracegroup-latency",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | where parentSpanId = '' | stats avg(`traceGroupFields.durationInNanos`) as avg_ns, count() as traces by traceGroup | sort - avg_ns"
+  }
+},
+{
+  "name": "s12-stats-by-span-1h",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats count() as c by span(startTime, 1h)"
+  }
+},
+{
+  "name": "s13-top5-slowest-spans",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | sort - durationInNanos | head 5 | fields traceId, name, serviceName, durationInNanos"
+  }
+},
+{
+  "name": "s14-trace-lookup-spans",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | where traceId = '{{ trace_id | default('d84d222f9f626d9f769c6a486ad38d9d') }}' | fields spanId, parentSpanId, name, serviceName, durationInNanos"
+  }
+},
+{
+  "name": "s15-http-5xx-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | where `attributes.http.response.status_code` >= 500 | stats count() as c by serviceName | sort - c"
+  }
+},
+{
+  "name": "s16-count-by-http-method",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats count() as c by `attributes.http.request.method` | sort - c"
+  }
+},
+{
+  "name": "s17-root-spans-by-name",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | where parentSpanId = '' | stats count() as c by name | sort - c"
+  }
+},
+{
+  "name": "s18-error-rate-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | eval err = case(`status.code` = 2, 1 else 0) | stats sum(err) as errors, count() as total by serviceName | eval rate = round(errors * 100.0 / total, 2) | sort - rate"
+  }
+},
+{
+  "name": "s19-count-by-service-kind",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }} | stats count() as c by serviceName, kind | sort - c"
+  }
+},
+{
+  "name": "m01-service-edges",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ service_map_index | default('otel-v2-apm-service-map') }} | stats count() as c by `sourceNode.keyAttributes.name`, `targetNode.keyAttributes.name` | sort - c"
+  }
+}
