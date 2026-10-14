@@ -14,7 +14,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats count()"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats count()"
   }
 },
 {
@@ -23,7 +23,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats count() as c by `severity.text` | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats count() as c by `severity.text` | sort - c"
   }
 },
 {
@@ -32,7 +32,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats count() as c by `resource.attributes.service.name` | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats count() as c by `resource.attributes.service.name` | sort - c"
   }
 },
 {
@@ -41,7 +41,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats count() as c by `resource.attributes.cloud.availability_zone` | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats count() as c by `resource.attributes.cloud.availability_zone` | sort - c"
   }
 },
 {
@@ -50,7 +50,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | where `severity.text` = 'ERROR' | stats count()"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | where `severity.text` = 'ERROR' | stats count()"
   }
 },
 {
@@ -59,7 +59,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats count() as c by `resource.attributes.k8s.namespace.name` | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats count() as c by `resource.attributes.k8s.namespace.name` | sort - c"
   }
 },
 {
@@ -68,7 +68,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats count() as c by `resource.attributes.telemetry.sdk.language` | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats count() as c by `resource.attributes.telemetry.sdk.language` | sort - c"
   }
 },
 {
@@ -77,7 +77,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats count() as c by `severity.text`, `resource.attributes.service.name` | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats count() as c by `severity.text`, `resource.attributes.service.name` | sort - c"
   }
 },
 {
@@ -86,7 +86,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats avg(`severity.number`) as avg_sev, max(`severity.number`) as max_sev, min(`@timestamp`) as min_time"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats avg(`severity.number`) as avg_sev, max(`severity.number`) as max_sev, min(`@timestamp`) as min_time"
   }
 },
 {
@@ -95,7 +95,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats dc(`resource.attributes.service.name`) as services, dc(`resource.attributes.host.name`) as hosts, dc(`resource.attributes.k8s.pod.name`) as pods"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats dc(`resource.attributes.service.name`) as services, dc(`resource.attributes.host.name`) as hosts, dc(`resource.attributes.k8s.pod.name`) as pods"
   }
 },
 {
@@ -104,7 +104,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats count() as c by span(`@timestamp`, 1h)"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats count() as c by span(`@timestamp`, 1h)"
   }
 },
 {
@@ -113,7 +113,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats count() as c, avg(`severity.number`) as avg_sev, max(`severity.number`) as max_sev, min(`severity.number`) as min_sev by `resource.attributes.service.name` | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats count() as c, avg(`severity.number`) as avg_sev, max(`severity.number`) as max_sev, min(`severity.number`) as min_sev by `resource.attributes.service.name` | sort - c"
   }
 },
 {
@@ -122,7 +122,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | stats count() as c, dc(traceId) as unique_traces by `resource.attributes.service.name` | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | stats count() as c, dc(traceId) as unique_traces by `resource.attributes.service.name` | sort - c"
   }
 },
 {
@@ -131,7 +131,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | dedup `resource.attributes.service.name` | stats count()"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | dedup `resource.attributes.service.name` | stats count()"
   }
 },
 {
@@ -140,7 +140,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | top 3 `resource.attributes.service.name`"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | top 3 `resource.attributes.service.name`"
   }
 },
 {
@@ -149,7 +149,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | rare 3 `resource.attributes.service.name`"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | rare 3 `resource.attributes.service.name`"
   }
 },
 {
@@ -158,7 +158,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | eval is_error = case(`severity.number` >= 17, 1 else 0) | stats sum(is_error) as errors by `resource.attributes.service.name` | sort - errors"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | eval is_error = case(`severity.number` >= 17, 1 else 0) | stats sum(is_error) as errors by `resource.attributes.service.name` | sort - errors"
   }
 },
 {
@@ -167,7 +167,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | eval sev_band = case(`severity.number` <= 5, 'low', `severity.number` <= 13, 'mid' else 'high') | stats count() as c by sev_band | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | eval sev_band = case(`severity.number` <= 5, 'low', `severity.number` <= 13, 'mid' else 'high') | stats count() as c by sev_band | sort - c"
   }
 },
 {
@@ -176,7 +176,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | where `severity.number` >= 13 | stats count() as c by `resource.attributes.service.name` | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | where `severity.number` >= 13 | stats count() as c by `resource.attributes.service.name` | sort - c"
   }
 },
 {
@@ -185,7 +185,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | sort - `@timestamp` | head 5 | fields `@timestamp`, `resource.attributes.service.name`, `severity.text`"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | sort - `@timestamp` | head 5 | fields `@timestamp`, `resource.attributes.service.name`, `severity.text`"
   }
 },
 {
@@ -194,7 +194,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | where match(body, 'declined') | stats count()"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | where match(body, 'declined') | stats count()"
   }
 },
 {
@@ -203,7 +203,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | where match(body, 'Unavailable') | stats count() as c by `resource.attributes.service.name` | sort - c"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | where match(body, 'Unavailable') | stats count() as c by `resource.attributes.service.name` | sort - c"
   }
 },
 {
@@ -212,7 +212,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | where match_phrase(body, 'connection reset by peer') | stats count()"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | where match_phrase(body, 'connection reset by peer') | stats count()"
   }
 },
 {
@@ -221,7 +221,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where }} | where traceId = '{{ trace_id | default('d84d222f9f626d9f769c6a486ad38d9d') }}' | fields `@timestamp`, `resource.attributes.service.name`, `severity.text`, body"
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_where | safe }} | where traceId = '{{ trace_id | default('d84d222f9f626d9f769c6a486ad38d9d') }}' | fields `@timestamp`, `resource.attributes.service.name`, `severity.text`, body"
   }
 },
 {
@@ -230,7 +230,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats count()"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats count()"
   }
 },
 {
@@ -239,7 +239,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats count() as c by serviceName | sort - c"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats count() as c by serviceName | sort - c"
   }
 },
 {
@@ -248,7 +248,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats count() as c by kind | sort - c"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats count() as c by kind | sort - c"
   }
 },
 {
@@ -257,7 +257,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats count() as c by `status.code` | sort - c"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats count() as c by `status.code` | sort - c"
   }
 },
 {
@@ -266,7 +266,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats avg(durationInNanos) as avg_ns, max(durationInNanos) as max_ns by serviceName | sort - avg_ns"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats avg(durationInNanos) as avg_ns, max(durationInNanos) as max_ns by serviceName | sort - avg_ns"
   }
 },
 {
@@ -275,7 +275,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats percentile(durationInNanos, 95) as p95_ns by serviceName | sort - p95_ns"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats percentile(durationInNanos, 95) as p95_ns by serviceName | sort - p95_ns"
   }
 },
 {
@@ -284,7 +284,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | where `status.code` = 2 | stats count() as c by serviceName | sort - c"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | where `status.code` = 2 | stats count() as c by serviceName | sort - c"
   }
 },
 {
@@ -293,7 +293,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | where durationInNanos > 500000000 | stats count() as c by name | sort - c"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | where durationInNanos > 500000000 | stats count() as c by name | sort - c"
   }
 },
 {
@@ -302,7 +302,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats count() as c by traceGroup | sort - c"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats count() as c by traceGroup | sort - c"
   }
 },
 {
@@ -311,7 +311,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats dc(traceId) as traces"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats dc(traceId) as traces"
   }
 },
 {
@@ -320,7 +320,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | where parentSpanId = '' | stats avg(`traceGroupFields.durationInNanos`) as avg_ns, count() as traces by traceGroup | sort - avg_ns"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | where parentSpanId = '' | stats avg(`traceGroupFields.durationInNanos`) as avg_ns, count() as traces by traceGroup | sort - avg_ns"
   }
 },
 {
@@ -329,7 +329,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats count() as c by span(startTime, 1h)"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats count() as c by span(startTime, 1h)"
   }
 },
 {
@@ -338,7 +338,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | sort - durationInNanos | head 5 | fields traceId, name, serviceName, durationInNanos"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | sort - durationInNanos | head 5 | fields traceId, name, serviceName, durationInNanos"
   }
 },
 {
@@ -347,7 +347,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | where traceId = '{{ trace_id | default('d84d222f9f626d9f769c6a486ad38d9d') }}' | fields spanId, parentSpanId, name, serviceName, durationInNanos"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | where traceId = '{{ trace_id | default('d84d222f9f626d9f769c6a486ad38d9d') }}' | fields spanId, parentSpanId, name, serviceName, durationInNanos"
   }
 },
 {
@@ -356,7 +356,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | where `attributes.http.response.status_code` >= 500 | stats count() as c by serviceName | sort - c"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | where `attributes.http.response.status_code` >= 500 | stats count() as c by serviceName | sort - c"
   }
 },
 {
@@ -365,7 +365,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats count() as c by `attributes.http.request.method` | sort - c"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats count() as c by `attributes.http.request.method` | sort - c"
   }
 },
 {
@@ -374,7 +374,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | where parentSpanId = '' | stats count() as c by name | sort - c"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | where parentSpanId = '' | stats count() as c by name | sort - c"
   }
 },
 {
@@ -383,7 +383,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | eval err = case(`status.code` = 2, 1 else 0) | stats sum(err) as errors, count() as total by serviceName | eval rate = round(errors * 100.0 / total, 2) | sort - rate"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | eval err = case(`status.code` = 2, 1 else 0) | stats sum(err) as errors, count() as total by serviceName | eval rate = round(errors * 100.0 / total, 2) | sort - rate"
   }
 },
 {
@@ -392,7 +392,7 @@
   "method": "POST",
   "path": "/_plugins/_ppl",
   "body": {
-    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where }} | stats count() as c by serviceName, kind | sort - c"
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_where | safe }} | stats count() as c by serviceName, kind | sort - c"
   }
 },
 {
