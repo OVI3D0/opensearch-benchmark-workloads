@@ -32,7 +32,8 @@ Place files at `<data dir>/otel_dp_logs/logs.json`, `otel_dp_spans/spans.json`,
 - `search` — the PPL query set in `operations/ppl.json` (logs, spans, service map), one client,
   sequential, `search_warmup_iterations` + `search_iterations` each (heavy queries use
   `heavy_iterations`). Index names via `logs_index` / `spans_index` / `service_map_index`; trace
-  lookups use `trace_id`. Run after ingest stops.
+  lookups use `trace_id`. Optional time window via `time_from` / `time_to` (see below). Run after
+  ingest stops.
 
 ## Parameters
 
@@ -43,6 +44,8 @@ Place files at `<data dir>/otel_dp_logs/logs.json`, `otel_dp_spans/spans.json`,
 | `rollover_shard_size` | `50gb` |
 | `bulk_size` | 5000 |
 | `bulk_indexing_clients` (or `logs_clients` / `spans_clients`) | 48 each |
+| `time_from` / `time_to` (search) | unset. When set (`'YYYY-MM-DD HH:MM:SS'`, half-open `[from, to)`), every logs/spans query gets `where <field> >= from and <field> < to` right after its source, so a run can target a fixed slice of a large cluster; pick a `trace_id` inside the window |
+| `logs_time_field` / `spans_time_field` (search) | `@timestamp` |
 | `time_period` / `warmup_time_period` | 3600 / 0 |
 
 Note: `setup` manages templates/indices with `raw-request` rather than OSB's
