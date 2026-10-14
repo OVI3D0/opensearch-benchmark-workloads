@@ -1,13 +1,11 @@
-{#- Optional time window (e.g. a fixed slice of a large cluster): set time_from and time_to
-    ('YYYY-MM-DD HH:MM:SS', half-open [from, to)) to add a where-clause on logs_time_field /
-    spans_time_field (default @timestamp) right after each logs/spans source. -#}
-{%- if time_from is defined -%}
-{%- set logs_where = " | where `" ~ (logs_time_field | default('@timestamp')) ~ "` >= '" ~ time_from ~ "' and `" ~ (logs_time_field | default('@timestamp')) ~ "` < '" ~ time_to ~ "'" -%}
-{%- set spans_where = " | where `" ~ (spans_time_field | default('@timestamp')) ~ "` >= '" ~ time_from ~ "' and `" ~ (spans_time_field | default('@timestamp')) ~ "` < '" ~ time_to ~ "'" -%}
-{%- else -%}
-{%- set logs_where = "" -%}
-{%- set spans_where = "" -%}
-{%- endif %}
+{#- Optional time window (e.g. a fixed slice of a large cluster): time_from ('YYYY-MM-DD HH:MM:SS')
+    adds `where <field> >= time_from` right after each logs/spans source; time_to, if also set, adds
+    `and <field> < time_to`. Field: logs_time_field / spans_time_field (default @timestamp). -#}
+{%- macro window(field) -%}
+{%- if time_from is defined %} | where `{{ field }}` >= '{{ time_from }}'{% if time_to is defined %} and `{{ field }}` < '{{ time_to }}'{% endif %}{% endif -%}
+{%- endmacro -%}
+{%- set logs_where = window(logs_time_field | default('@timestamp')) -%}
+{%- set spans_where = window(spans_time_field | default('@timestamp')) -%}
 {
   "name": "l01-count-all",
   "operation-type": "raw-request",

@@ -44,7 +44,7 @@ Place files at `<data dir>/otel_dp_logs/logs.json`, `otel_dp_spans/spans.json`,
 | `rollover_shard_size` | `50gb` |
 | `bulk_size` | 5000 |
 | `bulk_indexing_clients` (or `logs_clients` / `spans_clients`) | 48 each |
-| `time_from` / `time_to` (search) | unset. When set (`'YYYY-MM-DD HH:MM:SS'`, half-open `[from, to)`), every logs/spans query gets `where <field> >= from and <field> < to` right after its source, so a run can target a fixed slice of a large cluster; pick a `trace_id` inside the window |
+| `time_from` / `time_to` (search) | unset. `time_from` (`'YYYY-MM-DD HH:MM:SS'`) adds `where <field> >= time_from` right after each logs/spans source; `time_to` (optional) adds `and <field> < time_to`. Lets a run target a fixed slice of a large cluster; pick a `trace_id` inside the window |
 | `logs_time_field` / `spans_time_field` (search) | `@timestamp` |
 | `time_period` / `warmup_time_period` | 3600 / 0 |
 
