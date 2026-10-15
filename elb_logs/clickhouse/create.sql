@@ -1,0 +1,47 @@
+-- ALB access logs (elb_logs v1), from scripts/nightly-perf/elb_corpus.py clickhouse-ddl; dates are DateTime64(3) = OpenSearch `date` (ms) resolution.
+-- Column order == the corpus parquet, so INSERT … SELECT * FROM url(parquet) maps 1:1. All Nullable except the sort key @timestamp (its CHECK fails the load if a doc lacks it).
+CREATE TABLE elb_logs
+(
+    `@timestamp` DateTime64(3, 'UTC'),
+    `type` Nullable(String),
+    `elb` Nullable(String),
+    `client_ip` Nullable(String),
+    `client_port` Nullable(Int32),
+    `target_ip` Nullable(String),
+    `target_port` Nullable(Int32),
+    `request_processing_time` Nullable(Float64),
+    `target_processing_time` Nullable(Float64),
+    `response_processing_time` Nullable(Float64),
+    `elb_status_code` Nullable(Int32),
+    `target_status_code` Nullable(Int32),
+    `received_bytes` Nullable(Int64),
+    `sent_bytes` Nullable(Int64),
+    `request` Nullable(String),
+    `http_method` Nullable(String),
+    `request_url` Nullable(String),
+    `url_host` Nullable(String),
+    `url_path` Nullable(String),
+    `url_query` Nullable(String),
+    `http_version` Nullable(String),
+    `user_agent` Nullable(String),
+    `ssl_cipher` Nullable(String),
+    `ssl_protocol` Nullable(String),
+    `target_group_arn` Nullable(String),
+    `trace_id` Nullable(String),
+    `domain_name` Nullable(String),
+    `chosen_cert_arn` Nullable(String),
+    `matched_rule_priority` Nullable(Int32),
+    `request_creation_time` Nullable(DateTime64(3, 'UTC')),
+    `actions_executed` Nullable(String),
+    `redirect_url` Nullable(String),
+    `error_reason` Nullable(String),
+    `target_ip_port_list` Nullable(String),
+    `target_status_code_list` Nullable(String),
+    `classification` Nullable(String),
+    `classification_reason` Nullable(String),
+    `conn_trace_id` Nullable(String),
+    `lb_node_ip` Nullable(String),
+    CONSTRAINT timestamp_present CHECK `@timestamp` > 0
+)
+ENGINE = MergeTree
+ORDER BY `@timestamp`;
