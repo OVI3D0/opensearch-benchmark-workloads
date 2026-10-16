@@ -93,7 +93,7 @@ This workload allows the following parameters to be specified using `--workload-
 * `test_iterations` (default: 100): Iterations for each query.
 * `target_throughput` (default: 2): Number of requests per second per query, `none` for no limit.
 * `search_clients` (default: 1): Number of clients that issue query requests.
-* `legacy_syntax` (default: "false"): Value of the transient `plugins.ppl.syntax.legacy.preferred` cluster setting.
+* `legacy_syntax` (default: false, a boolean): Value of the transient `plugins.ppl.syntax.legacy.preferred` cluster setting.
 
 ### License
 

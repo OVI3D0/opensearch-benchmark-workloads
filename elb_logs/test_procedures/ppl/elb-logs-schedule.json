@@ -3,7 +3,7 @@
     "operation-type": "put-settings",
     "body": {
       "transient": {
-        "plugins.ppl.syntax.legacy.preferred": "{{legacy_syntax | default("false")}}"
+        "plugins.ppl.syntax.legacy.preferred": {{ legacy_syntax | default(false) | tojson }}
       }
     }
   }
