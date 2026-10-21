@@ -5,7 +5,7 @@ A search-only OpenSearch Benchmark workload that runs 39 PPL queries against an 
 ## What this workload does
 
 - **The search procedures don't ingest data.** Load the OTel logs index yourself (e.g., via Data Prepper from telemetrygen, restored from a snapshot, or any other path), or use `otel-logs-ingest`.
-- **`otel-logs-ingest` needs the corpus pre-placed.** The frozen 30M-doc corpus (`otel_logs-v1.json.gz`, plus `otel_logs-v1-1k.json.gz` for `--test-mode`) isn't publicly hosted, so the `base-url` in `workload.json` is a placeholder: put the files in OSB's data directory (`<root.dir>/data/otel_logs/`) before running, and OSB skips the download.
+- **`otel-logs-ingest` needs the corpus pre-placed.** The frozen 30M-doc corpus (`otel_logs-v1.json.gz`, plus `otel_logs-v1-1k.json.gz` for `--test-mode`) isn't publicly hosted, so the `base-url` in `workload.json` only has to answer HTTP 403/404 (OSB then builds the `.offset` index locally; an unresolvable host makes OSB fail): put the files in OSB's data directory (`<root.dir>/data/otel_logs/`) before running, and OSB skips the download.
 - **Does run 39 PPL queries** covering counts, group-by, where-clauses, eval expressions, dedup, top/rare, head, sort, span aggregations, and multi-field analytics.
 - **Reports per-query throughput and latency** so you can compare engines or cluster configurations on the same dataset.
 

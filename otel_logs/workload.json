@@ -10,7 +10,7 @@
   "corpora": [
     {
       "name": "otel_logs",
-      "base-url": "https://corpora.invalid/otel_logs/v1",
+      "base-url": "https://dbyiw3u3rf9yr.cloudfront.net/corpora/otel_logs",
       "documents": [
         {
           "source-file": "otel_logs-v1.json.gz",
