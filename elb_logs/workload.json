@@ -12,7 +12,6 @@
   "corpora": [
     {
       "name": "elb_logs",
-      "base-url": "https://dbyiw3u3rf9yr.cloudfront.net/corpora/elb_logs",
       "documents": [
         {
           "source-file": "documents.json.bz2",

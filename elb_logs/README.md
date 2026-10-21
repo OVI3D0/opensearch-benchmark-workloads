@@ -4,6 +4,10 @@ This workload is based on [Application Load Balancer access logs](https://docs.a
 Each document is one access log entry, with the raw `request` field additionally broken out into
 `http_method`, `request_url`, `url_host`, `url_path`, `url_query` and `http_version`.
 
+**Corpus:** `workload.json` declares no download URL. Place `documents.json.bz2` (and
+`documents-1k.json.bz2` for `--test-mode`) in OSB's data directory (`<root.dir>/data/elb_logs/`)
+before running; OSB then skips the download and builds the `.offset` table locally.
+
 **Note:** the corpus statistics (`document-count`, `compressed-bytes`, `uncompressed-bytes`) in
 `workload.json` are placeholders and must be replaced with the real values once the corpus is
 uploaded.
