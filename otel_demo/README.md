@@ -11,7 +11,7 @@ through an OTel collector and Data Prepper into the OpenSearch OTel format (dott
 | `otel_metrics` | 4,547,738 |
 
 The corpus is not published with the workload: place the files from `files.txt` in the
-benchmark data directory (`<data root>/otel_demo/`) or pass `corpus_base_url`.
+benchmark data directory (`<data root>/otel_demo/`) before running; the corpus has no download URL.
 
 ### Index bodies
 

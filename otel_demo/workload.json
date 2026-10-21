@@ -20,7 +20,6 @@
   "corpora": [
     {
       "name": "otel_demo",
-      "base-url": "{{ corpus_base_url | default('https://dbyiw3u3rf9yr.cloudfront.net/corpora/otel_demo') }}",
       "documents": [
         {
           "source-file": "otel_spans.ndjson.gz",
