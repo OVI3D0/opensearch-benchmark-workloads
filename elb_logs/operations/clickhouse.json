@@ -1,0 +1,266 @@
+  {
+    "name": "q01-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT * FROM elb_logs WHERE elb_status_code = 504 LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q02-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS error_count, toStartOfInterval(`@timestamp`, INTERVAL 5 MINUTE) AS \"span(`@timestamp`,5m)\", elb_status_code FROM elb_logs WHERE elb_status_code >= 500 GROUP BY elb_status_code, \"span(`@timestamp`,5m)\" LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q03-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS requestCount, toStartOfInterval(`@timestamp`, INTERVAL 5 MINUTE) AS time_bin, elb_status_code FROM elb_logs WHERE elb_status_code IS NOT NULL GROUP BY elb_status_code, time_bin ORDER BY time_bin DESC LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q04-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS requests, countIf(elb_status_code >= 400) AS errors, toStartOfHour(`@timestamp`) AS hour FROM elb_logs GROUP BY hour ORDER BY hour LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q05-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS total_requests, countIf(elb_status_code > 499) AS errors, round(errors * 100.0 / total_requests, 4) AS error_rate_pct FROM elb_logs;"
+    }
+  },
+  {
+    "name": "q06-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS requestCount, url_path FROM elb_logs WHERE elb_status_code >= 500 AND url_path IS NOT NULL GROUP BY url_path ORDER BY requestCount DESC LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q07-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT * FROM elb_logs WHERE elb_status_code >= 500 ORDER BY `@timestamp` DESC, trace_id ASC NULLS FIRST LIMIT 1000;"
+    }
+  },
+  {
+    "name": "q08-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS c, elb_status_code, target_status_code FROM elb_logs WHERE elb_status_code IS NOT NULL AND target_status_code IS NOT NULL GROUP BY elb_status_code, target_status_code ORDER BY c DESC, elb_status_code, target_status_code LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q09-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS `count`, client_ip FROM elb_logs WHERE client_ip IS NOT NULL GROUP BY client_ip ORDER BY `count` DESC LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q10-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS c, http_method, client_ip FROM elb_logs WHERE http_method IS NOT NULL AND client_ip IS NOT NULL GROUP BY http_method, client_ip ORDER BY c DESC, http_method, client_ip LIMIT 100;"
+    }
+  },
+  {
+    "name": "q11-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS `count`, client_ip, elb, request_url FROM elb_logs WHERE client_ip IS NOT NULL AND elb IS NOT NULL AND request_url IS NOT NULL GROUP BY client_ip, elb, request_url ORDER BY `count` DESC LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q12-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT request_url FROM elb_logs WHERE user_agent LIKE '%Safari%' ORDER BY `@timestamp`, trace_id ASC NULLS FIRST LIMIT 10;"
+    }
+  },
+  {
+    "name": "q13-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS scanAttempts, min(`@timestamp`) AS first_seen, max(`@timestamp`) AS last_seen, client_ip, user_agent FROM elb_logs WHERE (request LIKE '%.env%' OR request LIKE '%admin%' OR request LIKE '%login%' OR request LIKE '%cgi-bin%' OR request LIKE '%remote/login%' OR request LIKE '%+CSCOE+%') AND client_ip IS NOT NULL AND user_agent IS NOT NULL GROUP BY client_ip, user_agent ORDER BY scanAttempts DESC LIMIT 20;"
+    }
+  },
+  {
+    "name": "q14-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS requests, quantileTDigest(0.99)(target_processing_time) AS latency_p99, countIf(elb_status_code >= 500) AS errors, user_agent, http_method, url_path FROM elb_logs WHERE target_processing_time > 0 AND user_agent IS NOT NULL AND http_method IS NOT NULL AND url_path IS NOT NULL GROUP BY user_agent, http_method, url_path HAVING requests >= 10 ORDER BY latency_p99 DESC LIMIT 25;"
+    }
+  },
+  {
+    "name": "q15-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS requests, avg(target_processing_time) AS avg_latency, quantileTDigest(0.99)(target_processing_time) AS p99_latency, target_ip FROM elb_logs WHERE target_processing_time > 0 AND target_ip IS NOT NULL GROUP BY target_ip ORDER BY avg_latency DESC LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q16-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT avg_latency, q[1] AS p50, q[2] AS p90, q[3] AS p99, time_bin FROM (SELECT avg(target_processing_time) AS avg_latency, quantilesTDigest(0.5, 0.9, 0.99)(target_processing_time) AS q, toStartOfInterval(`@timestamp`, INTERVAL 5 MINUTE) AS time_bin FROM elb_logs WHERE target_processing_time != -1 GROUP BY time_bin) ORDER BY time_bin DESC LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q17-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT quantileTDigest(0.95)(target_processing_time) AS p95, count() AS c, elb_status_code FROM elb_logs WHERE target_processing_time >= 0 AND elb_status_code IS NOT NULL GROUP BY elb_status_code ORDER BY elb_status_code LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q18-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT avg(request_processing_time) AS average_request_processing_time, avg(target_processing_time) AS average_target_processing_time, avg(response_processing_time) AS average_response_processing_time FROM elb_logs;"
+    }
+  },
+  {
+    "name": "q19-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT `@timestamp`, request_url, target_processing_time, elb_status_code, target_status_code FROM elb_logs WHERE target_processing_time > 5 ORDER BY target_processing_time DESC NULLS LAST LIMIT 1000;"
+    }
+  },
+  {
+    "name": "q20-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT toStartOfHour(`@timestamp`) AS `@timestamp`, multiIf(elb_status_code IS NULL, 'NULL', elb_status_code IN (SELECT elb_status_code FROM elb_logs WHERE elb_status_code IS NOT NULL GROUP BY elb_status_code ORDER BY count() DESC LIMIT 10), toString(elb_status_code), 'OTHER') AS elb_status_code, count() AS `count()` FROM elb_logs GROUP BY `@timestamp`, elb_status_code ORDER BY `@timestamp`, elb_status_code LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q21-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count(DISTINCT client_ip) AS unique_clients FROM elb_logs;"
+    }
+  },
+  {
+    "name": "q22-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT sum(received_bytes / 1000000.0) AS client_datareceived_megabytes, client_ip FROM elb_logs WHERE client_ip IS NOT NULL GROUP BY client_ip ORDER BY client_datareceived_megabytes DESC NULLS LAST LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q23-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS requestCount, min(`@timestamp`) AS firstLogTime, max(`@timestamp`) AS lastLogTime, avg(received_bytes + sent_bytes) AS avgTransactionSize, sum(received_bytes) AS totalBytesReceived, sum(sent_bytes) AS totalBytesSent, sum(received_bytes + sent_bytes) AS totalBytes, elb FROM elb_logs WHERE elb IS NOT NULL GROUP BY elb ORDER BY requestCount DESC LIMIT 10;"
+    }
+  },
+  {
+    "name": "q24-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT * FROM elb_logs WHERE `@timestamp` >= '2026-09-23 00:00:00' AND `@timestamp` < '2026-09-24 00:00:00' ORDER BY `@timestamp`, trace_id ASC NULLS FIRST LIMIT 5000;"
+    }
+  },
+  {
+    "name": "q25-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT * FROM elb_logs ORDER BY `@timestamp` LIMIT 100;"
+    }
+  },
+  {
+    "name": "q26-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS c FROM elb_logs;"
+    }
+  },
+  {
+    "name": "q27-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS c, client_ip, url_path FROM elb_logs WHERE client_ip IS NOT NULL AND url_path IS NOT NULL GROUP BY client_ip, url_path ORDER BY c DESC, client_ip, url_path LIMIT 10;"
+    }
+  },
+  {
+    "name": "q28-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS c, countIf(elb_status_code >= 400) AS sr, avg(received_bytes) AS arb, trace_id, client_ip FROM elb_logs WHERE trace_id IS NOT NULL AND client_ip IS NOT NULL GROUP BY trace_id, client_ip ORDER BY c DESC LIMIT 10;"
+    }
+  },
+  {
+    "name": "q29-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS c, conn_trace_id, toMinute(`@timestamp`) AS m, url_path FROM elb_logs WHERE url_path IS NOT NULL AND conn_trace_id IS NOT NULL GROUP BY conn_trace_id, m, url_path ORDER BY c DESC LIMIT 10;"
+    }
+  },
+  {
+    "name": "q30-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS c, conn_trace_id, url_path FROM elb_logs WHERE url_path IS NOT NULL AND conn_trace_id IS NOT NULL GROUP BY conn_trace_id, url_path LIMIT 10;"
+    }
+  },
+  {
+    "name": "q31-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT sum(received_bytes) AS s0, sum(received_bytes + 1) AS s1, sum(received_bytes + 2) AS s2, sum(received_bytes + 3) AS s3, sum(received_bytes + 4) AS s4, sum(received_bytes + 5) AS s5, sum(received_bytes + 6) AS s6, sum(received_bytes + 7) AS s7, sum(received_bytes + 8) AS s8, sum(received_bytes + 9) AS s9, sum(received_bytes + 10) AS s10, sum(received_bytes + 11) AS s11, sum(received_bytes + 12) AS s12, sum(received_bytes + 13) AS s13, sum(received_bytes + 14) AS s14, sum(received_bytes + 15) AS s15, sum(received_bytes + 16) AS s16, sum(received_bytes + 17) AS s17, sum(received_bytes + 18) AS s18, sum(received_bytes + 19) AS s19, sum(received_bytes + 20) AS s20, sum(received_bytes + 21) AS s21, sum(received_bytes + 22) AS s22, sum(received_bytes + 23) AS s23, sum(received_bytes + 24) AS s24, sum(received_bytes + 25) AS s25, sum(received_bytes + 26) AS s26, sum(received_bytes + 27) AS s27, sum(received_bytes + 28) AS s28, sum(received_bytes + 29) AS s29, sum(received_bytes + 30) AS s30, sum(received_bytes + 31) AS s31, sum(received_bytes + 32) AS s32, sum(received_bytes + 33) AS s33, sum(received_bytes + 34) AS s34, sum(received_bytes + 35) AS s35, sum(received_bytes + 36) AS s36, sum(received_bytes + 37) AS s37, sum(received_bytes + 38) AS s38, sum(received_bytes + 39) AS s39, sum(received_bytes + 40) AS s40, sum(received_bytes + 41) AS s41, sum(received_bytes + 42) AS s42, sum(received_bytes + 43) AS s43, sum(received_bytes + 44) AS s44, sum(received_bytes + 45) AS s45, sum(received_bytes + 46) AS s46, sum(received_bytes + 47) AS s47, sum(received_bytes + 48) AS s48, sum(received_bytes + 49) AS s49, sum(received_bytes + 50) AS s50, sum(received_bytes + 51) AS s51, sum(received_bytes + 52) AS s52, sum(received_bytes + 53) AS s53, sum(received_bytes + 54) AS s54, sum(received_bytes + 55) AS s55, sum(received_bytes + 56) AS s56, sum(received_bytes + 57) AS s57, sum(received_bytes + 58) AS s58, sum(received_bytes + 59) AS s59, sum(received_bytes + 60) AS s60, sum(received_bytes + 61) AS s61, sum(received_bytes + 62) AS s62, sum(received_bytes + 63) AS s63, sum(received_bytes + 64) AS s64, sum(received_bytes + 65) AS s65, sum(received_bytes + 66) AS s66, sum(received_bytes + 67) AS s67, sum(received_bytes + 68) AS s68, sum(received_bytes + 69) AS s69, sum(received_bytes + 70) AS s70, sum(received_bytes + 71) AS s71, sum(received_bytes + 72) AS s72, sum(received_bytes + 73) AS s73, sum(received_bytes + 74) AS s74, sum(received_bytes + 75) AS s75, sum(received_bytes + 76) AS s76, sum(received_bytes + 77) AS s77, sum(received_bytes + 78) AS s78, sum(received_bytes + 79) AS s79, sum(received_bytes + 80) AS s80, sum(received_bytes + 81) AS s81, sum(received_bytes + 82) AS s82, sum(received_bytes + 83) AS s83, sum(received_bytes + 84) AS s84, sum(received_bytes + 85) AS s85, sum(received_bytes + 86) AS s86, sum(received_bytes + 87) AS s87, sum(received_bytes + 88) AS s88, sum(received_bytes + 89) AS s89 FROM elb_logs;"
+    }
+  },
+  {
+    "name": "q32-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS n, type, elb, target_port, elb_status_code, target_status_code, http_method, http_version, ssl_cipher, ssl_protocol, target_group_arn FROM elb_logs WHERE type IS NOT NULL AND elb IS NOT NULL AND target_port IS NOT NULL AND elb_status_code IS NOT NULL AND target_status_code IS NOT NULL AND http_method IS NOT NULL AND http_version IS NOT NULL AND ssl_cipher IS NOT NULL AND ssl_protocol IS NOT NULL AND target_group_arn IS NOT NULL GROUP BY type, elb, target_port, elb_status_code, target_status_code, http_method, http_version, ssl_cipher, ssl_protocol, target_group_arn ORDER BY n DESC, type, elb, target_port, elb_status_code, target_status_code, http_method, http_version, ssl_cipher, ssl_protocol, target_group_arn LIMIT 10;"
+    }
+  },
+  {
+    "name": "q33-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS n, type, elb, target_port, elb_status_code, target_status_code, http_method, http_version, ssl_cipher, ssl_protocol, target_group_arn, chosen_cert_arn, matched_rule_priority, actions_executed, target_status_code_list, classification, classification_reason, lb_node_ip, domain_name, url_host, target_ip FROM elb_logs WHERE type IS NOT NULL AND elb IS NOT NULL AND target_port IS NOT NULL AND elb_status_code IS NOT NULL AND target_status_code IS NOT NULL AND http_method IS NOT NULL AND http_version IS NOT NULL AND ssl_cipher IS NOT NULL AND ssl_protocol IS NOT NULL AND target_group_arn IS NOT NULL AND chosen_cert_arn IS NOT NULL AND matched_rule_priority IS NOT NULL AND actions_executed IS NOT NULL AND target_status_code_list IS NOT NULL AND classification IS NOT NULL AND classification_reason IS NOT NULL AND lb_node_ip IS NOT NULL AND domain_name IS NOT NULL AND url_host IS NOT NULL AND target_ip IS NOT NULL GROUP BY type, elb, target_port, elb_status_code, target_status_code, http_method, http_version, ssl_cipher, ssl_protocol, target_group_arn, chosen_cert_arn, matched_rule_priority, actions_executed, target_status_code_list, classification, classification_reason, lb_node_ip, domain_name, url_host, target_ip ORDER BY n DESC, type, elb, target_port, elb_status_code, target_status_code, http_method, http_version, ssl_cipher, ssl_protocol, target_group_arn, chosen_cert_arn, matched_rule_priority, actions_executed, target_status_code_list, classification, classification_reason, lb_node_ip, domain_name, url_host, target_ip LIMIT 5;"
+    }
+  },
+  {
+    "name": "q34-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS pv, received_bytes, sent_bytes FROM elb_logs WHERE http_method = 'POST' AND `@timestamp` >= '2026-09-18 00:00:00' AND `@timestamp` <= '2026-09-27 23:59:59' AND elb_status_code = 200 AND url_path = '/_bulk' AND received_bytes IS NOT NULL AND sent_bytes IS NOT NULL GROUP BY received_bytes, sent_bytes ORDER BY pv DESC LIMIT 10 OFFSET 10000;"
+    }
+  },
+  {
+    "name": "q35-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS c FROM elb_logs WHERE match(url_path, '[.](env|git|php)([.]|$)');"
+    }
+  },
+  {
+    "name": "q36-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS c, extract(url_path, '[.]([A-Za-z0-9]+)$') AS ext FROM elb_logs WHERE url_path IS NOT NULL AND ext != '' GROUP BY ext ORDER BY c DESC, ext LIMIT 10;"
+    }
+  },
+  {
+    "name": "q37-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT http_method, elb_status_code, `@timestamp`, trace_id FROM (SELECT http_method, elb_status_code, `@timestamp`, trace_id FROM elb_logs WHERE http_method IS NOT NULL AND elb_status_code IS NOT NULL ORDER BY `@timestamp` DESC, trace_id ASC NULLS FIRST LIMIT 1 BY http_method, elb_status_code) ORDER BY http_method, elb_status_code LIMIT 10000;"
+    }
+  },
+  {
+    "name": "q38-clickhouse",
+    "operation-type": "search",
+    "body": {
+      "sql": "SELECT count() AS c FROM elb_logs WHERE client_port = 2829;"
+    }
+  }

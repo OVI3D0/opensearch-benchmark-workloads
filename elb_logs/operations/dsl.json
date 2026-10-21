@@ -1,0 +1,1535 @@
+{
+  "name": "dsl-t1-01-status-504",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 10000,
+    "track_total_hits": false,
+    "query": {
+      "term": {
+        "elb_status_code": 504
+      }
+    },
+    "sort": [
+      "_doc"
+    ]
+  }
+},
+{
+  "name": "dsl-t1-03-5xx-count-5min-by-status",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "range": {
+        "elb_status_code": {
+          "gte": 500
+        }
+      }
+    },
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10000,
+          "sources": [
+            {
+              "elb_status_code": {
+                "terms": {
+                  "field": "elb_status_code",
+                  "order": "asc"
+                }
+              }
+            },
+            {
+              "span": {
+                "date_histogram": {
+                  "field": "@timestamp",
+                  "fixed_interval": "5m",
+                  "order": "asc",
+                  "format": "yyyy-MM-dd HH:mm:ss"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-04-status-mix-over-time",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10000,
+          "sources": [
+            {
+              "time_bin": {
+                "date_histogram": {
+                  "field": "@timestamp",
+                  "fixed_interval": "5m",
+                  "order": "desc",
+                  "format": "yyyy-MM-dd HH:mm:ss"
+                }
+              }
+            },
+            {
+              "elb_status_code": {
+                "terms": {
+                  "field": "elb_status_code",
+                  "order": "asc"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-05-hourly-requests-errors",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "date_histogram": {
+          "field": "@timestamp",
+          "fixed_interval": "1h",
+          "min_doc_count": 1,
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "aggs": {
+          "errors": {
+            "filter": {
+              "range": {
+                "elb_status_code": {
+                  "gte": 400
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-06-5xx-rate",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "errors": {
+        "filter": {
+          "range": {
+            "elb_status_code": {
+              "gt": 499
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-07-top-urls-5xx",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "range": {
+        "elb_status_code": {
+          "gte": 500
+        }
+      }
+    },
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "url_path",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-08-5xx-newest-1000",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 1000,
+    "track_total_hits": false,
+    "query": {
+      "range": {
+        "elb_status_code": {
+          "gte": 500
+        }
+      }
+    },
+    "sort": [
+      {
+        "@timestamp": {
+          "order": "desc",
+          "missing": "_last"
+        }
+      },
+      {
+        "trace_id": {
+          "order": "asc",
+          "missing": "_first"
+        }
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-t1-09-elb-vs-target-status",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "elb_status_code"
+            },
+            {
+              "field": "target_status_code"
+            }
+          ],
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-11-requests-per-client",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "client_ip",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-13-top-verb-client",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "http_method"
+            },
+            {
+              "field": "client_ip"
+            }
+          ],
+          "size": 100,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "shard_size": 10000
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-14-client-elb-url-counts",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "client_ip"
+            },
+            {
+              "field": "elb"
+            },
+            {
+              "field": "request_url"
+            }
+          ],
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-15-safari-urls",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 10,
+    "track_total_hits": false,
+    "query": {
+      "wildcard": {
+        "user_agent": "*Safari*"
+      }
+    },
+    "sort": [
+      {
+        "@timestamp": {
+          "order": "asc",
+          "missing": "_first"
+        }
+      },
+      {
+        "trace_id": {
+          "order": "asc",
+          "missing": "_first"
+        }
+      }
+    ],
+    "_source": [
+      "request_url"
+    ]
+  }
+},
+{
+  "name": "dsl-t1-17-scanner-hunting",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "bool": {
+        "filter": [
+          {
+            "bool": {
+              "should": [
+                {
+                  "wildcard": {
+                    "request": "*.env*"
+                  }
+                },
+                {
+                  "wildcard": {
+                    "request": "*admin*"
+                  }
+                },
+                {
+                  "wildcard": {
+                    "request": "*login*"
+                  }
+                },
+                {
+                  "wildcard": {
+                    "request": "*cgi-bin*"
+                  }
+                },
+                {
+                  "wildcard": {
+                    "request": "*remote/login*"
+                  }
+                },
+                {
+                  "wildcard": {
+                    "request": "*+CSCOE+*"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "client_ip"
+            },
+            {
+              "field": "user_agent"
+            }
+          ],
+          "size": 20,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "shard_size": 10000
+        },
+        "aggs": {
+          "first_seen": {
+            "min": {
+              "field": "@timestamp",
+              "format": "yyyy-MM-dd HH:mm:ss.SSS"
+            }
+          },
+          "last_seen": {
+            "max": {
+              "field": "@timestamp",
+              "format": "yyyy-MM-dd HH:mm:ss.SSS"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-18-latency-errors-by-consumer",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "range": {
+        "target_processing_time": {
+          "gt": 0
+        }
+      }
+    },
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "user_agent"
+            },
+            {
+              "field": "http_method"
+            },
+            {
+              "field": "url_path"
+            }
+          ],
+          "size": 25,
+          "order": [
+            {
+              "latency_p99.99": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "min_doc_count": 10,
+          "shard_size": 10000
+        },
+        "aggs": {
+          "latency_p99": {
+            "percentiles": {
+              "field": "target_processing_time",
+              "percents": [
+                99
+              ],
+              "tdigest": {
+                "compression": 100
+              }
+            }
+          },
+          "errors": {
+            "filter": {
+              "range": {
+                "elb_status_code": {
+                  "gte": 500
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-19-latency-per-backend",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "range": {
+        "target_processing_time": {
+          "gt": 0
+        }
+      }
+    },
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "target_ip",
+          "size": 10000,
+          "order": [
+            {
+              "avg_latency": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "avg_latency": {
+            "avg": {
+              "field": "target_processing_time"
+            }
+          },
+          "p99_latency": {
+            "percentiles": {
+              "field": "target_processing_time",
+              "percents": [
+                99
+              ],
+              "tdigest": {
+                "compression": 100
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-20-latency-percentiles-over-time",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "bool": {
+        "filter": [
+          {
+            "exists": {
+              "field": "target_processing_time"
+            }
+          }
+        ],
+        "must_not": [
+          {
+            "term": {
+              "target_processing_time": -1
+            }
+          }
+        ]
+      }
+    },
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10000,
+          "sources": [
+            {
+              "time_bin": {
+                "date_histogram": {
+                  "field": "@timestamp",
+                  "fixed_interval": "5m",
+                  "order": "desc",
+                  "format": "yyyy-MM-dd HH:mm:ss"
+                }
+              }
+            }
+          ]
+        },
+        "aggs": {
+          "avg_latency": {
+            "avg": {
+              "field": "target_processing_time"
+            }
+          },
+          "p": {
+            "percentiles": {
+              "field": "target_processing_time",
+              "percents": [
+                50,
+                90,
+                99
+              ],
+              "tdigest": {
+                "compression": 100
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-21-p95-latency-per-status",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "range": {
+        "target_processing_time": {
+          "gte": 0
+        }
+      }
+    },
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10000,
+          "sources": [
+            {
+              "elb_status_code": {
+                "terms": {
+                  "field": "elb_status_code",
+                  "order": "asc"
+                }
+              }
+            }
+          ]
+        },
+        "aggs": {
+          "p95": {
+            "percentiles": {
+              "field": "target_processing_time",
+              "percents": [
+                95
+              ],
+              "tdigest": {
+                "compression": 100
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-23-avg-processing-times",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "average_request_processing_time": {
+        "avg": {
+          "field": "request_processing_time"
+        }
+      },
+      "average_target_processing_time": {
+        "avg": {
+          "field": "target_processing_time"
+        }
+      },
+      "average_response_processing_time": {
+        "avg": {
+          "field": "response_processing_time"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-24-slowest-requests",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 1000,
+    "track_total_hits": false,
+    "query": {
+      "range": {
+        "target_processing_time": {
+          "gt": 5
+        }
+      }
+    },
+    "sort": [
+      {
+        "target_processing_time": {
+          "order": "desc"
+        }
+      }
+    ],
+    "_source": [
+      "@timestamp",
+      "request_url",
+      "target_processing_time",
+      "elb_status_code",
+      "target_status_code"
+    ]
+  }
+},
+{
+  "name": "dsl-t1-27-timechart-by-status",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "top": {
+        "terms": {
+          "field": "elb_status_code",
+          "size": 10,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "shard_size": 10000
+        }
+      },
+      "t": {
+        "date_histogram": {
+          "field": "@timestamp",
+          "fixed_interval": "1h",
+          "min_doc_count": 1,
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "aggs": {
+          "s": {
+            "terms": {
+              "field": "elb_status_code",
+              "size": 1000,
+              "order": [
+                {
+                  "_key": "asc"
+                }
+              ],
+              "shard_size": 10000
+            }
+          },
+          "null": {
+            "missing": {
+              "field": "elb_status_code"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-28-distinct-clients",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "d": {
+        "cardinality": {
+          "field": "client_ip",
+          "precision_threshold": 3000
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-29-bytes-per-client",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "client_ip",
+          "size": 10000,
+          "order": [
+            {
+              "rb": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "rb": {
+            "sum": {
+              "field": "received_bytes"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-32-traffic-per-lb",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "elb",
+          "size": 10,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "shard_size": 10000
+        },
+        "aggs": {
+          "first": {
+            "min": {
+              "field": "@timestamp",
+              "format": "yyyy-MM-dd HH:mm:ss.SSS"
+            }
+          },
+          "last": {
+            "max": {
+              "field": "@timestamp",
+              "format": "yyyy-MM-dd HH:mm:ss.SSS"
+            }
+          },
+          "rb": {
+            "sum": {
+              "field": "received_bytes"
+            }
+          },
+          "sb": {
+            "sum": {
+              "field": "sent_bytes"
+            }
+          },
+          "both": {
+            "filter": {
+              "bool": {
+                "filter": [
+                  {
+                    "exists": {
+                      "field": "received_bytes"
+                    }
+                  },
+                  {
+                    "exists": {
+                      "field": "sent_bytes"
+                    }
+                  }
+                ]
+              }
+            },
+            "aggs": {
+              "rb": {
+                "sum": {
+                  "field": "received_bytes"
+                }
+              },
+              "sb": {
+                "sum": {
+                  "field": "sent_bytes"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-33-one-day-rows",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 5000,
+    "track_total_hits": false,
+    "query": {
+      "range": {
+        "@timestamp": {
+          "gte": "2026-09-23T00:00:00Z",
+          "lt": "2026-09-24T00:00:00Z"
+        }
+      }
+    },
+    "sort": [
+      {
+        "@timestamp": {
+          "order": "asc",
+          "missing": "_first"
+        }
+      },
+      {
+        "trace_id": {
+          "order": "asc",
+          "missing": "_first"
+        }
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-t1-34-oldest-100",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "track_total_hits": false,
+    "sort": [
+      {
+        "@timestamp": {
+          "order": "asc",
+          "missing": "_first"
+        }
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-t2-01-count-all",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true
+  }
+},
+{
+  "name": "dsl-t2-04-two-key-topn",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "client_ip"
+            },
+            {
+              "field": "url_path"
+            }
+          ],
+          "size": 10,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "shard_size": 10000
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-05-near-unique-two-key",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "trace_id"
+            },
+            {
+              "field": "client_ip"
+            }
+          ],
+          "size": 10,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "shard_size": 10000
+        },
+        "aggs": {
+          "sr": {
+            "filter": {
+              "range": {
+                "elb_status_code": {
+                  "gte": 400
+                }
+              }
+            }
+          },
+          "arb": {
+            "avg": {
+              "field": "received_bytes"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-06-three-key-expression",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "conn_trace_id"
+            },
+            {
+              "script": {
+                "lang": "painless",
+                "source": "doc['@timestamp'].value.getMinute()"
+              },
+              "value_type": "long"
+            },
+            {
+              "field": "url_path"
+            }
+          ],
+          "size": 10,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "shard_size": 10000
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-07-topn-no-order",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10,
+          "sources": [
+            {
+              "url_path": {
+                "terms": {
+                  "field": "url_path",
+                  "order": "asc"
+                }
+              }
+            },
+            {
+              "conn_trace_id": {
+                "terms": {
+                  "field": "conn_trace_id",
+                  "order": "asc"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-08-ninety-aggregates",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "s0": {
+        "sum": {
+          "field": "received_bytes"
+        }
+      },
+      "n": {
+        "value_count": {
+          "field": "received_bytes"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-09-ten-key-groupby",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "type"
+            },
+            {
+              "field": "elb"
+            },
+            {
+              "field": "target_port"
+            },
+            {
+              "field": "elb_status_code"
+            },
+            {
+              "field": "target_status_code"
+            },
+            {
+              "field": "http_method"
+            },
+            {
+              "field": "http_version"
+            },
+            {
+              "field": "ssl_cipher"
+            },
+            {
+              "field": "ssl_protocol"
+            },
+            {
+              "field": "target_group_arn"
+            }
+          ],
+          "size": 10,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "shard_size": 10000
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-10-twenty-key-groupby",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "type"
+            },
+            {
+              "field": "elb"
+            },
+            {
+              "field": "target_port"
+            },
+            {
+              "field": "elb_status_code"
+            },
+            {
+              "field": "target_status_code"
+            },
+            {
+              "field": "http_method"
+            },
+            {
+              "field": "http_version"
+            },
+            {
+              "field": "ssl_cipher"
+            },
+            {
+              "field": "ssl_protocol"
+            },
+            {
+              "field": "target_group_arn"
+            },
+            {
+              "field": "chosen_cert_arn"
+            },
+            {
+              "field": "matched_rule_priority"
+            },
+            {
+              "field": "actions_executed"
+            },
+            {
+              "field": "target_status_code_list"
+            },
+            {
+              "field": "classification"
+            },
+            {
+              "field": "classification_reason"
+            },
+            {
+              "field": "lb_node_ip"
+            },
+            {
+              "field": "domain_name"
+            },
+            {
+              "field": "url_host"
+            },
+            {
+              "field": "target_ip"
+            }
+          ],
+          "size": 5,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "shard_size": 10000
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-11-deep-pagination",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "bool": {
+        "filter": [
+          {
+            "term": {
+              "http_method": "POST"
+            }
+          },
+          {
+            "range": {
+              "@timestamp": {
+                "gte": "2026-09-18T00:00:00Z",
+                "lte": "2026-09-27T23:59:59Z"
+              }
+            }
+          },
+          {
+            "term": {
+              "elb_status_code": 200
+            }
+          },
+          {
+            "term": {
+              "url_path": "/_bulk"
+            }
+          }
+        ]
+      }
+    },
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "received_bytes"
+            },
+            {
+              "field": "sent_bytes"
+            }
+          ],
+          "size": 10010,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "page": {
+            "bucket_sort": {
+              "from": 10000,
+              "size": 10
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-13-regex-alternation",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "regexp": {
+        "url_path": {
+          "value": ".*[.](env|git|php)([.].*)?",
+          "flags": "NONE"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-14-rex-extraction-topn",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "regexp": {
+        "url_path": {
+          "value": ".*[.][A-Za-z0-9]+",
+          "flags": "NONE"
+        }
+      }
+    },
+    "aggs": {
+      "g": {
+        "terms": {
+          "size": 10,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ],
+          "shard_size": 10000,
+          "script": {
+            "lang": "painless",
+            "source": "String p = doc['url_path'].value; return p.substring(p.lastIndexOf('.') + 1);"
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-15-dedup-latest-per-key",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10000,
+          "sources": [
+            {
+              "http_method": {
+                "terms": {
+                  "field": "http_method",
+                  "order": "asc"
+                }
+              }
+            },
+            {
+              "elb_status_code": {
+                "terms": {
+                  "field": "elb_status_code",
+                  "order": "asc"
+                }
+              }
+            }
+          ]
+        },
+        "aggs": {
+          "latest": {
+            "top_hits": {
+              "size": 1,
+              "sort": [
+                {
+                  "@timestamp": {
+                    "order": "desc",
+                    "missing": "_last"
+                  }
+                },
+                {
+                  "trace_id": {
+                    "order": "asc",
+                    "missing": "_first"
+                  }
+                }
+              ],
+              "_source": false,
+              "docvalue_fields": [
+                {
+                  "field": "@timestamp",
+                  "format": "yyyy-MM-dd HH:mm:ss.SSS"
+                },
+                "trace_id"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-16-numeric-point-lookup",
+  "operation-type": "raw-request",
+  "path": "/{{ index_name | default('elb_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": true,
+    "query": {
+      "term": {
+        "client_port": 2829
+      }
+    }
+  }
+}

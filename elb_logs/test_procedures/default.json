@@ -1,0 +1,69 @@
+    {
+      "name": "elb_logs",
+      "description": "Indexes the ELB access log corpus and runs OpenSearch PPL queries to benchmark observability use case performance",
+      "default": true,
+      "schedule": [
+        {% with default_index_settings={}, index_name=index_name | default("elb_logs") %}
+        {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
+        {% endwith %}
+        {{ benchmark.collect(parts="ppl/elb-logs-schedule.json") }}
+      ]
+    },
+    {
+      "name": "elb_logs-test",
+      "description": "Lightweight test procedure for validating ELB logs workload setup and basic functionality",
+      "default": false,
+      "schedule": [
+        {% with default_index_settings={}, index_name=index_name | default("elb_logs") %}
+        {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
+        {% endwith %}
+        {{ benchmark.collect(parts="ppl/test-schedule.json") }}
+      ]
+    },
+    {
+      "name": "append-no-conflicts-index-only",
+      "description": "Indexes the whole document corpus. Document ids are unique so all index operations are append only.",
+      "default": false,
+      "schedule": [
+        {% with default_index_settings={}, index_name=index_name | default("elb_logs") %}
+        {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }}
+        {% endwith %}
+      ]
+    },
+    {
+      "name": "elb-logs-ingest",
+      "description": "Ingest only: delete/create index, bulk-index the corpus, flush. No queries. For a plain Lucene index pass parquet_enabled_index=false (default is the Mustang composite index).",
+      "default": false,
+      "schedule": [
+        {% with default_index_settings={}, index_name=index_name | default("elb_logs") %}
+        {{ benchmark.collect(parts="../../common_operations/delete_index.json") }},
+        {{ benchmark.collect(parts="../../common_operations/create_index.json") }},
+        {{ benchmark.collect(parts="../../common_operations/check_cluster_health.json") }},
+        {{ benchmark.collect(parts="../../common_operations/index_append.json") }},
+        {% endwith %}
+        {
+          "operation": "flush-index",
+          "warmup-iterations": {{ flush_index_warmup_iterations or warmup_iterations | default(1) | tojson }},
+          "iterations": {{ flush_index_iterations or test_iterations | default(1) | tojson }},
+          "target-throughput": {{ flush_index_target_throughput or target_throughput | default(1) | tojson }},
+          "clients": {{ flush_index_clients or search_clients | default(1) }}
+        }
+      ]
+    },
+    {
+      "name": "elb-logs-ppl",
+      "description": "Queries only: the 38 PPL queries against an already-indexed elb_logs index.",
+      "default": false,
+      "schedule": [
+        {{ benchmark.collect(parts="ppl/elb-logs-schedule.json") }}
+      ]
+    },
+    {
+      "name": "dsl-elb-logs",
+      "description": "Queries only: the 38 ELB queries as native OpenSearch DSL (/_search) for a plain Lucene index, each result-equivalent to the matching PPL op.",
+      "default": false,
+      "schedule": [
+        {{ benchmark.collect(parts="dsl/dsl-elb-logs-schedule.json") }}
+      ]
+    }
+
