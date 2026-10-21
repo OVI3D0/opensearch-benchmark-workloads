@@ -1,0 +1,866 @@
+{%- set composite = parquet_enabled_index | default(true) %}
+{
+  "settings": {
+    "index.number_of_shards": {{ number_of_shards | default(1) }},
+    "index.number_of_replicas": {{ number_of_replicas | default(0) }},
+    "index.queries.cache.enabled": {{ query_cache_enabled | default(false) | tojson }},
+    "index.requests.cache.enable": {{ requests_cache_enabled | default(false) | tojson }},
+    "index.codec": "best_compression",
+    "index.translog.sync_interval": "30s",
+    "index.translog.durability": {{ index_translog_durability | default("async") | tojson }},
+    "index.sort.field": ["eventTime"],
+    "index.sort.order": ["asc"]
+    {%- if composite %},
+    "index.pluggable.dataformat.enabled": true,
+    "index.pluggable.dataformat": "composite",
+    "index.composite.primary_data_format": "parquet",
+    "index.composite.secondary_data_formats": ["lucene"]
+    {%- endif %}
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "date_detection": false,
+    "numeric_detection": false,
+    "dynamic_templates": [
+      {
+        "attributes_mv": {
+          "path_match": "*attributes.*_mv",
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 8191{%- if composite %},
+            "multi_value": true{%- endif %}
+          }
+        }
+      },
+      {
+        "attributes_string_as_keyword": {
+          "path_match": "*attributes.*",
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 8191
+          }
+        }
+      },
+      {
+        "attributes_long_as_keyword": {
+          "path_match": "*attributes.*",
+          "match_mapping_type": "long",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 8191
+          }
+        }
+      },
+      {
+        "attributes_double_as_keyword": {
+          "path_match": "*attributes.*",
+          "match_mapping_type": "double",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 8191
+          }
+        }
+      },
+      {
+        "attributes_boolean_as_keyword": {
+          "path_match": "*attributes.*",
+          "match_mapping_type": "boolean",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 8191
+          }
+        }
+      }
+    ],
+    "properties": {
+      "derived": {
+        "properties": {
+          "environment": {
+            "type": "keyword"
+          },
+          "error": {
+            "type": "keyword"
+          },
+          "fault": {
+            "type": "keyword"
+          },
+          "operation": {
+            "type": "keyword"
+          }
+        }
+      },
+      "droppedAttributesCount": {
+        "type": "integer"
+      },
+      "droppedEventsCount": {
+        "type": "integer"
+      },
+      "droppedLinksCount": {
+        "type": "integer"
+      },
+      "durationInNanos": {
+        "type": "long"
+      },
+      "endTime": {
+        "type": "date_nanos"
+      },
+      "events": {
+        "properties": {
+          "attributes": {
+            "properties": {
+              "app@payment@transaction@id": {
+                "type": "keyword"
+              },
+              "app@quote@cost@total": {
+                "type": "double"
+              },
+              "app@shipping@cost@total": {
+                "type": "keyword"
+              },
+              "app@shipping@tracking@id": {
+                "type": "keyword"
+              },
+              "exception@escaped": {
+                "type": "keyword"
+              },
+              "exception@message": {
+                "type": "keyword"
+              },
+              "exception@stacktrace": {
+                "type": "keyword"
+              },
+              "exception@type": {
+                "type": "keyword"
+              },
+              "feature_flag@key": {
+                "type": "keyword"
+              },
+              "feature_flag@provider@name": {
+                "type": "keyword"
+              },
+              "feature_flag@result@reason": {
+                "type": "keyword"
+              },
+              "feature_flag@result@value": {
+                "type": "keyword"
+              },
+              "feature_flag@result@variant": {
+                "type": "keyword"
+              },
+              "message_id": {
+                "type": "long"
+              },
+              "message_type": {
+                "type": "keyword"
+              },
+              "message_uncompressed_size": {
+                "type": "long"
+              }
+            },
+            "dynamic": true
+          },
+          "droppedAttributesCount": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "keyword"
+          },
+          "time": {
+            "type": "date_nanos"
+          }
+        },
+        "type": "nested"
+      },
+      "instrumentationScope": {
+        "properties": {
+          "name": {
+            "type": "keyword"
+          },
+          "version": {
+            "type": "keyword"
+          }
+        }
+      },
+      "kind": {
+        "type": "keyword"
+      },
+      "links": {
+        "properties": {
+          "droppedAttributesCount": {
+            "type": "integer"
+          },
+          "spanId": {
+            "type": "keyword"
+          },
+          "traceId": {
+            "type": "keyword"
+          },
+          "traceState": {
+            "type": "keyword"
+          },
+          "attributes": {
+            "properties": {},
+            "dynamic": true
+          }
+        },
+        "type": "nested"
+      },
+      "name": {
+        "type": "keyword"
+      },
+      "parentSpanId": {
+        "type": "keyword"
+      },
+      "resource": {
+        "properties": {
+          "attributes": {
+            "properties": {
+              "cloud@account@id": {
+                "type": "keyword"
+              },
+              "cloud@availability_zone": {
+                "type": "keyword"
+              },
+              "cloud@platform": {
+                "type": "keyword"
+              },
+              "cloud@provider": {
+                "type": "keyword"
+              },
+              "cloud@region": {
+                "type": "keyword"
+              },
+              "container@id": {
+                "type": "keyword"
+              },
+              "host@arch": {
+                "type": "keyword"
+              },
+              "host@id": {
+                "type": "keyword"
+              },
+              "host@name": {
+                "type": "keyword"
+              },
+              "host@type": {
+                "type": "keyword"
+              },
+              "os@build_id": {
+                "type": "keyword"
+              },
+              "os@description": {
+                "type": "keyword"
+              },
+              "os@name": {
+                "type": "keyword"
+              },
+              "os@type": {
+                "type": "keyword"
+              },
+              "os@version": {
+                "type": "keyword"
+              },
+              "process@command": {
+                "type": "keyword"
+              },
+              "process@command_args": {
+                "type": "keyword"
+              },
+              "process@command_line": {
+                "type": "keyword"
+              },
+              "process@executable@name": {
+                "type": "keyword"
+              },
+              "process@executable@path": {
+                "type": "keyword"
+              },
+              "process@owner": {
+                "type": "keyword"
+              },
+              "process@pid": {
+                "type": "long"
+              },
+              "process@runtime@description": {
+                "type": "keyword"
+              },
+              "process@runtime@name": {
+                "type": "keyword"
+              },
+              "process@runtime@version": {
+                "type": "keyword"
+              },
+              "service@instance@id": {
+                "type": "keyword"
+              },
+              "service@name": {
+                "type": "keyword"
+              },
+              "service@namespace": {
+                "type": "keyword"
+              },
+              "service@version": {
+                "type": "keyword"
+              },
+              "telemetry@auto@version": {
+                "type": "keyword"
+              },
+              "telemetry@distro@name": {
+                "type": "keyword"
+              },
+              "telemetry@distro@version": {
+                "type": "keyword"
+              },
+              "telemetry@sdk@language": {
+                "type": "keyword"
+              },
+              "telemetry@sdk@name": {
+                "type": "keyword"
+              },
+              "telemetry@sdk@version": {
+                "type": "keyword"
+              },
+              "process@command_args_mv": {
+                "type": "keyword"{%- if composite %},
+                "multi_value": true{%- endif %}
+              }
+            },
+            "dynamic": true
+          }
+        }
+      },
+      "serviceName": {
+        "type": "keyword"
+      },
+      "span": {
+        "properties": {
+          "attributes": {
+            "properties": {
+              "app@ads@ad_request_type": {
+                "type": "keyword"
+              },
+              "app@ads@ad_response_type": {
+                "type": "keyword"
+              },
+              "app@ads@category": {
+                "type": "keyword"
+              },
+              "app@ads@contextKeys@count": {
+                "type": "long"
+              },
+              "app@ads@count": {
+                "type": "long"
+              },
+              "app@cache_hit": {
+                "type": "boolean"
+              },
+              "app@cart@items@count": {
+                "type": "long"
+              },
+              "app@currency@conversion@from": {
+                "type": "keyword"
+              },
+              "app@currency@conversion@to": {
+                "type": "keyword"
+              },
+              "app@email@recipient": {
+                "type": "keyword"
+              },
+              "app@filtered_products@count": {
+                "type": "long"
+              },
+              "app@filtered_products@list": {
+                "type": "keyword"
+              },
+              "app@loyalty@level": {
+                "type": "keyword"
+              },
+              "app@order@amount": {
+                "type": "double"
+              },
+              "app@order@id": {
+                "type": "keyword"
+              },
+              "app@order@items@count": {
+                "type": "long"
+              },
+              "app@payment@amount": {
+                "type": "keyword"
+              },
+              "app@payment@card_type": {
+                "type": "keyword"
+              },
+              "app@payment@card_valid": {
+                "type": "boolean"
+              },
+              "app@payment@charged": {
+                "type": "boolean"
+              },
+              "app@product@id": {
+                "type": "keyword"
+              },
+              "app@product@name": {
+                "type": "keyword"
+              },
+              "app@product@quantity": {
+                "type": "long"
+              },
+              "app@product@question": {
+                "type": "keyword"
+              },
+              "app@product_reviews@count": {
+                "type": "long"
+              },
+              "app@products@count": {
+                "type": "long"
+              },
+              "app@products_recommended@count": {
+                "type": "long"
+              },
+              "app@quote@cost@total": {
+                "type": "double"
+              },
+              "app@quote@items@count": {
+                "type": "long"
+              },
+              "app@recommendation@cache_enabled": {
+                "type": "boolean"
+              },
+              "app@shipping@amount": {
+                "type": "double"
+              },
+              "app@shipping@cost@total": {
+                "type": "keyword"
+              },
+              "app@shipping@tracking@id": {
+                "type": "keyword"
+              },
+              "app@user@currency": {
+                "type": "keyword"
+              },
+              "app@user@id": {
+                "type": "keyword"
+              },
+              "app_ads_contextKeys": {
+                "type": "keyword"
+              },
+              "canceled": {
+                "type": "keyword"
+              },
+              "category": {
+                "type": "keyword"
+              },
+              "client@address": {
+                "type": "keyword"
+              },
+              "code@file@path": {
+                "type": "keyword"
+              },
+              "code@function": {
+                "type": "keyword"
+              },
+              "code@line@number": {
+                "type": "long"
+              },
+              "code@namespace": {
+                "type": "keyword"
+              },
+              "code_function_name": {
+                "type": "keyword"
+              },
+              "component": {
+                "type": "keyword"
+              },
+              "db@name": {
+                "type": "keyword"
+              },
+              "db@namespace": {
+                "type": "keyword"
+              },
+              "db@npgsql@connection_id": {
+                "type": "long"
+              },
+              "db@npgsql@data_source": {
+                "type": "keyword"
+              },
+              "db@query@text": {
+                "type": "keyword"
+              },
+              "db@redis@database_index": {
+                "type": "long"
+              },
+              "db@statement": {
+                "type": "keyword"
+              },
+              "db@user": {
+                "type": "keyword"
+              },
+              "db_system": {
+                "type": "keyword"
+              },
+              "db_system_name": {
+                "type": "keyword"
+              },
+              "downstream_cluster": {
+                "type": "keyword"
+              },
+              "error": {
+                "type": "keyword"
+              },
+              "error@reason": {
+                "type": "keyword"
+              },
+              "error_type": {
+                "type": "keyword"
+              },
+              "feature_flag@change_count": {
+                "type": "long"
+              },
+              "feature_flag@key": {
+                "type": "keyword"
+              },
+              "feature_flag@provider@name": {
+                "type": "keyword"
+              },
+              "feature_flag@provider_name": {
+                "type": "keyword"
+              },
+              "feature_flag@result@variant": {
+                "type": "keyword"
+              },
+              "feature_flag@source": {
+                "type": "keyword"
+              },
+              "flood@count": {
+                "type": "long"
+              },
+              "gen_ai@operation@name": {
+                "type": "keyword"
+              },
+              "gen_ai@request@model": {
+                "type": "keyword"
+              },
+              "gen_ai@response@finish_reasons": {
+                "type": "keyword"
+              },
+              "gen_ai@response@id": {
+                "type": "keyword"
+              },
+              "gen_ai@response@model": {
+                "type": "keyword"
+              },
+              "gen_ai@system": {
+                "type": "keyword"
+              },
+              "gen_ai@usage@input_tokens": {
+                "type": "long"
+              },
+              "gen_ai@usage@output_tokens": {
+                "type": "long"
+              },
+              "grpc@error_message": {
+                "type": "keyword"
+              },
+              "grpc@error_name": {
+                "type": "keyword"
+              },
+              "grpc@method": {
+                "type": "keyword"
+              },
+              "grpc@status_code": {
+                "type": "keyword"
+              },
+              "guid:x-request-id": {
+                "type": "keyword"
+              },
+              "http@flavor": {
+                "type": "keyword"
+              },
+              "http@host": {
+                "type": "keyword"
+              },
+              "http@method": {
+                "type": "keyword"
+              },
+              "http@protocol": {
+                "type": "keyword"
+              },
+              "http@request@body@size": {
+                "type": "keyword"
+              },
+              "http@request@method": {
+                "type": "keyword"
+              },
+              "http@request_content_length_uncompressed": {
+                "type": "long"
+              },
+              "http@response@body@size": {
+                "type": "keyword"
+              },
+              "http@response@status_code": {
+                "type": "keyword"
+              },
+              "http@route": {
+                "type": "keyword"
+              },
+              "http@scheme": {
+                "type": "keyword"
+              },
+              "http@status_code": {
+                "type": "keyword"
+              },
+              "http@status_text": {
+                "type": "keyword"
+              },
+              "http@target": {
+                "type": "keyword"
+              },
+              "http@url": {
+                "type": "keyword"
+              },
+              "http@user_agent": {
+                "type": "keyword"
+              },
+              "item@count": {
+                "type": "long"
+              },
+              "kafka@record@queue_time_ms": {
+                "type": "long"
+              },
+              "messaging@batch@message_count": {
+                "type": "long"
+              },
+              "messaging@client_id": {
+                "type": "keyword"
+              },
+              "messaging@destination@name": {
+                "type": "keyword"
+              },
+              "messaging@destination@partition@id": {
+                "type": "keyword"
+              },
+              "messaging@kafka@consumer@group": {
+                "type": "keyword"
+              },
+              "messaging@kafka@destination@partition": {
+                "type": "long"
+              },
+              "messaging@kafka@message@offset": {
+                "type": "long"
+              },
+              "messaging@kafka@producer@duration_ms": {
+                "type": "long"
+              },
+              "messaging@kafka@producer@success": {
+                "type": "boolean"
+              },
+              "messaging@message@body@size": {
+                "type": "long"
+              },
+              "messaging@operation": {
+                "type": "keyword"
+              },
+              "messaging@system": {
+                "type": "keyword"
+              },
+              "net@host@ip": {
+                "type": "keyword"
+              },
+              "net@host@name": {
+                "type": "keyword"
+              },
+              "net@host@port": {
+                "type": "long"
+              },
+              "net@peer@ip": {
+                "type": "keyword"
+              },
+              "net@peer@name": {
+                "type": "keyword"
+              },
+              "net@peer@port": {
+                "type": "keyword"
+              },
+              "net@transport": {
+                "type": "keyword"
+              },
+              "network@peer@address": {
+                "type": "keyword"
+              },
+              "network@peer@port": {
+                "type": "long"
+              },
+              "network@protocol@version": {
+                "type": "keyword"
+              },
+              "network@transport": {
+                "type": "keyword"
+              },
+              "network@type": {
+                "type": "keyword"
+              },
+              "next@route": {
+                "type": "keyword"
+              },
+              "next@rsc": {
+                "type": "boolean"
+              },
+              "next@span_name": {
+                "type": "keyword"
+              },
+              "next@span_type": {
+                "type": "keyword"
+              },
+              "node_id": {
+                "type": "keyword"
+              },
+              "peer@address": {
+                "type": "keyword"
+              },
+              "peer@ipv4": {
+                "type": "keyword"
+              },
+              "peer@service": {
+                "type": "keyword"
+              },
+              "product@id": {
+                "type": "keyword"
+              },
+              "quantity": {
+                "type": "long"
+              },
+              "question": {
+                "type": "keyword"
+              },
+              "request_size": {
+                "type": "keyword"
+              },
+              "response_flags": {
+                "type": "keyword"
+              },
+              "response_size": {
+                "type": "keyword"
+              },
+              "rpc@grpc@status_code": {
+                "type": "long"
+              },
+              "rpc@method": {
+                "type": "keyword"
+              },
+              "rpc@service": {
+                "type": "keyword"
+              },
+              "rpc@user_agent": {
+                "type": "keyword"
+              },
+              "rpc_system": {
+                "type": "keyword"
+              },
+              "server@address": {
+                "type": "keyword"
+              },
+              "server@port": {
+                "type": "long"
+              },
+              "sinatra@template_name": {
+                "type": "keyword"
+              },
+              "thread@id": {
+                "type": "long"
+              },
+              "thread@name": {
+                "type": "keyword"
+              },
+              "upstream_address": {
+                "type": "keyword"
+              },
+              "upstream_cluster": {
+                "type": "keyword"
+              },
+              "upstream_cluster_name": {
+                "type": "keyword"
+              },
+              "url@full": {
+                "type": "keyword"
+              },
+              "url@path": {
+                "type": "keyword"
+              },
+              "url@scheme": {
+                "type": "keyword"
+              },
+              "user@id": {
+                "type": "keyword"
+              },
+              "user_agent_original": {
+                "type": "keyword"
+              },
+              "user_agent_string": {
+                "type": "keyword"
+              },
+              "zone": {
+                "type": "keyword"
+              },
+              "app@filtered_products@list_mv": {
+                "type": "keyword"{%- if composite %},
+                "multi_value": true{%- endif %}
+              },
+              "app_ads_contextKeys_mv": {
+                "type": "keyword"{%- if composite %},
+                "multi_value": true{%- endif %}
+              },
+              "gen_ai@response@finish_reasons_mv": {
+                "type": "keyword"{%- if composite %},
+                "multi_value": true{%- endif %}
+              }
+            },
+            "dynamic": true
+          }
+        }
+      },
+      "spanId": {
+        "type": "keyword"
+      },
+      "startTime": {
+        "type": "date_nanos"
+      },
+      "status": {
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "keyword"
+          }
+        }
+      },
+      "traceGroup": {
+        "type": "keyword"
+      },
+      "traceGroupFields": {
+        "properties": {
+          "durationInNanos": {
+            "type": "long"
+          },
+          "endTime": {
+            "type": "date_nanos"
+          },
+          "statusCode": {
+            "type": "integer"
+          }
+        }
+      },
+      "traceId": {
+        "type": "keyword"
+      },
+      "traceState": {
+        "type": "keyword"
+      },
+      "eventTime": {
+        "type": "date_nanos"
+      }
+    }
+  }
+}

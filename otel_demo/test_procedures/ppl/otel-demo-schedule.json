@@ -1,0 +1,325 @@
+{
+  "operation": {
+    "operation-type": "put-settings",
+    "body": {
+      "transient": {
+        "plugins.ppl.syntax.legacy.preferred": {{ legacy_syntax | default(true) | tojson }}
+      }
+    }
+  }
+},
+{
+  "operation": "t1-01-spans-per-minute",
+  "warmup-iterations": {{ t1_01_spans_per_minute_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_01_spans_per_minute_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_01_spans_per_minute_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_01_spans_per_minute_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-02-apdex-per-service",
+  "warmup-iterations": {{ t1_02_apdex_per_service_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_02_apdex_per_service_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_02_apdex_per_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_02_apdex_per_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-03-slow-ops-eventstats",
+  "warmup-iterations": {{ t1_03_slow_ops_eventstats_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_03_slow_ops_eventstats_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_03_slow_ops_eventstats_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_03_slow_ops_eventstats_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-04-distinct-traces-per-service",
+  "warmup-iterations": {{ t1_04_distinct_traces_per_service_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_04_distinct_traces_per_service_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_04_distinct_traces_per_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_04_distinct_traces_per_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-05-biggest-traces",
+  "warmup-iterations": {{ t1_05_biggest_traces_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_05_biggest_traces_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_05_biggest_traces_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_05_biggest_traces_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-06-checkout-last-10min",
+  "warmup-iterations": {{ t1_06_checkout_last_10min_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_06_checkout_last_10min_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_06_checkout_last_10min_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_06_checkout_last_10min_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-07-newest-spans",
+  "warmup-iterations": {{ t1_07_newest_spans_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_07_newest_spans_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_07_newest_spans_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_07_newest_spans_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-08-exception-spans",
+  "warmup-iterations": {{ t1_08_exception_spans_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_08_exception_spans_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_08_exception_spans_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_08_exception_spans_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-09-logs-of-trace",
+  "warmup-iterations": {{ t1_09_logs_of_trace_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_09_logs_of_trace_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_09_logs_of_trace_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_09_logs_of_trace_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-10-logs-by-severity",
+  "warmup-iterations": {{ t1_10_logs_by_severity_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_10_logs_by_severity_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_10_logs_by_severity_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_10_logs_by_severity_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-11-error-logs-per-service",
+  "warmup-iterations": {{ t1_11_error_logs_per_service_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_11_error_logs_per_service_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_11_error_logs_per_service_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_11_error_logs_per_service_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-12-newest-error-logs",
+  "warmup-iterations": {{ t1_12_newest_error_logs_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_12_newest_error_logs_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_12_newest_error_logs_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_12_newest_error_logs_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-13-fts-and-window",
+  "warmup-iterations": {{ t1_13_fts_and_window_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_13_fts_and_window_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_13_fts_and_window_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_13_fts_and_window_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-14-fts-all-tokens",
+  "warmup-iterations": {{ t1_14_fts_all_tokens_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_14_fts_all_tokens_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_14_fts_all_tokens_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_14_fts_all_tokens_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-15-fts-common-token",
+  "warmup-iterations": {{ t1_15_fts_common_token_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_15_fts_common_token_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_15_fts_common_token_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_15_fts_common_token_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-16-ilike-substring",
+  "warmup-iterations": {{ t1_16_ilike_substring_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_16_ilike_substring_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_16_ilike_substring_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_16_ilike_substring_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-17-log-patterns",
+  "warmup-iterations": {{ t1_17_log_patterns_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_17_log_patterns_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_17_log_patterns_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_17_log_patterns_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-18-envoy-parse-latency",
+  "warmup-iterations": {{ t1_18_envoy_parse_latency_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_18_envoy_parse_latency_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_18_envoy_parse_latency_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_18_envoy_parse_latency_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t1-19-newest-logs",
+  "warmup-iterations": {{ t1_19_newest_logs_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t1_19_newest_logs_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t1_19_newest_logs_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t1_19_newest_logs_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-01-match-all",
+  "warmup-iterations": {{ t2_01_match_all_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_01_match_all_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_01_match_all_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_01_match_all_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-02-newest-10",
+  "warmup-iterations": {{ t2_02_newest_10_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_02_newest_10_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_02_newest_10_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_02_newest_10_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-03-service-newest-10",
+  "warmup-iterations": {{ t2_03_service_newest_10_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_03_service_newest_10_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_03_service_newest_10_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_03_service_newest_10_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-04-rare-term",
+  "warmup-iterations": {{ t2_04_rare_term_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_04_rare_term_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_04_rare_term_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_04_rare_term_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-05-service-time-window",
+  "warmup-iterations": {{ t2_05_service_time_window_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_05_service_time_window_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_05_service_time_window_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_05_service_time_window_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-06-duration-range",
+  "warmup-iterations": {{ t2_06_duration_range_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_06_duration_range_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_06_duration_range_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_06_duration_range_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-07-slowest-spans",
+  "warmup-iterations": {{ t2_07_slowest_spans_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_07_slowest_spans_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_07_slowest_spans_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_07_slowest_spans_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-08-logs-per-hour",
+  "warmup-iterations": {{ t2_08_logs_per_hour_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_08_logs_per_hour_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_08_logs_per_hour_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_08_logs_per_hour_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-09-latency-bands",
+  "warmup-iterations": {{ t2_09_latency_bands_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_09_latency_bands_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_09_latency_bands_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_09_latency_bands_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-10-multi-terms",
+  "warmup-iterations": {{ t2_10_multi_terms_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_10_multi_terms_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_10_multi_terms_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_10_multi_terms_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-11-composite-two-key",
+  "warmup-iterations": {{ t2_11_composite_two_key_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_11_composite_two_key_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_11_composite_two_key_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_11_composite_two_key_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-12-distinct-traces",
+  "warmup-iterations": {{ t2_12_distinct_traces_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_12_distinct_traces_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_12_distinct_traces_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_12_distinct_traces_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-13-query-string",
+  "warmup-iterations": {{ t2_13_query_string_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_13_query_string_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_13_query_string_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_13_query_string_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-14-latest-gauge-value",
+  "warmup-iterations": {{ t2_14_latest_gauge_value_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_14_latest_gauge_value_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_14_latest_gauge_value_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_14_latest_gauge_value_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-15-count-spans",
+  "warmup-iterations": {{ t2_15_count_spans_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_15_count_spans_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_15_count_spans_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_15_count_spans_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-16-limit-no-order",
+  "warmup-iterations": {{ t2_16_limit_no_order_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_16_limit_no_order_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_16_limit_no_order_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_16_limit_no_order_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-17-derived-keys",
+  "warmup-iterations": {{ t2_17_derived_keys_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_17_derived_keys_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_17_derived_keys_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_17_derived_keys_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-18-in-list-offset",
+  "warmup-iterations": {{ t2_18_in_list_offset_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_18_in_list_offset_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_18_in_list_offset_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_18_in_list_offset_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-19-minute-key",
+  "warmup-iterations": {{ t2_19_minute_key_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_19_minute_key_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_19_minute_key_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_19_minute_key_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-20-nested-stats",
+  "warmup-iterations": {{ t2_20_nested_stats_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_20_nested_stats_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_20_nested_stats_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_20_nested_stats_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-21-log-bytes-having",
+  "warmup-iterations": {{ t2_21_log_bytes_having_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_21_log_bytes_having_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_21_log_bytes_having_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_21_log_bytes_having_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-22-mvexpand-buckets",
+  "warmup-iterations": {{ t2_22_mvexpand_buckets_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_22_mvexpand_buckets_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_22_mvexpand_buckets_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_22_mvexpand_buckets_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-23-severity-labels",
+  "warmup-iterations": {{ t2_23_severity_labels_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_23_severity_labels_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_23_severity_labels_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_23_severity_labels_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-24-distinct-durations",
+  "warmup-iterations": {{ t2_24_distinct_durations_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_24_distinct_durations_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_24_distinct_durations_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_24_distinct_durations_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-25-export-cadence",
+  "warmup-iterations": {{ t2_25_export_cadence_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_25_export_cadence_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_25_export_cadence_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_25_export_cadence_clients or search_clients | default(1) }}
+},
+{
+  "operation": "t2-26-traces-per-minute",
+  "warmup-iterations": {{ t2_26_traces_per_minute_warmup_iterations or warmup_iterations | default(10) | tojson }},
+  "iterations": {{ t2_26_traces_per_minute_iterations or test_iterations | default(10) | tojson }},
+  "target-throughput": {{ t2_26_traces_per_minute_target_throughput or target_throughput | default(2) | tojson }},
+  "clients": {{ t2_26_traces_per_minute_clients or search_clients | default(1) }}
+}

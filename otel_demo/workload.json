@@ -1,0 +1,55 @@
+{% import "benchmark.helpers" as benchmark with context %}
+
+{
+  "version": 2,
+  "description": "OpenTelemetry Demo telemetry (spans, logs, metrics) in the Data Prepper OTel format, 45 PPL queries",
+  "indices": [
+    {
+      "name": "{{ spans_index | default('otel_spans') }}",
+      "body": "index/otel_spans.json"
+    },
+    {
+      "name": "{{ logs_index | default('otel_logs') }}",
+      "body": "index/otel_logs.json"
+    },
+    {
+      "name": "{{ metrics_index | default('otel_metrics') }}",
+      "body": "index/otel_metrics.json"
+    }
+  ],
+  "corpora": [
+    {
+      "name": "otel_demo",
+      "base-url": "{{ corpus_base_url | default('https://example.invalid/otel_demo') }}",
+      "documents": [
+        {
+          "source-file": "otel_spans.ndjson.gz",
+          "target-index": "{{ spans_index | default('otel_spans') }}",
+          "document-count": 36987718,
+          "compressed-bytes": 5021085400,
+          "uncompressed-bytes": 80099573456
+        },
+        {
+          "source-file": "otel_logs.ndjson.gz",
+          "target-index": "{{ logs_index | default('otel_logs') }}",
+          "document-count": 13148738,
+          "compressed-bytes": 1137339096,
+          "uncompressed-bytes": 19346915077
+        },
+        {
+          "source-file": "otel_metrics.ndjson.gz",
+          "target-index": "{{ metrics_index | default('otel_metrics') }}",
+          "document-count": 4547738,
+          "compressed-bytes": 114727489,
+          "uncompressed-bytes": 5230795816
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {{ benchmark.collect(parts="operations/*.json") }}
+  ],
+  "test_procedures": [
+    {{ benchmark.collect(parts="test_procedures/*.json") }}
+  ]
+}

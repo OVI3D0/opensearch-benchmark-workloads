@@ -1,0 +1,442 @@
+{%- set composite = parquet_enabled_index | default(true) %}
+{
+  "settings": {
+    "index.number_of_shards": {{ number_of_shards | default(1) }},
+    "index.number_of_replicas": {{ number_of_replicas | default(0) }},
+    "index.queries.cache.enabled": {{ query_cache_enabled | default(false) | tojson }},
+    "index.requests.cache.enable": {{ requests_cache_enabled | default(false) | tojson }},
+    "index.codec": "best_compression",
+    "index.translog.sync_interval": "30s",
+    "index.translog.durability": {{ index_translog_durability | default("async") | tojson }},
+    "index.sort.field": ["eventTime"],
+    "index.sort.order": ["asc"]
+    {%- if composite %},
+    "index.pluggable.dataformat.enabled": true,
+    "index.pluggable.dataformat": "composite",
+    "index.composite.primary_data_format": "parquet",
+    "index.composite.secondary_data_formats": ["lucene"]
+    {%- endif %}
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "date_detection": false,
+    "numeric_detection": false,
+    "dynamic_templates": [
+      {
+        "attributes_mv": {
+          "path_match": "*attributes.*_mv",
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 8191{%- if composite %},
+            "multi_value": true{%- endif %}
+          }
+        }
+      },
+      {
+        "attributes_string_as_keyword": {
+          "path_match": "*attributes.*",
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 8191
+          }
+        }
+      },
+      {
+        "attributes_long_as_keyword": {
+          "path_match": "*attributes.*",
+          "match_mapping_type": "long",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 8191
+          }
+        }
+      },
+      {
+        "attributes_double_as_keyword": {
+          "path_match": "*attributes.*",
+          "match_mapping_type": "double",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 8191
+          }
+        }
+      },
+      {
+        "attributes_boolean_as_keyword": {
+          "path_match": "*attributes.*",
+          "match_mapping_type": "boolean",
+          "mapping": {
+            "type": "keyword",
+            "ignore_above": 8191
+          }
+        }
+      }
+    ],
+    "properties": {
+      "@timestamp": {
+        "type": "date_nanos"
+      },
+      "body": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 8191
+          }
+        }
+      },
+      "droppedAttributesCount": {
+        "type": "integer"
+      },
+      "flags": {
+        "type": "long"
+      },
+      "instrumentationScope": {
+        "properties": {
+          "name": {
+            "type": "keyword"
+          },
+          "version": {
+            "type": "keyword"
+          }
+        }
+      },
+      "log": {
+        "properties": {
+          "attributes": {
+            "properties": {
+              "@OrderResult": {
+                "type": "keyword"
+              },
+              "ContentRoot": {
+                "type": "keyword"
+              },
+              "Detail": {
+                "type": "keyword"
+              },
+              "EnvName": {
+                "type": "keyword"
+              },
+              "State": {
+                "type": "keyword"
+              },
+              "StatusCode": {
+                "type": "keyword"
+              },
+              "addr": {
+                "type": "keyword"
+              },
+              "address": {
+                "type": "keyword"
+              },
+              "amount": {
+                "type": "keyword"
+              },
+              "app@email@recipient": {
+                "type": "keyword"
+              },
+              "app@order@amount": {
+                "type": "double"
+              },
+              "app@order@id": {
+                "type": "keyword"
+              },
+              "app@order@items@count": {
+                "type": "long"
+              },
+              "app@product@id": {
+                "type": "keyword"
+              },
+              "app@product@name": {
+                "type": "keyword"
+              },
+              "app@shipping@amount": {
+                "type": "double"
+              },
+              "app@shipping@tracking@id": {
+                "type": "keyword"
+              },
+              "cardType": {
+                "type": "keyword"
+              },
+              "code@file@path": {
+                "type": "keyword"
+              },
+              "code@function@name": {
+                "type": "keyword"
+              },
+              "code@line@number": {
+                "type": "long"
+              },
+              "context": {
+                "type": "keyword"
+              },
+              "destination@address": {
+                "type": "keyword"
+              },
+              "err": {
+                "type": "keyword"
+              },
+              "event@name": {
+                "type": "keyword"
+              },
+              "exception@message": {
+                "type": "keyword"
+              },
+              "exception@stacktrace": {
+                "type": "keyword"
+              },
+              "exception@type": {
+                "type": "keyword"
+              },
+              "gen_ai@system": {
+                "type": "keyword"
+              },
+              "http": {
+                "type": "keyword"
+              },
+              "https": {
+                "type": "keyword"
+              },
+              "lastFourDigits": {
+                "type": "keyword"
+              },
+              "loyalty_level": {
+                "type": "keyword"
+              },
+              "name": {
+                "type": "keyword"
+              },
+              "otelServiceName": {
+                "type": "keyword"
+              },
+              "otelSpanID": {
+                "type": "keyword"
+              },
+              "otelTraceID": {
+                "type": "keyword"
+              },
+              "otelTraceSampled": {
+                "type": "boolean"
+              },
+              "productId": {
+                "type": "keyword"
+              },
+              "products": {
+                "type": "long"
+              },
+              "quantity": {
+                "type": "long"
+              },
+              "quote@cents": {
+                "type": "long"
+              },
+              "quote@dollars": {
+                "type": "long"
+              },
+              "quote_service_addr": {
+                "type": "keyword"
+              },
+              "reason": {
+                "type": "keyword"
+              },
+              "request": {
+                "type": "keyword"
+              },
+              "server@address": {
+                "type": "keyword"
+              },
+              "servers": {
+                "type": "keyword"
+              },
+              "source@address": {
+                "type": "keyword"
+              },
+              "tracking_id": {
+                "type": "keyword"
+              },
+              "transactionId": {
+                "type": "keyword"
+              },
+              "transaction_id": {
+                "type": "keyword"
+              },
+              "upstream@cluster": {
+                "type": "keyword"
+              },
+              "upstream@host": {
+                "type": "keyword"
+              },
+              "url@full": {
+                "type": "keyword"
+              },
+              "url@path": {
+                "type": "keyword"
+              },
+              "url@query": {
+                "type": "keyword"
+              },
+              "url@template": {
+                "type": "keyword"
+              },
+              "urls": {
+                "type": "keyword"
+              },
+              "userId": {
+                "type": "keyword"
+              },
+              "user_agent@original": {
+                "type": "keyword"
+              },
+              "user_currency": {
+                "type": "keyword"
+              },
+              "user_id": {
+                "type": "keyword"
+              }
+            },
+            "dynamic": true
+          }
+        }
+      },
+      "observedTimestamp": {
+        "type": "date_nanos"
+      },
+      "resource": {
+        "properties": {
+          "attributes": {
+            "properties": {
+              "cluster_name": {
+                "type": "keyword"
+              },
+              "container@id": {
+                "type": "keyword"
+              },
+              "host@arch": {
+                "type": "keyword"
+              },
+              "host@name": {
+                "type": "keyword"
+              },
+              "log_name": {
+                "type": "keyword"
+              },
+              "node_name": {
+                "type": "keyword"
+              },
+              "os@build_id": {
+                "type": "keyword"
+              },
+              "os@description": {
+                "type": "keyword"
+              },
+              "os@name": {
+                "type": "keyword"
+              },
+              "os@type": {
+                "type": "keyword"
+              },
+              "os@version": {
+                "type": "keyword"
+              },
+              "process@command": {
+                "type": "keyword"
+              },
+              "process@command_args": {
+                "type": "keyword"
+              },
+              "process@command_line": {
+                "type": "keyword"
+              },
+              "process@executable@name": {
+                "type": "keyword"
+              },
+              "process@executable@path": {
+                "type": "keyword"
+              },
+              "process@owner": {
+                "type": "keyword"
+              },
+              "process@pid": {
+                "type": "long"
+              },
+              "process@runtime@description": {
+                "type": "keyword"
+              },
+              "process@runtime@name": {
+                "type": "keyword"
+              },
+              "process@runtime@version": {
+                "type": "keyword"
+              },
+              "service@instance@id": {
+                "type": "keyword"
+              },
+              "service@name": {
+                "type": "keyword"
+              },
+              "service@namespace": {
+                "type": "keyword"
+              },
+              "service@version": {
+                "type": "keyword"
+              },
+              "telemetry@auto@version": {
+                "type": "keyword"
+              },
+              "telemetry@distro@name": {
+                "type": "keyword"
+              },
+              "telemetry@distro@version": {
+                "type": "keyword"
+              },
+              "telemetry@sdk@language": {
+                "type": "keyword"
+              },
+              "telemetry@sdk@name": {
+                "type": "keyword"
+              },
+              "telemetry@sdk@version": {
+                "type": "keyword"
+              },
+              "zone_name": {
+                "type": "keyword"
+              },
+              "process@command_args_mv": {
+                "type": "keyword"{%- if composite %},
+                "multi_value": true{%- endif %}
+              }
+            },
+            "dynamic": true
+          }
+        }
+      },
+      "schemaUrl": {
+        "type": "keyword"
+      },
+      "serviceName": {
+        "type": "keyword"
+      },
+      "severityNumber": {
+        "type": "integer"
+      },
+      "severityText": {
+        "type": "keyword"
+      },
+      "spanId": {
+        "type": "keyword"
+      },
+      "time": {
+        "type": "date_nanos"
+      },
+      "traceId": {
+        "type": "keyword"
+      },
+      "eventTime": {
+        "type": "date_nanos"
+      }
+    }
+  }
+}

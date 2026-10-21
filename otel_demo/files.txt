@@ -1,0 +1,6 @@
+otel_spans.ndjson.gz
+otel_logs.ndjson.gz
+otel_metrics.ndjson.gz
+otel_spans-1k.ndjson.gz
+otel_logs-1k.ndjson.gz
+otel_metrics-1k.ndjson.gz
