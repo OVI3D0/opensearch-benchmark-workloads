@@ -1,0 +1,58 @@
+    {
+      "name": "otel-demo",
+      "description": "Indexes the three OTel Demo indices (spans, logs, metrics) and runs the 45 PPL queries",
+      "default": true,
+      "schedule": [
+        {% with default_index_settings={}, index_name=(spans_index | default('otel_spans')) ~ ',' ~ (logs_index | default('otel_logs')) ~ ',' ~ (metrics_index | default('otel_metrics')) %}
+        {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
+        {% endwith %}
+        {{ benchmark.collect(parts="ppl/otel-demo-schedule.json") }}
+      ]
+    },
+    {
+      "name": "otel-demo-test",
+      "description": "Lightweight check of the workload: setup plus one iteration of each PPL query",
+      "default": false,
+      "schedule": [
+        {% with default_index_settings={}, index_name=(spans_index | default('otel_spans')) ~ ',' ~ (logs_index | default('otel_logs')) ~ ',' ~ (metrics_index | default('otel_metrics')) %}
+        {{ benchmark.collect(parts="../../common_operations/workload_setup.json") }},
+        {% endwith %}
+        {{ benchmark.collect(parts="ppl/test-schedule.json") }}
+      ]
+    },
+    {
+      "name": "otel-demo-ingest",
+      "description": "Ingest only: delete/create the three indices, bulk-index the corpus, flush. No queries. For plain Lucene indices pass parquet_enabled_index=false (default is the composite parquet + lucene index).",
+      "default": false,
+      "schedule": [
+        {% with default_index_settings={}, index_name=(spans_index | default('otel_spans')) ~ ',' ~ (logs_index | default('otel_logs')) ~ ',' ~ (metrics_index | default('otel_metrics')) %}
+        {{ benchmark.collect(parts="../../common_operations/delete_index.json") }},
+        {{ benchmark.collect(parts="../../common_operations/create_index.json") }},
+        {{ benchmark.collect(parts="../../common_operations/check_cluster_health.json") }},
+        {{ benchmark.collect(parts="../../common_operations/index_append.json") }},
+        {% endwith %}
+        {
+          "operation": "flush-index",
+          "warmup-iterations": {{ flush_index_warmup_iterations or warmup_iterations | default(1) | tojson }},
+          "iterations": {{ flush_index_iterations or test_iterations | default(1) | tojson }},
+          "target-throughput": {{ flush_index_target_throughput or target_throughput | default(1) | tojson }},
+          "clients": {{ flush_index_clients or search_clients | default(1) }}
+        }
+      ]
+    },
+    {
+      "name": "otel-demo-ppl",
+      "description": "Queries only: the 45 PPL queries against already-indexed otel_spans/otel_logs/otel_metrics.",
+      "default": false,
+      "schedule": [
+        {{ benchmark.collect(parts="ppl/otel-demo-schedule.json") }}
+      ]
+    },
+    {
+      "name": "dsl-otel-demo",
+      "description": "Queries only: the PPL queries that native OpenSearch DSL (/_search) can express, for plain Lucene indices, each result-equivalent to the matching PPL op.",
+      "default": false,
+      "schedule": [
+        {{ benchmark.collect(parts="dsl/dsl-otel-demo-schedule.json") }}
+      ]
+    }

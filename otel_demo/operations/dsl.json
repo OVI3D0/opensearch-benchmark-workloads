@@ -1,0 +1,1687 @@
+{
+  "name": "dsl-t1-01-spans-per-minute",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10000,
+          "sources": [
+            {
+              "ts": {
+                "date_histogram": {
+                  "field": "startTime",
+                  "fixed_interval": "1m",
+                  "format": "yyyy-MM-dd HH:mm:ss",
+                  "order": "asc"
+                }
+              }
+            },
+            {
+              "serviceName": {
+                "terms": {
+                  "field": "serviceName",
+                  "order": "asc"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-02-apdex-per-service",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName",
+          "size": 10000
+        },
+        "aggs": {
+          "s": {
+            "filter": {
+              "range": {
+                "durationInNanos": {
+                  "lte": 500000000
+                }
+              }
+            }
+          },
+          "t": {
+            "filter": {
+              "range": {
+                "durationInNanos": {
+                  "gt": 500000000,
+                  "lte": 2000000000
+                }
+              }
+            }
+          },
+          "apdex": {
+            "bucket_script": {
+              "buckets_path": {
+                "s": "s>_count",
+                "t": "t>_count",
+                "n": "_count"
+              },
+              "script": "(params.s + params.t * 0.5) / params.n"
+            }
+          },
+          "order": {
+            "bucket_sort": {
+              "sort": [
+                {
+                  "apdex": "asc"
+                }
+              ],
+              "size": 10000
+            }
+          }
+        }
+      }
+    },
+    "query": {
+      "terms": {
+        "kind": [
+          "SPAN_KIND_SERVER",
+          "SPAN_KIND_CONSUMER"
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-03-slow-ops-eventstats",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "all": {
+        "filter": {
+          "exists": {
+            "field": "name"
+          }
+        },
+        "aggs": {
+          "affected": {
+            "filter": {
+              "range": {
+                "durationInNanos": {
+                  "gt": 100000000
+                }
+              }
+            }
+          }
+        }
+      },
+      "g": {
+        "terms": {
+          "field": "name",
+          "size": 10000
+        },
+        "aggs": {
+          "affected": {
+            "filter": {
+              "range": {
+                "durationInNanos": {
+                  "gt": 100000000
+                }
+              }
+            }
+          },
+          "rate": {
+            "bucket_script": {
+              "buckets_path": {
+                "a": "affected>_count",
+                "n": "_count"
+              },
+              "script": "params.a / params.n"
+            }
+          },
+          "having": {
+            "bucket_selector": {
+              "buckets_path": {
+                "n": "_count"
+              },
+              "script": "params.n >= 20"
+            }
+          },
+          "order": {
+            "bucket_sort": {
+              "sort": [
+                {
+                  "rate": "desc"
+                }
+              ],
+              "size": 20
+            }
+          }
+        }
+      }
+    },
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "term": {
+              "serviceName": {
+                "value": "frontend"
+              }
+            }
+          },
+          {
+            "term": {
+              "kind": {
+                "value": "SPAN_KIND_SERVER"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-04-distinct-traces-per-service",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName",
+          "size": 10000,
+          "order": [
+            {
+              "trace_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "trace_count": {
+            "cardinality": {
+              "field": "traceId"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-05-biggest-traces",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "traceId",
+          "size": 20,
+          "shard_size": 2147483647,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-06-checkout-last-10min",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": 2147483647,
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "term": {
+              "serviceName": {
+                "value": "checkout"
+              }
+            }
+          },
+          {
+            "range": {
+              "endTime": {
+                "gte": "2026-10-16T06:40:00.000Z"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-07-newest-spans",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 50,
+    "track_total_hits": false,
+    "sort": [
+      {
+        "startTime": "desc"
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-t1-08-exception-spans",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10000,
+          "sources": [
+            {
+              "t_min": {
+                "date_histogram": {
+                  "field": "startTime",
+                  "fixed_interval": "1m",
+                  "format": "yyyy-MM-dd HH:mm:ss",
+                  "order": "asc"
+                }
+              }
+            },
+            {
+              "serviceName": {
+                "terms": {
+                  "field": "serviceName",
+                  "order": "asc"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "query": {
+      "nested": {
+        "path": "events",
+        "query": {
+          "term": {
+            "events.name": {
+              "value": "exception"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-09-logs-of-trace",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 1000,
+    "track_total_hits": false,
+    "query": {
+      "term": {
+        "traceId": {
+          "value": "59c5c193c46bf6d736d615d2a5ca8001"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-10-logs-by-severity",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10000,
+          "sources": [
+            {
+              "t": {
+                "date_histogram": {
+                  "field": "eventTime",
+                  "fixed_interval": "1m",
+                  "format": "yyyy-MM-dd HH:mm:ss",
+                  "order": "asc"
+                }
+              }
+            },
+            {
+              "severityText": {
+                "terms": {
+                  "field": "severityText",
+                  "order": "asc"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-11-error-logs-per-service",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10000,
+          "sources": [
+            {
+              "t": {
+                "date_histogram": {
+                  "field": "eventTime",
+                  "fixed_interval": "1m",
+                  "format": "yyyy-MM-dd HH:mm:ss",
+                  "order": "asc"
+                }
+              }
+            },
+            {
+              "serviceName": {
+                "terms": {
+                  "field": "serviceName",
+                  "order": "asc"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "query": {
+      "bool": {
+        "should": [
+          {
+            "term": {
+              "severityText": {
+                "value": "ERROR",
+                "case_insensitive": true
+              }
+            }
+          },
+          {
+            "term": {
+              "severityText": {
+                "value": "WARN",
+                "case_insensitive": true
+              }
+            }
+          },
+          {
+            "term": {
+              "severityText": {
+                "value": "WARNING",
+                "case_insensitive": true
+              }
+            }
+          }
+        ],
+        "minimum_should_match": 1
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-12-newest-error-logs",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "track_total_hits": false,
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "range": {
+              "time": {
+                "gte": "2026-10-15T16:40:00.000Z",
+                "lte": "2026-10-15T21:40:00.000Z"
+              }
+            }
+          },
+          {
+            "range": {
+              "severityNumber": {
+                "gte": 17
+              }
+            }
+          }
+        ]
+      }
+    },
+    "sort": [
+      {
+        "time": "desc"
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-t1-13-fts-and-window",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "track_total_hits": false,
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "match": {
+              "body": {
+                "query": "order placed",
+                "operator": "AND"
+              }
+            }
+          },
+          {
+            "term": {
+              "serviceName": {
+                "value": "checkout"
+              }
+            }
+          },
+          {
+            "range": {
+              "eventTime": {
+                "gte": "2026-10-15T21:00:00.000Z",
+                "lt": "2026-10-15T21:30:00.000Z"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "sort": [
+      {
+        "eventTime": "desc"
+      }
+    ],
+    "_source": [
+      "eventTime",
+      "serviceName",
+      "severityText",
+      "body"
+    ]
+  }
+},
+{
+  "name": "dsl-t1-14-fts-all-tokens",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": 2147483647,
+    "query": {
+      "match": {
+        "body": {
+          "query": "connect redis",
+          "operator": "AND"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-15-fts-common-token",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "track_total_hits": false,
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "match": {
+              "body": "GET"
+            }
+          },
+          {
+            "range": {
+              "eventTime": {
+                "gte": "2026-10-15T21:00:00.000Z",
+                "lte": "2026-10-16T06:50:00.000Z"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "sort": [
+      {
+        "eventTime": "desc"
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-t1-16-ilike-substring",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 100,
+    "track_total_hits": false,
+    "query": {
+      "wildcard": {
+        "body.keyword": {
+          "value": "*redis*",
+          "case_insensitive": true
+        }
+      }
+    },
+    "sort": [
+      {
+        "eventTime": "desc"
+      }
+    ],
+    "_source": [
+      "eventTime",
+      "serviceName",
+      "severityText",
+      "body"
+    ]
+  }
+},
+{
+  "name": "dsl-t1-17-log-patterns",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "script": {
+            "lang": "painless",
+            "source": "if (doc['body.keyword'].size() == 0) { return ''; } def s = doc['body.keyword'].value; return s.isEmpty() ? '' : /[a-zA-Z0-9]+/.matcher(s).replaceAll('<*>');"
+          },
+          "size": 20,
+          "shard_size": 2147483647,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    },
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "term": {
+              "serviceName": {
+                "value": "cart"
+              }
+            }
+          },
+          {
+            "exists": {
+              "field": "body"
+            }
+          }
+        ],
+        "must_not": [
+          {
+            "wildcard": {
+              "body.keyword": {
+                "value": "*ValkeyCartStore*",
+                "case_insensitive": true
+              }
+            }
+          },
+          {
+            "wildcard": {
+              "body.keyword": {
+                "value": "*called with userId*",
+                "case_insensitive": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-18-envoy-parse-latency",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "script": {
+                "lang": "painless",
+                "source": "if (doc['body.keyword'].size() == 0) { return ''; } def m = /^\\[([^\\]]+)\\] \"(\\S+) (\\S+) ([^\"]+)\" (\\d{3}) (\\S+) (\\S+) (\\S+) \"([^\"]*)\" (\\d+) (\\d+) (\\d+) [\\s\\S]+/.matcher(doc['body.keyword'].value); return m.matches() ? m.group(2) : '';"
+              }
+            },
+            {
+              "script": {
+                "lang": "painless",
+                "source": "if (doc['body.keyword'].size() == 0) { return ''; } def m = /^\\[([^\\]]+)\\] \"(\\S+) (\\S+) ([^\"]+)\" (\\d{3}) (\\S+) (\\S+) (\\S+) \"([^\"]*)\" (\\d+) (\\d+) (\\d+) [\\s\\S]+/.matcher(doc['body.keyword'].value); return m.matches() ? m.group(3) : '';"
+              }
+            }
+          ],
+          "size": 20,
+          "shard_size": 2147483647,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "avg": {
+            "avg": {
+              "script": {
+                "lang": "painless",
+                "source": "if (doc['body.keyword'].size() == 0) { return null; } def m = /^\\[([^\\]]+)\\] \"(\\S+) (\\S+) ([^\"]+)\" (\\d{3}) (\\S+) (\\S+) (\\S+) \"([^\"]*)\" (\\d+) (\\d+) (\\d+) [\\s\\S]+/.matcher(doc['body.keyword'].value); return m.matches() ? Integer.parseInt(m.group(12)) : null;"
+              }
+            }
+          },
+          "max": {
+            "max": {
+              "script": {
+                "lang": "painless",
+                "source": "if (doc['body.keyword'].size() == 0) { return null; } def m = /^\\[([^\\]]+)\\] \"(\\S+) (\\S+) ([^\"]+)\" (\\d{3}) (\\S+) (\\S+) (\\S+) \"([^\"]*)\" (\\d+) (\\d+) (\\d+) [\\s\\S]+/.matcher(doc['body.keyword'].value); return m.matches() ? Integer.parseInt(m.group(12)) : null;"
+              }
+            }
+          },
+          "p95": {
+            "percentiles": {
+              "script": {
+                "lang": "painless",
+                "source": "if (doc['body.keyword'].size() == 0) { return null; } def m = /^\\[([^\\]]+)\\] \"(\\S+) (\\S+) ([^\"]+)\" (\\d{3}) (\\S+) (\\S+) (\\S+) \"([^\"]*)\" (\\d+) (\\d+) (\\d+) [\\s\\S]+/.matcher(doc['body.keyword'].value); return m.matches() ? Integer.parseInt(m.group(12)) : null;"
+              },
+              "percents": [
+                95
+              ]
+            }
+          }
+        }
+      }
+    },
+    "query": {
+      "term": {
+        "serviceName": {
+          "value": "frontend-proxy"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t1-19-newest-logs",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 1000,
+    "track_total_hits": false,
+    "sort": [
+      {
+        "eventTime": "desc"
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-t2-01-match-all",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 10,
+    "track_total_hits": false
+  }
+},
+{
+  "name": "dsl-t2-02-newest-10",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 10,
+    "track_total_hits": false,
+    "sort": [
+      {
+        "eventTime": "desc"
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-t2-03-service-newest-10",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 10,
+    "track_total_hits": false,
+    "query": {
+      "term": {
+        "serviceName": {
+          "value": "product-reviews"
+        }
+      }
+    },
+    "sort": [
+      {
+        "eventTime": "desc"
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-t2-04-rare-term",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 10,
+    "track_total_hits": false,
+    "query": {
+      "term": {
+        "serviceName": {
+          "value": "kafka"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-05-service-time-window",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 10,
+    "track_total_hits": false,
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "term": {
+              "serviceName": {
+                "value": "product-reviews"
+              }
+            }
+          },
+          {
+            "range": {
+              "eventTime": {
+                "gte": "2026-10-15T23:00:00.000Z",
+                "lt": "2026-10-16T00:35:00.000Z"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-06-duration-range",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 10,
+    "track_total_hits": false,
+    "query": {
+      "range": {
+        "durationInNanos": {
+          "gte": 20000000,
+          "lte": 200000000
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-07-slowest-spans",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 10,
+    "track_total_hits": false,
+    "sort": [
+      {
+        "durationInNanos": "desc"
+      }
+    ]
+  }
+},
+{
+  "name": "dsl-t2-08-logs-per-hour",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "date_histogram": {
+          "field": "eventTime",
+          "fixed_interval": "1h",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-09-latency-bands",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "latency_band": {
+        "range": {
+          "field": "durationInNanos",
+          "keyed": true,
+          "ranges": [
+            {
+              "key": "a_lt_1ms",
+              "to": 1000000
+            },
+            {
+              "key": "b_1_10ms",
+              "from": 1000000,
+              "to": 10000000
+            },
+            {
+              "key": "c_10_100ms",
+              "from": 10000000,
+              "to": 100000000
+            },
+            {
+              "key": "d_100ms_1s",
+              "from": 100000000,
+              "to": 1000000000
+            },
+            {
+              "key": "e_1_10s",
+              "from": 1000000000,
+              "to": 10000000000
+            },
+            {
+              "key": "f_ge_10s",
+              "from": 10000000000
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-10-multi-terms",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "serviceName"
+            },
+            {
+              "field": "kind"
+            }
+          ],
+          "size": 10,
+          "shard_size": 2147483647,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    },
+    "query": {
+      "range": {
+        "eventTime": {
+          "gte": "2026-10-16T02:00:00.000Z",
+          "lt": "2026-10-16T02:10:00.000Z"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-11-composite-two-key",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10,
+          "sources": [
+            {
+              "serviceName": {
+                "terms": {
+                  "field": "serviceName",
+                  "order": "desc"
+                }
+              }
+            },
+            {
+              "kind": {
+                "terms": {
+                  "field": "kind",
+                  "order": "asc"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "query": {
+      "range": {
+        "eventTime": {
+          "gte": "2026-10-16T01:00:00.000Z",
+          "lt": "2026-10-16T01:20:00.000Z"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-12-distinct-traces",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "dc": {
+        "cardinality": {
+          "field": "traceId"
+        }
+      }
+    },
+    "query": {
+      "exists": {
+        "field": "traceId"
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-13-query-string",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 10,
+    "track_total_hits": false,
+    "query": {
+      "query_string": {
+        "query": "telescope binoculars score",
+        "fields": [
+          "body"
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-14-latest-gauge-value",
+  "operation-type": "raw-request",
+  "path": "/{{ metrics_index | default('otel_metrics') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "name",
+          "size": 10,
+          "shard_size": 2147483647,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "last": {
+            "top_hits": {
+              "size": 1,
+              "sort": [
+                {
+                  "eventTime": "desc"
+                }
+              ],
+              "_source": false,
+              "fields": [
+                "value"
+              ]
+            }
+          },
+          "last_seen": {
+            "max": {
+              "field": "eventTime",
+              "format": "yyyy-MM-dd HH:mm:ss.SSS"
+            }
+          }
+        }
+      }
+    },
+    "query": {
+      "term": {
+        "kind": {
+          "value": "GAUGE"
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-15-count-spans",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": 2147483647
+  }
+},
+{
+  "name": "dsl-t2-16-limit-no-order",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "composite": {
+          "size": 10,
+          "sources": [
+            {
+              "traceId": {
+                "terms": {
+                  "field": "traceId",
+                  "order": "asc"
+                }
+              }
+            },
+            {
+              "serviceName": {
+                "terms": {
+                  "field": "serviceName",
+                  "order": "asc"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-17-derived-keys",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "durationInNanos",
+          "size": 10,
+          "shard_size": 2147483647,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-18-in-list-offset",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "name"
+            },
+            {
+              "script": {
+                "lang": "painless",
+                "source": "doc['startTime'].value.toInstant().toEpochMilli() / 60000L * 60000L"
+              }
+            }
+          ],
+          "size": 110,
+          "shard_size": 2147483647,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "page": {
+            "bucket_sort": {
+              "from": 100,
+              "size": 10
+            }
+          }
+        }
+      }
+    },
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "term": {
+              "serviceName": {
+                "value": "cart"
+              }
+            }
+          },
+          {
+            "terms": {
+              "name": [
+                "HGET",
+                "HMSET",
+                "EXPIRE",
+                "POST /oteldemo.CartService/GetCart",
+                "POST /oteldemo.CartService/AddItem",
+                "POST /oteldemo.CartService/EmptyCart"
+              ]
+            }
+          },
+          {
+            "exists": {
+              "field": "startTime"
+            }
+          }
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-19-minute-key",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "multi_terms": {
+          "terms": [
+            {
+              "field": "traceId"
+            },
+            {
+              "script": {
+                "lang": "painless",
+                "source": "doc['startTime'].value.getMinute()"
+              }
+            },
+            {
+              "field": "name"
+            }
+          ],
+          "size": 10,
+          "shard_size": 2147483647,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-20-nested-stats",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "date_histogram": {
+          "field": "startTime",
+          "fixed_interval": "1m",
+          "min_doc_count": 1
+        }
+      },
+      "avg_count": {
+        "avg_bucket": {
+          "buckets_path": "g>_count"
+        }
+      }
+    },
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "term": {
+              "serviceName": {
+                "value": "frontend"
+              }
+            }
+          },
+          {
+            "exists": {
+              "field": "startTime"
+            }
+          }
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-21-log-bytes-having",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName",
+          "size": 10000
+        },
+        "aggs": {
+          "avg_len": {
+            "avg": {
+              "script": {
+                "lang": "painless",
+                "source": "doc['body.keyword'].size() == 0 ? null : doc['body.keyword'].value.length()"
+              }
+            }
+          },
+          "max_len": {
+            "max": {
+              "script": {
+                "lang": "painless",
+                "source": "doc['body.keyword'].size() == 0 ? null : doc['body.keyword'].value.length()"
+              }
+            }
+          },
+          "bytes": {
+            "sum": {
+              "script": {
+                "lang": "painless",
+                "source": "doc['body.keyword'].size() == 0 ? null : doc['body.keyword'].value.length()"
+              }
+            }
+          },
+          "having": {
+            "bucket_selector": {
+              "buckets_path": {
+                "n": "_count"
+              },
+              "script": "params.n > 1000"
+            }
+          },
+          "order": {
+            "bucket_sort": {
+              "sort": [
+                {
+                  "bytes": "desc"
+                }
+              ],
+              "size": 10000
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-22-mvexpand-buckets",
+  "operation-type": "raw-request",
+  "path": "/{{ metrics_index | default('otel_metrics') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "name",
+          "size": 10,
+          "shard_size": 2147483647,
+          "order": [
+            {
+              "entries": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "entries": {
+            "sum": {
+              "script": {
+                "lang": "painless",
+                "source": "int c = 0; for (def v : doc['bucketCountsList']) { if (v > 0) { c++; } } return c;"
+              }
+            }
+          }
+        }
+      }
+    },
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "term": {
+              "kind": {
+                "value": "HISTOGRAM"
+              }
+            }
+          },
+          {
+            "range": {
+              "bucketCountsList": {
+                "gt": 0
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-23-severity-labels",
+  "operation-type": "raw-request",
+  "path": "/{{ logs_index | default('otel_logs') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName",
+          "size": 10000
+        },
+        "aggs": {
+          "sev_numbers": {
+            "cardinality": {
+              "field": "severityNumber"
+            }
+          },
+          "sev_labels": {
+            "cardinality": {
+              "field": "severityText"
+            }
+          },
+          "labels": {
+            "terms": {
+              "field": "severityText",
+              "size": 10000,
+              "order": {
+                "_key": "asc"
+              }
+            }
+          },
+          "having": {
+            "bucket_selector": {
+              "buckets_path": {
+                "n": "sev_labels"
+              },
+              "script": "params.n > 1"
+            }
+          },
+          "order": {
+            "bucket_sort": {
+              "sort": [
+                {
+                  "sev_labels": "desc"
+                },
+                {
+                  "_key": "asc"
+                }
+              ],
+              "size": 10000
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-24-distinct-durations",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName",
+          "size": 10000,
+          "order": [
+            {
+              "_count": "desc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "distinct_durations": {
+            "cardinality": {
+              "field": "durationInNanos"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-25-export-cadence",
+  "operation-type": "raw-request",
+  "path": "/{{ metrics_index | default('otel_metrics') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "terms": {
+          "field": "serviceName",
+          "size": 10000,
+          "order": [
+            {
+              "export_timestamps": "asc"
+            },
+            {
+              "_key": "asc"
+            }
+          ]
+        },
+        "aggs": {
+          "export_timestamps": {
+            "cardinality": {
+              "field": "time"
+            }
+          },
+          "first_export": {
+            "min": {
+              "field": "time",
+              "format": "yyyy-MM-dd HH:mm:ss.SSS"
+            }
+          },
+          "last_export": {
+            "max": {
+              "field": "time",
+              "format": "yyyy-MM-dd HH:mm:ss.SSS"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+{
+  "name": "dsl-t2-26-traces-per-minute",
+  "operation-type": "raw-request",
+  "path": "/{{ spans_index | default('otel_spans') }}/_search",
+  "method": "POST",
+  "body": {
+    "size": 0,
+    "track_total_hits": false,
+    "aggs": {
+      "g": {
+        "date_histogram": {
+          "field": "startTime",
+          "fixed_interval": "1m",
+          "min_doc_count": 1,
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "aggs": {
+          "traces": {
+            "cardinality": {
+              "field": "traceId"
+            }
+          }
+        }
+      }
+    }
+  }
+}
