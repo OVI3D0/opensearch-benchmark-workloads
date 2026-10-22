@@ -1,22 +1,47 @@
+{% import "benchmark.helpers" as benchmark with context %}
+
 {
   "version": 2,
-  "description": "OTel logs benchmark: 39 queries (PPL, plus DSL and ClickHouse/DataFusion/OpenObserve SQL translations) over the frozen 30M-doc OTel corpus. otel-logs-ingest loads the corpus; the search procedures (otel-logs-ppl, dsl-otel-logs, …) run against an existing otel_logs index.",
+  "description": "OpenTelemetry Demo telemetry (spans, logs, metrics) in the Data Prepper OTel format, 45 PPL queries",
   "indices": [
     {
-      "name": "{{ index_name | default('otel_logs') }}",
-      "body": "{{ index_body | default('index-datafusion.json') }}"
+      "name": "{{ spans_index | default('otel_spans') }}",
+      "body": "index/otel_spans.json"
+    },
+    {
+      "name": "{{ logs_index | default('otel_logs') }}",
+      "body": "index/otel_logs.json"
+    },
+    {
+      "name": "{{ metrics_index | default('otel_metrics') }}",
+      "body": "index/otel_metrics.json"
     }
   ],
   "corpora": [
     {
-      "name": "otel_logs",
-      "base-url": "https://dbyiw3u3rf9yr.cloudfront.net/corpora/otel_logs",
+      "name": "otel_demo",
+      "base-url": "{{ corpus_base_url | default('https://dbyiw3u3rf9yr.cloudfront.net/corpora/otel_demo') }}",
       "documents": [
         {
-          "source-file": "otel_logs-v1.json.gz",
-          "document-count": 30000000,
-          "compressed-bytes": 5940152880,
-          "uncompressed-bytes": 45240642202
+          "source-file": "otel_spans.ndjson.gz",
+          "target-index": "{{ spans_index | default('otel_spans') }}",
+          "document-count": 36987718,
+          "compressed-bytes": 5021085400,
+          "uncompressed-bytes": 80099573456
+        },
+        {
+          "source-file": "otel_logs.ndjson.gz",
+          "target-index": "{{ logs_index | default('otel_logs') }}",
+          "document-count": 13148738,
+          "compressed-bytes": 1137339096,
+          "uncompressed-bytes": 19346915077
+        },
+        {
+          "source-file": "otel_metrics.ndjson.gz",
+          "target-index": "{{ metrics_index | default('otel_metrics') }}",
+          "document-count": 4547738,
+          "compressed-bytes": 114727489,
+          "uncompressed-bytes": 5230795816
         }
       ]
     }
