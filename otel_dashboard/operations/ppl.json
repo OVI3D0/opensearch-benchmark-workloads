@@ -1,0 +1,250 @@
+{#- Dashboard widgets for OTel logs + traces in the Data Prepper standard shape. Window: time_from ('YYYY-MM-DD HH:MM:SS') adds
+    `where <field> >= time_from` (omit it for "all time"); time_to (optional) adds an upper bound. bucket = time-series bucket (e.g. 1m). -#}
+{%- macro since(field) -%}
+{%- if time_from is defined %} | where `{{ field }}` >= '{{ time_from }}'{% if time_to is defined %} and `{{ field }}` < '{{ time_to }}'{% endif %}{% endif -%}
+{%- endmacro -%}
+{%- set logs_since = since(logs_time_field | default('@timestamp')) -%}
+{%- set spans_since = since(spans_time_field | default('@timestamp')) -%}
+{
+  "name": "dash-l01-log-volume",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | stats count() as logs by span(`@timestamp`, {{ bucket | default('1m') }})"
+  }
+},
+{
+  "name": "dash-l02-volume-by-severity",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | stats count() as logs by span(`@timestamp`, {{ bucket | default('1m') }}), `severity.number`"
+  }
+},
+{
+  "name": "dash-l03-top-error-services",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | where `severity.number` >= 17 | stats count() as errors by `resource.attributes.service.name` | sort - errors | head 10"
+  }
+},
+{
+  "name": "dash-l04-error-rate-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | eval err = if(`severity.number` >= 17, 1, 0) | stats sum(err) as errors, count() as total by `resource.attributes.service.name` | eval error_pct = errors * 100.0 / total | sort - error_pct | head 20"
+  }
+},
+{
+  "name": "dash-l04b-error-rate-by-service-split",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | stats count() as logs by `resource.attributes.service.name`, `severity.number`"
+  }
+},
+{
+  "name": "dash-l05-top-exception-types",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | where isnotnull(`attributes.exception.type`) | stats count() as c by `attributes.exception.type` | sort - c | head 10"
+  }
+},
+{
+  "name": "dash-l06-errors-by-cluster-namespace",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | where `severity.number` >= 17 | stats count() as errors by `resource.attributes.k8s.cluster.name`, `resource.attributes.k8s.namespace.name` | sort - errors | head 20"
+  }
+},
+{
+  "name": "dash-l07-logs-by-env-region",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | stats count() as logs by `resource.attributes.deployment.environment.name`, `resource.attributes.cloud.region`"
+  }
+},
+{
+  "name": "dash-l08-error-pods-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | where `severity.number` >= 17 | stats dc(`resource.attributes.k8s.pod.name`) as pods by `resource.attributes.service.name` | sort - pods | head 10"
+  }
+},
+{
+  "name": "dash-l09-latest-errors",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | where `severity.number` >= 17 | sort - `@timestamp` | head 50 | fields `@timestamp`, `resource.attributes.service.name`, `severity.text`, `attributes.exception.type`, body, traceId"
+  }
+},
+{
+  "name": "dash-l10-fts-timeout-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | where match(body, 'timeout') | stats count() as c by `resource.attributes.service.name` | sort - c | head 10"
+  }
+},
+{
+  "name": "dash-l11-logs-for-trace",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | where traceId = '{{ trace_id | default('00000000000000000000000000000000') }}' | sort `@timestamp` | fields `@timestamp`, `resource.attributes.service.name`, `severity.text`, body"
+  }
+},
+{
+  "name": "dash-t01-request-rate",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where kind = 'SPAN_KIND_SERVER' | stats count() as requests by span(`@timestamp`, {{ bucket | default('1m') }})"
+  }
+},
+{
+  "name": "dash-t02-latency-percentiles",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where kind = 'SPAN_KIND_SERVER' | stats percentile(durationInNanos, 50) as p50, percentile(durationInNanos, 95) as p95, percentile(durationInNanos, 99) as p99 by span(`@timestamp`, {{ bucket | default('1m') }})"
+  }
+},
+{
+  "name": "dash-t03-error-rate",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where kind = 'SPAN_KIND_SERVER' | eval err = if(`status.code` = 2, 1, 0) | stats sum(err) as errors, count() as total by span(`@timestamp`, {{ bucket | default('1m') }})"
+  }
+},
+{
+  "name": "dash-t04-red-by-service",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where kind = 'SPAN_KIND_SERVER' | eval err = if(`status.code` = 2, 1, 0) | stats count() as requests, sum(err) as errors, percentile(durationInNanos, 95) as p95 by serviceName | sort - requests | head 20"
+  }
+},
+{
+  "name": "dash-t04b-red-by-service-split",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where kind = 'SPAN_KIND_SERVER' | stats count() as requests, percentile(durationInNanos, 95) as p95 by serviceName, `status.code` | sort - requests | head 60"
+  }
+},
+{
+  "name": "dash-t05-slowest-routes",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where kind = 'SPAN_KIND_SERVER' and isnotnull(`attributes.http.route`) | stats percentile(durationInNanos, 95) as p95, count() as requests by `attributes.http.route` | sort - p95 | head 10"
+  }
+},
+{
+  "name": "dash-t06-http-status",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where isnotnull(`attributes.http.response.status_code`) | stats count() as c by `attributes.http.response.status_code` | sort - c"
+  }
+},
+{
+  "name": "dash-t07-error-types",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where `status.code` = 2 | stats count() as c by `attributes.error.type`, serviceName | sort - c | head 20"
+  }
+},
+{
+  "name": "dash-t08-entry-points",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where parentSpanId = '' | stats count() as traces, percentile(`traceGroupFields.durationInNanos`, 95) as p95 by traceGroup | sort - traces | head 20"
+  }
+},
+{
+  "name": "dash-t09-db-calls",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where isnotnull(`attributes.db.system`) | stats count() as calls, percentile(durationInNanos, 95) as p95 by `attributes.db.system`, `attributes.db.collection.name` | sort - calls | head 20"
+  }
+},
+{
+  "name": "dash-t10-kafka-topics",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where kind = 'SPAN_KIND_PRODUCER' | stats count() as messages by `attributes.messaging.destination.name` | sort - messages | head 10"
+  }
+},
+{
+  "name": "dash-t11-slowest-traces",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where parentSpanId = '' | sort - `traceGroupFields.durationInNanos` | head 20 | fields traceId, traceGroup, serviceName, `traceGroupFields.durationInNanos`, `traceGroupFields.statusCode`"
+  }
+},
+{
+  "name": "dash-t12-distinct-traces-users",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | stats dc(traceId) as traces, dc(`attributes.app.user.id`) as users"
+  }
+},
+{
+  "name": "dash-t13-trace-waterfall",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ spans_index | default('otel-v1-apm-span-*') }}{{ spans_since | safe }} | where traceId = '{{ trace_id | default('00000000000000000000000000000000') }}' | sort startTime | fields spanId, parentSpanId, serviceName, name, kind, startTime, durationInNanos, `status.code`"
+  }
+},
+{
+  "name": "dash-t14-service-map",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ service_map_index | default('otel-v2-apm-service-map') }} | stats count() as edges by `sourceNode.keyAttributes.name`, `targetNode.keyAttributes.name` | sort - edges | head 50"
+  }
+}

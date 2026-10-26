@@ -1,0 +1,70 @@
+{
+  "name": "dashboard",
+  "description": "Every dashboard widget query run sequentially by one client: warmup + timed iterations per query. Pass time_from (window start) and bucket per window; omit time_from for all-time. dash-l04 / dash-t04 (eval + sum grouped by a keyword) can hit the 300 s gateway limit, so they run heavy_iterations with no warmup.",
+  "default": true,
+  "schedule": [
+    {"operation": "dash-l01-log-volume", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l02-volume-by-severity", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l03-top-error-services", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l04-error-rate-by-service", "warmup-iterations": {{ heavy_warmup_iterations | default(0) }}, "iterations": {{ heavy_iterations | default(1) }}, "clients": 1},
+    {"operation": "dash-l04b-error-rate-by-service-split", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l05-top-exception-types", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l06-errors-by-cluster-namespace", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l07-logs-by-env-region", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l08-error-pods-by-service", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l09-latest-errors", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l10-fts-timeout-by-service", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l11-logs-for-trace", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t01-request-rate", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t02-latency-percentiles", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t03-error-rate", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t04-red-by-service", "warmup-iterations": {{ heavy_warmup_iterations | default(0) }}, "iterations": {{ heavy_iterations | default(1) }}, "clients": 1},
+    {"operation": "dash-t04b-red-by-service-split", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t05-slowest-routes", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t06-http-status", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t07-error-types", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t08-entry-points", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t09-db-calls", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t10-kafka-topics", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t11-slowest-traces", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t12-distinct-traces-users", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t13-trace-waterfall", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-t14-service-map", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1}
+  ]
+},
+{
+  "name": "logs-dashboard-load",
+  "description": "The 9 widgets of a logs dashboard fired concurrently (one OSB task per widget, dashboard_users clients each), dashboard_loads iterations per widget. Per-widget service time under concurrency; a dashboard load takes about as long as its slowest widget.",
+  "default": false,
+  "schedule": [
+    {"parallel": {"tasks": [
+        {"name": "logs-dashboard-load-dash-l01-log-volume", "operation": "dash-l01-log-volume", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "logs-dashboard-load-dash-l02-volume-by-severity", "operation": "dash-l02-volume-by-severity", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "logs-dashboard-load-dash-l03-top-error-services", "operation": "dash-l03-top-error-services", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "logs-dashboard-load-dash-l04b-error-rate-by-service-split", "operation": "dash-l04b-error-rate-by-service-split", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "logs-dashboard-load-dash-l05-top-exception-types", "operation": "dash-l05-top-exception-types", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "logs-dashboard-load-dash-l06-errors-by-cluster-namespace", "operation": "dash-l06-errors-by-cluster-namespace", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "logs-dashboard-load-dash-l07-logs-by-env-region", "operation": "dash-l07-logs-by-env-region", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "logs-dashboard-load-dash-l09-latest-errors", "operation": "dash-l09-latest-errors", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "logs-dashboard-load-dash-l10-fts-timeout-by-service", "operation": "dash-l10-fts-timeout-by-service", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}}
+    ]}}
+  ]
+},
+{
+  "name": "apm-dashboard-load",
+  "description": "The 9 widgets of an APM / traces dashboard fired concurrently (one OSB task per widget, dashboard_users clients each), dashboard_loads iterations per widget.",
+  "default": false,
+  "schedule": [
+    {"parallel": {"tasks": [
+        {"name": "apm-dashboard-load-dash-t01-request-rate", "operation": "dash-t01-request-rate", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "apm-dashboard-load-dash-t02-latency-percentiles", "operation": "dash-t02-latency-percentiles", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "apm-dashboard-load-dash-t03-error-rate", "operation": "dash-t03-error-rate", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "apm-dashboard-load-dash-t04b-red-by-service-split", "operation": "dash-t04b-red-by-service-split", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "apm-dashboard-load-dash-t05-slowest-routes", "operation": "dash-t05-slowest-routes", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "apm-dashboard-load-dash-t06-http-status", "operation": "dash-t06-http-status", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "apm-dashboard-load-dash-t07-error-types", "operation": "dash-t07-error-types", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "apm-dashboard-load-dash-t08-entry-points", "operation": "dash-t08-entry-points", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}},
+        {"name": "apm-dashboard-load-dash-t11-slowest-traces", "operation": "dash-t11-slowest-traces", "warmup-iterations": {{ load_warmup_iterations | default(1) }}, "iterations": {{ dashboard_loads | default(5) }}, "clients": {{ dashboard_users | default(1) }}}
+    ]}}
+  ]
+}
