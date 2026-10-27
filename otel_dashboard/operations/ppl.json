@@ -114,6 +114,15 @@
   }
 },
 {
+  "name": "dash-l12-error-categories",
+  "operation-type": "raw-request",
+  "method": "POST",
+  "path": "/_plugins/_ppl",
+  "body": {
+    "query": "source={{ logs_index | default('logs-otel-v1-*') }}{{ logs_since | safe }} | where `severity.number` >= 17 | stats count() as errors, dc(`resource.attributes.service.name`) as services, min(`@timestamp`) as first_seen, max(`@timestamp`) as last_seen by `attributes.exception.type` | sort - errors"
+  }
+},
+{
   "name": "dash-t01-request-rate",
   "operation-type": "raw-request",
   "method": "POST",

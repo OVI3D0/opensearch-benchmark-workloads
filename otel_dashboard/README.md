@@ -6,7 +6,7 @@ example data loaded with the [`otel_dp`](../otel_dp) workload or a Data Prepper 
 and loads no corpus: point it at a cluster that already holds the data, after ingest has stopped (or during
 ingest, if that is what you want to measure).
 
-## Queries (`operations/ppl.json`, 27 PPL ops)
+## Queries (`operations/ppl.json`, 28 PPL ops)
 
 | Logs dashboard | APM / traces dashboard |
 |---|---|
@@ -22,7 +22,7 @@ ingest, if that is what you want to measure).
 | `dash-l09-latest-errors` · newest 50 error lines | `dash-t09-db-calls` · by db system / collection |
 | `dash-l10-fts-timeout-by-service` · full-text `match` | `dash-t10-kafka-topics` · producer spans by topic |
 | `dash-l11-logs-for-trace` · drill-down | `dash-t11-slowest-traces` · slowest 20 root spans |
-| | `dash-t12-distinct-traces-users` · `dc()` |
+| `dash-l12-error-categories` · every error category (exception type): count, services, first / last seen | `dash-t12-distinct-traces-users` · `dc()` |
 | | `dash-t13-trace-waterfall` · drill-down |
 | | `dash-t14-service-map` · service → service edges |
 

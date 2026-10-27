@@ -15,6 +15,7 @@
     {"operation": "dash-l09-latest-errors", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
     {"operation": "dash-l10-fts-timeout-by-service", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
     {"operation": "dash-l11-logs-for-trace", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
+    {"operation": "dash-l12-error-categories", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
     {"operation": "dash-t01-request-rate", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
     {"operation": "dash-t02-latency-percentiles", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},
     {"operation": "dash-t03-error-rate", "warmup-iterations": {{ warmup_iterations | default(1) }}, "iterations": {{ iterations | default(3) }}, "clients": 1},

@@ -1,7 +1,7 @@
 {% import "benchmark.helpers" as benchmark with context %}
 {
   "version": 2,
-  "description": "Search-only dashboard workload for OTel logs + traces in the Data Prepper standard index shape (logs-otel-v1-* / otel-v1-apm-span-* / otel-v2-apm-service-map), e.g. data loaded by the otel_dp workload. 27 PPL widget queries (logs dashboard + APM dashboard) scoped to a time window via time_from; test procedures run them sequentially or fire a whole dashboard concurrently. No indices or corpora: point it at a cluster that already holds the data.",
+  "description": "Search-only dashboard workload for OTel logs + traces in the Data Prepper standard index shape (logs-otel-v1-* / otel-v1-apm-span-* / otel-v2-apm-service-map), e.g. data loaded by the otel_dp workload. 28 PPL widget queries (logs dashboard + APM dashboard) scoped to a time window via time_from; test procedures run them sequentially or fire a whole dashboard concurrently. No indices or corpora: point it at a cluster that already holds the data.",
   "operations": [
     {{ benchmark.collect(parts="operations/*.json") }}
   ],
